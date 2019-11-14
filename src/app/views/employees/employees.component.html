@@ -1,0 +1,225 @@
+<section>
+    <div class="">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="row justify-content-between">
+                <div class="col-xs-12 col-sm-6">
+                  <h4>Quản Lí Tài Khoản Nhân Viên</h4>
+                </div>
+                <div class="col-xs-12 col-sm-6 text-right">
+                    <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder" (click)="this.refresh()">
+                        <i class="fa fa-retweet"></i>
+                        Refresh
+                      </button>
+                  <button type="button" class="btn btn-info mr-1 text-light font-weight-bolder" data-toggle="modal" (click)="this.showAdd()">
+                    <i class="fa fa-plus" aria-hidden="true"> </i>
+                    Thêm
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mt-3 row justify-content-end">
+                <div class="input-group-prepend mr-2">
+                    <select [(ngModel)]="slc_search" class="custom-select">
+                        <option  [ngValue]="1" [selected]="true" >Email</option>
+                        <option  [ngValue]="3">Tên</option>
+                        <option  [ngValue]="4">Điện Thoại</option>
+                        <option  [ngValue]="5">Địa Chỉ</option>
+                        <option  [ngValue]="8">Vị Trí</option>
+                        <option  [ngValue]="9">Hoạt Động</option>
+                      </select>
+                </div>
+                <div class="input-group-prepend">
+              <input type="text" id="mySearchText" style="padding-left:5px;padding-right: 5px;" placeholder="Search..." [(ngModel)]="inp_search">
+              <button id="mySearchButton" class="btn" (click)="filter()"><i class="fa fa-search" aria-hidden="true"></i></button>
+              </div>
+              </div>
+            <div class="card-body table-responsive">
+                 <!--  START- LIST-->
+              <table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" id="dttb">
+                <thead class="bg-primary">
+                  <tr>
+                    <th>STT</th>
+                    <th>Email</th>
+                    <th>Họ</th>
+                    <th>Tên</th>
+                    <th>Điện Thoại</th>
+                    <th>Địa Chỉ</th>
+                    <th>Ngày Sinh</th>
+                    <th>Hình Ảnh</th>
+                    <th>Vị Trí</th>
+                    <th>Hoạt Động</th>
+                    <th>Hành Động</th>
+                  </tr>
+                </thead>
+                <tbody >
+                    <tr *ngFor="let emp of this.list;let i=index">
+                        <td>{{i+1}}</td>
+                        <td>
+                            {{emp.Email}}
+                        </td>
+                        <td>
+                            {{emp.Lastname}}
+                        </td>
+                        <td>
+                            {{emp.Firstname}}
+                        </td>
+                        <td>
+                            {{emp.Phone}}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-secondary" ngbPopover="{{emp.Address}}" triggers="mouseenter:mouseleave" popoverTitle="Địa chỉ">
+                                <i class="fa fa-eye"></i>
+                                </button>
+                        </td>
+                        <td>
+                            {{emp.Birthday  | date:'dd-MM-yyyy'}}
+                        </td>
+            
+                        <td class="row justify-content-center w-100">
+                          <div *ngIf="emp.Image!=null">
+                            <img [src]="emp.Image" width="30px" height="30px" />
+                            </div>
+
+                            <div *ngIf="emp.Image==null">
+                                <img src="http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png" width="30px" height="30px" />
+                                </div>
+                        </td>
+                        <td>
+                          <span *ngIf="emp.Position==0"> Quản trị</span>
+                          <span *ngIf="emp.Position==1"> Quản lí</span>
+                        </td>
+                        <td><span *ngIf="emp.Status==1; else SAI;" style="color: green;">Hoạt động</span>
+                          <ng-template #SAI> <span style="color: red;">Bị Cấm</span></ng-template>
+                        </td>
+                        <td class="text-center">
+                              <button (click)="showedit(emp)" class="bg-success" style="border:0">
+                              <i class="fa fa-edit"></i>
+                              </button>
+                              
+                          </td>
+                      </tr>
+                </tbody>
+              </table>
+              <!--  END - LIST-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- begin modal create -->
+  
+  <div bsModal #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title w-100 text-center" *ngIf="this.type==1" >Thêm Nhân Viên</h4>
+          <h4 class="modal-title w-100 text-center" *ngIf="this.type==2" >Cập Nhật Nhân Viên</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+              <!-- START CREATE -->
+              <form #form="ngForm" autocomplete="off">
+                  <input *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id"  hidden>
+                  <div class="row justify-content-center mb-2 w-100">
+                  <img [src]="service.formData.Image" class="col" style="max-height:300px;max-width:300px;"/>
+               
+                  </div>
+                  <div class="form-group row">
+          
+                      <label class="col-sm-3 col-form-label text-dark h3">ẢNH</label>
+                      <input #myInput type="file" (change)="onFileChanged($event)" />
+                      <input name="Image" #Image1="ngModel" [(ngModel)]="service.formData.Image" hidden>
+                  </div>
+                    <div class="form-group row">
+                    <label class="col-sm-3 col-form-label text-dark h3">EMAIL</label>
+                    <input name="Email" #Email1="ngModel" [(ngModel)]="service.formData.Email" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"  maxlength="100" required class="form-control col-sm-9" 
+                    [ngClass]="{ 'is-invalid':(Email1.errors && Email1.touched),'is-valid': !Email1.errors && Email1.touched}"
+                    >
+                    <span class="text-danger offset-sm-3" *ngIf="Email1.invalid && Email1.dirty">
+                      Phải có dạng email e.g a@gmail.com và dài nhiều nhất 100 kí tự
+                    </span>
+                  </div>
+                    <input name="Password" #Password1="ngModel" [(ngModel)]="service.formData.Password"  hidden>
+                  <div class="form-group row">
+                    <label  class="col-sm-3 col-form-label text-dark h3">HỌ</label>
+                    <input name="Lastname" #Lastname1="ngModel" [(ngModel)]="service.formData.Lastname" minlength="3" maxlength="50"  required class="form-control col-sm-9"
+                    [ngClass]="{ 'is-invalid':(Lastname1.errors && Lastname1.touched),'is-valid': !Lastname1.errors && Lastname1.touched}">
+                    <span class="text-danger offset-sm-3" *ngIf="Lastname1.invalid && Lastname1.dirty">
+                      Họ phải từ 3 đến 50 kí tự
+                    </span>
+                    
+                  </div>
+                  <div class="form-group row">
+                    <label  class="col-sm-3 col-form-label text-dark h3">TÊN</label>
+                    <input name="Firstname" #Firstname1="ngModel" [(ngModel)]="service.formData.Firstname"  minlength="3" maxlength="50"   required class="form-control col-sm-9"
+                    [ngClass]="{ 'is-invalid':(Firstname1.errors && Firstname1.touched),'is-valid': !Firstname1.errors && Firstname1.touched}">
+                    <span class="text-danger offset-sm-3" *ngIf="Firstname1.invalid && Firstname1.dirty">
+                        Tên phải từ 3 đến 50 kí tự
+                    </span>
+                  </div>
+                  <div class="form-group row">
+                    <label  class="col-sm-3 col-form-label text-dark h3">SĐT</label>
+                    <input name="Phone" #Phone1="ngModel" [(ngModel)]="service.formData.Phone"  pattern="^0(1\d{9}|9\d{8})$" required class="form-control col-sm-9"
+                    [ngClass]="{ 'is-invalid':(Phone1.errors && Phone1.touched),'is-valid': !Phone1.errors && Phone1.touched}">
+                    <span class="text-danger offset-sm-3" *ngIf="Phone1.invalid && Phone1.dirty">
+                      SDT chỉ bao gồm số và có 10 số và bắt đầu là 09
+                    </span>
+                  </div>
+                  <div class="form-group row">
+                    <label  class="col-sm-3 col-form-label text-dark h3">ĐỊA CHỈ</label>
+                    <textarea rows="2" name="Address" #Address1="ngModel" [(ngModel)]="service.formData.Address"  minlength="3" maxlength="200" required class="form-control col-sm-9"
+                      [ngClass]="{ 'is-invalid':(Address1.errors && Address1.touched),'is-valid': !Address1.errors && Address1.touched}">
+
+                    </textarea>
+                    <span class="text-danger offset-sm-3" *ngIf="Address1.invalid && Address1.dirty">
+                        Địa chỉ phải từ 3 đến 200 kí tự
+                      </span>
+                  </div>
+                  <div class="form-group row">
+                    <label  class="col-sm-3 col-form-label text-dark h3">NGÀY SINH</label>
+                    <input type="date"  
+                    [ngModel]="service.formData.Birthday | date:'yyyy-MM-dd'"  
+                    (ngModelChange)="service.formData.Birthday = $event"    
+                    name="Birthday" 
+                    class="form-control col-sm-9 form-control col-sm-9-rounded"
+              >
+                  </div>
+                  <div class="form-group row">
+                    <label  class="col-sm-3 col-form-label text-dark h3">VỊ TRÍ</label>
+                    <select name="Position" #Position1="ngModel" [(ngModel)]="service.formData.Position" required class="form-control col-sm-9">
+                      <option  [ngValue]="0" >Quản trị</option>
+                      <option  [ngValue]="1">Quản lí</option>
+                    </select>
+                  </div>
+                  <div class="form-group row" *ngIf="this.type==2;else status">
+                    <label  class="col-sm-3 col-form-label text-dark h3">HOẠT ĐỘNG</label>
+                    <select name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" required class="form-control col-sm-9">
+                      <option  [ngValue]="0" >Bị Cấm</option>
+                      <option  [ngValue]="1">Hoạt Động</option>
+                    </select>
+                   
+                  </div>
+                  <ng-template #status><input name="Status" [(ngModel)]="service.formData.Status" hidden></ng-template>
+                  <div class="form-group row pull-left ml-5">
+                    <button type="button"  data-dismiss="modal" (click)="this.service.resetForm(this.type)"  class="btn btn-danger btn-block font-weight-bolder">RESET</button>
+                  </div>
+                    <div class="form-group row pull-right mr-5">
+                      <button type="button" (click)="this.onSubmit(form)"  [disabled]="form.invalid" data-dismiss="modal" class="btn btn-info btn-block text-light font-weight-bolder">SUBMIT</button>
+                    </div>
+                </form>
+              <!-- END -CREATE-->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- end modal create -->
+
+  
