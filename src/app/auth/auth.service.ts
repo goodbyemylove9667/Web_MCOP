@@ -1,76 +1,144 @@
 import { Injectable } from '@angular/core';
-import { Router } from  "@angular/router";
-import { auth } from  'firebase/app';
-import { AngularFireAuth } from  "@angular/fire/auth";
-import { User } from  'firebase';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Router } from "@angular/router";
+import { auth } from 'firebase/app';
+import { AngularFireAuth } from "@angular/fire/auth";
+import { User } from 'firebase';
+import { AngularFireDatabase } from '@angular/fire/database';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   user: User;
   errorMessage = "";
-  loading= false;
-  constructor(public  afAuth:  AngularFireAuth, public  router:  Router) {
-    this.afAuth.authState.subscribe(user => {
-      if (user){
+  loading = false;
+  constructor(public afAuth: AngularFireAuth, public router: Router, private firebase: AngularFireDatabase) {
+    this.afAuth.authState.subscribe(async(user) => {
+      if (user) {
         this.user = user;
         localStorage.setItem('user', JSON.stringify(this.user));
-        this.afAuth.auth.currentUser.getIdToken().then(token=>{   
+        this.afAuth.auth.currentUser.getIdToken().then(token => {
         });
 
       } else {
         localStorage.setItem('user', null);
         this.router.navigate(['/login']);
       }
-      
+
     })
-    
-   }
-   async login(email: string, password: string) {
-    this.loading=true;
-    await this.afAuth.auth.signInWithEmailAndPassword(email, password).then
+
+  }
+  async login(email: string, password: string) {
+    this.loading = true;
+    var status =1;
+    this.errorMessage="";
+    await this.firebase.database.ref('Employee').orderByChild('Email').equalTo(email).once("value", (value) => {
+      if (value.exists()) {
+        value.forEach((element) => {
+          localStorage.setItem('currentUser', JSON.stringify(element));
+          if (element.toJSON()["Status"] == 0) {
+            status=0;
+            this.loading = false;
+            this.errorMessage = "Tài Khoản Đã Bị Khóa";
+          }})
+      }
+      else {
+        status=0;
+        this.loading = false;
+        this.errorMessage = "Tài Khoản Không Tồn Tại";
+      }
+    });
+    if (status==1)
+    {
+    this.afAuth.auth.signInWithEmailAndPassword(email, password).then
     (() => {
       localStorage.setItem('email', JSON.stringify(email));
       localStorage.setItem('password', JSON.stringify(password));
       this.router.navigate(['']);
-      this.loading=false;
-    }   
-    ).catch( () =>{
-      this.loading=false;
-      this.errorMessage = "Sai Tài Khoản Hoặc Mật Khẩu";
+      this.loading = false;
+    }
+    ).catch((error) => {
+      this.loading = false;
+      if (error.toString().includes("The email address is already in use by another account."))
+        this.errorMessage = "Địa chỉ email đã được sử dụng bởi tài khoản khác."
+      else
+        if (error.toString().includes("The custom token format is incorrect. Please check the documentation."))
+          this.errorMessage = "Định dạng mã thông báo tùy chỉnh không chính xác. Vui lòng kiểm tra tài liệu."
+        else
+          if (error.toString().includes("The custom token corresponds to a different audience."))
+            this.errorMessage = "Mã thông báo tùy chỉnh tương ứng với một đối tượng khác."
+          else
+            if (error.toString().includes("The supplied auth credential is malformed or has expired."))
+              this.errorMessage = "Thông tin xác thực được cung cấp không đúng định dạng hoặc đã hết hạn."
+            else
+              if (error.toString().includes("The email address is badly formatted."))
+                this.errorMessage = "Địa chỉ email được định dạng sai."
+              else
+                if (error.toString().includes("The password is invalid or the user does not have a password."))
+                  this.errorMessage = "Mật khẩu không hợp lệ."
+                else
+                  if (error.toString().includes("The supplied credentials do not correspond to the previously signed in user."))
+                    this.errorMessage = "Thông tin đăng nhập được cung cấp không tương ứng với người dùng đã đăng nhập trước đó."
+                  else
+                    if (error.toString().includes("This operation is sensitive and requires recent authentication. Log in again before retrying this request."))
+                      this.errorMessage = "Thao tác này rất nhạy cảm và yêu cầu xác thực gần đây. Đăng nhập lại trước khi thử lại yêu cầu này."
+                    else
+                      if (error.toString().includes("An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address."))
+                        this.errorMessage = "Một tài khoản đã tồn tại với cùng một địa chỉ email nhưng thông tin đăng nhập khác nhau. Đăng nhập bằng nhà cung cấp được liên kết với địa chỉ email này."
+                      else
+                        if (error.toString().includes("This credential is already associated with a different user account."))
+                          this.errorMessage = "Thông tin đăng nhập này đã được liên kết với một tài khoản người dùng khác."
+                        else
+                          if (error.toString().includes("The user account has been disabled by an administrator."))
+                            this.errorMessage = "Tài khoản người dùng đã bị vô hiệu hóa bởi quản trị viên."
+                          else
+                            if (error.toString().includes("The user's credential is no longer valid. The user must sign in again."))
+                              this.errorMessage = "Thông tin đăng nhập của người dùng không còn hợp lệ. Người dùng phải đăng nhập lại."
+                            else
+                              if (error.toString().includes("There is no user record corresponding to this identifier. The user may have been deleted."))
+                                this.errorMessage = "Tài khoản người dùng không chính xác hoặc có thể đã bị xóa."
+                              else
+                                if (error.toString().includes("The user's credential is no longer valid. The user must sign in again."))
+                                  this.errorMessage = "Thông tin đăng nhập của người dùng không còn hợp lệ. Người dùng phải đăng nhập lại."
+                                else
+                                  if (error.toString().includes("This operation is not allowed. You must enable this service in the console."))
+                                    this.errorMessage = "Thao tác này không được phép. Bạn phải kích hoạt dịch vụ này trong bảng điều khiển."
+                                  else
+                                    if (error.toString().includes("There is no user record corresponding to this identifier"))
+                                      this.errorMessage = "Tài khoản không tồn tại hoặc đã xóa."
+                                    else
+                                      this.errorMessage = "Không Thể Đăng Nhập";
     }
     );
+  }
+
 
   }
-    async register(email: string, password: string) {
-      var result = await this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-      this.sendEmailVerification();
+  async register(email: string, password: string) {
+    var result = await this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+    this.sendEmailVerification();
   }
   async sendEmailVerification() {
     await this.afAuth.auth.currentUser.sendEmailVerification()
     this.router.navigate(['admin/verify-email']);
   }
-    async sendPasswordResetEmail(passwordResetEmail: string) {
-      return await this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail);
+  async sendPasswordResetEmail(passwordResetEmail: string) {  
+    return await this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail);
   }
-  async logout(){
+  async logout() {
     await this.afAuth.auth.signOut();
     localStorage.removeItem('user');
 
     this.router.navigate(['/login']);
   }
-    get isLoggedIn(): boolean {
-      const  user  =  JSON.parse(localStorage.getItem('user'));
-      return  user  !==  null;
+  get isLoggedIn(): boolean {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user !== null;
   }
-async getToken()
-{
-  return await  this.afAuth.auth.currentUser.getIdToken();
-}
-  async  loginWithGoogle(){
-    await  this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
+  async getToken() {
+    return await this.afAuth.auth.currentUser.getIdToken();
+  }
+  async  loginWithGoogle() {
+    await this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
     this.router.navigate(['admin/list']);
   }
 }

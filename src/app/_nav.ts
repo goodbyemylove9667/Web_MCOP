@@ -46,7 +46,7 @@ export const navItems: NavData[] = [
     },
     {
       name: 'Tài Khoản Người Chơi',
-      url: '/dashboard',
+      url: '/customer',
       icon: 'icon-user'
     },
     {

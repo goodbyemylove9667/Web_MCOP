@@ -7,8 +7,10 @@ import { DefaultLayoutComponent } from './containers';
 import { P404Component } from './views/error/404.component';
 import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
-import { RegisterComponent } from './views/register/register.component';
 import {EmployeesComponent} from './views/employees/employees.component';
+import { CustomersComponent } from './views/customers/customers.component';
+import { AuthinfoComponent } from './views/authinfo/authinfo.component';
+import { ChangepassComponent } from './views/changepass/changepass.component';
 export const routes: Routes = [
   {
     path: '',
@@ -33,14 +35,7 @@ export const routes: Routes = [
     path: 'login',
     component: LoginComponent,
     data: {
-      title: 'Login Page'
-    }
-  },
-  {
-    path: 'register',
-    component: RegisterComponent,
-    data: {
-      title: 'Register Page'
+      title: 'Đăng Nhập'
     }
   },
   {
@@ -49,11 +44,34 @@ export const routes: Routes = [
     data: {
       title: 'Home'
     },
-   
     children: [
       {
         path: 'employee',
-        component: EmployeesComponent
+        component: EmployeesComponent,
+        data: {
+          title: 'Quản Lí Tài Khoản Nhân Viên'
+        }
+      },
+      {
+        path: 'customer',
+        component: CustomersComponent,
+        data: {
+          title: 'Quản Lí Tài Khoản Người Chơi'
+        }
+      },
+      {
+        path: 'authinfo',
+        component: AuthinfoComponent,
+        data: {
+          title: 'Thông Tin Tài Khoản'
+        }
+      },
+      {
+        path: 'changepass',
+        component: ChangepassComponent,
+        data: {
+          title: 'Thay Đổi Mật Khẩu'
+        }
       },
       
       // {

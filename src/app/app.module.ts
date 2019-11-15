@@ -52,6 +52,9 @@ import { AppInterceptor } from './app.interceptor';
 import { EmployeesComponent } from './views/employees/employees.component';
 import { DataTablesModule } from 'angular-datatables';
 import { CookieService } from 'ngx-cookie-service';
+import { CustomersComponent } from './views/customers/customers.component';
+import { AuthinfoComponent } from './views/authinfo/authinfo.component';
+import { ChangepassComponent } from './views/changepass/changepass.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -86,7 +89,10 @@ import { CookieService } from 'ngx-cookie-service';
     P500Component,
     LoginComponent,
     RegisterComponent,
-    EmployeesComponent
+    EmployeesComponent,
+    CustomersComponent,
+    AuthinfoComponent,
+    ChangepassComponent
   ],
   providers: [AuthService,CookieService , {
     provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true

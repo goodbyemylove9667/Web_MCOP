@@ -1,25 +1,26 @@
-import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit ,ElementRef} from '@angular/core';
-import { EmployeeService, Employee } from '../../services/employee.service';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { CustomerService,Customer} from '../../services/customer.service';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject, from } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 @Component({
-  selector: 'app-employees',
-  templateUrl: './employees.component.html',
-  styleUrls: ['./employees.component.scss']
+  selector: 'app-customers',
+  templateUrl: './customers.component.html',
+  styleUrls: ['./customers.component.scss']
 })
-export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
+export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
+
   @ViewChild('myModal', { static: false }) public myModal: ModalDirective;
   @ViewChild(DataTableDirective, { static: false })dtElement: DataTableDirective;
   @ViewChild('myInput', { static: false }) myInputVariable: ElementRef;
   dtTrigger: Subject<any> = new Subject();
-  constructor(private service: EmployeeService,private toastr: ToastrService) {
+  constructor(private service: CustomerService,private toastr: ToastrService) {
 
   }
-  list: Array<Employee> = [];
-  data: Employee;
+  list: Array<Customer> = [];
+  data: Customer;
   dtOptions: DataTables.Settings = {};
   image: any;
   slc_search : number = 1;
@@ -27,24 +28,24 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
   type: number = 1;
   ngOnInit(): void {
     this.service.getList().then((res) => {
+      console.log(res);
     for (let key in res) {
         this.list.push
           ({
             Id: key,
-            Email: res[key].Email,
+            Username :res[key].Username, 
             Password: res[key].Password,
-            Firstname: res[key].Firstname,
-            Lastname: res[key].Lastname,
+            Fullname: res[key].Fullname,
+            Email: res[key].Email,
             Phone: res[key].Phone,
             Address: res[key].Address,
             Birthday: res[key].Birthday,
             Image: res[key].Image,
-            Position: res[key].Position,
             Status: res[key].Status
           }
           )
       }
-
+      console.log(this.list);
       this.rerender();
     }, error => {
       console.log(error);
@@ -111,16 +112,15 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
           this.list.push
             ({
               Id: key,
-              Email: res[key].Email,
-              Password: res[key].Password,
-              Firstname: res[key].Firstname,
-              Lastname: res[key].Lastname,
-              Phone: res[key].Phone,
-              Address: res[key].Address,
-              Birthday: res[key].Birthday,
-              Image: res[key].Image,
-              Position: res[key].Position,
-              Status: res[key].Status
+            Username :res[key].Username, 
+            Password: res[key].Password,
+            Fullname: res[key].Fullname,
+            Email: res[key].Email,
+            Phone: res[key].Phone,
+            Address: res[key].Address,
+            Birthday: res[key].Birthday,
+            Image: res[key].Image,
+            Status: res[key].Status
             }
             )
         }
@@ -145,7 +145,6 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
       dtInstance.draw();
       this.inp_search="";
     });
-
   }
   showAdd() {
     this.type = 1;
@@ -163,7 +162,7 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
       this.service.formData.Image = this.imageShow;
     }
   }
-  showedit(data: Employee) {
+  showedit(data: Customer) {
     this.type = 2;
     this.service.msg = "";
     this.myInputVariable.nativeElement.value = "";
@@ -179,12 +178,12 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Thêm Thành Công Email '+form.value["Email"],'Thành Công!');
+          this.toastr.success('Thêm Thành Công Email '+form.value["Username"],'Thành Công!');
           this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Thêm Thất Bại Email'+form.value["Email"]+ ".Lỗi: "+this.service.msg,'Thất Bại!');
+            this.toastr.error( 'Thêm Thất Bại Email'+form.value["Username"]+ ".Lỗi: "+this.service.msg,'Thất Bại!');
           }
         }
       )
@@ -207,4 +206,5 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
       )
     }
   }
+
 }

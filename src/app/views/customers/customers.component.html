@@ -6,7 +6,7 @@
             <div class="card-header">
               <div class="row justify-content-between">
                 <div class="col-xs-12 col-sm-6">
-                  <h4>Quản Lí Tài Khoản Nhân Viên</h4>
+                  <h4>Quản Lí Tài Khoản Người Chơi</h4>
                 </div>
                 <div class="col-xs-12 col-sm-6 text-right">
                     <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder" (click)="this.refresh()">
@@ -23,13 +23,13 @@
             <div class="input-group mt-3 row justify-content-end">
                 <div class="input-group-prepend mr-2">
                     <select [(ngModel)]="slc_search" class="custom-select">
-                        <option  [ngValue]="1" [selected]="true" >Email</option>
-                        <option  [ngValue]="3">Tên</option>
+                        <option  [ngValue]="1" [selected]="true" >Tài Khoản</option>
+                        <option  [ngValue]="2">Họ Tên</option>
+                        <option  [ngValue]="3">Email</option>
                         <option  [ngValue]="4">Điện Thoại</option>
                         <option  [ngValue]="5">Địa Chỉ</option>
                         <option  [ngValue]="6">Ngày Sinh</option>
-                        <option  [ngValue]="8">Vị Trí</option>
-                        <option  [ngValue]="9">Hoạt Động</option>
+                        <option  [ngValue]="8">Hoạt Động</option>
                       </select>
                 </div>
                 <div class="input-group-prepend">
@@ -43,60 +43,55 @@
                 <thead class="bg-primary">
                   <tr>
                     <th>STT</th>
+                    <th>Tài Khoản</th>
+                    <th>Họ Tên</th>
                     <th>Email</th>
-                    <th>Họ</th>
-                    <th>Tên</th>
                     <th>Điện Thoại</th>
                     <th>Địa Chỉ</th>
                     <th>Ngày Sinh</th>
                     <th>Hình Ảnh</th>
-                    <th>Vị Trí</th>
                     <th>Hoạt Động</th>
                     <th>Hành Động</th>
                   </tr>
                 </thead>
                 <tbody >
-                    <tr *ngFor="let emp of this.list;let i=index">
+                    <tr *ngFor="let cus of this.list;let i=index">
                         <td>{{i+1}}</td>
-                        <td>
-                            {{emp.Email}}
+                        <td >
+                            {{cus.Username}}
                         </td>
                         <td>
-                            {{emp.Lastname}}
+                            {{cus.Fullname}}
                         </td>
                         <td>
-                            {{emp.Firstname}}
+                            {{cus.Email}}
                         </td>
                         <td>
-                            {{emp.Phone}}
+                            {{cus.Phone}}
                         </td>
                         <td>
-                            <button type="button" class="btn btn-outline-secondary" ngbPopover="{{emp.Address}}" triggers="mouseenter:mouseleave" popoverTitle="Địa chỉ">
+                            <button type="button" class="btn btn-outline-secondary" ngbPopover="{{cus.Address}}" triggers="mouseenter:mouseleave" popoverTitle="Địa chỉ">
                                 <i class="fa fa-eye"></i>
                                 </button>
                         </td>
                         <td>
-                            {{emp.Birthday  | date:'dd-MM-yyyy'}}
+                            {{cus.Birthday  | date:'dd-MM-yyyy'}}
                         </td>
             
                         <td class="row justify-content-center w-100">
-                          <div *ngIf="emp.Image!=null">
-                            <img [src]="emp.Image" width="40px" height="40px" />
+                          <div *ngIf="cus.Image!=null">
+                            <img [src]="cus.Image"  width="40px" height="40px"/>
                             </div>
 
-                            <div *ngIf="emp.Image==null">
+                            <div *ngIf="cus.Image==null">
                                 <img src="http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png" width="40px" height="40px" />
                                 </div>
                         </td>
-                        <td>
-                          <span *ngIf="emp.Position==0"> Quản trị</span>
-                          <span *ngIf="emp.Position==1"> Quản lí</span>
-                        </td>
-                        <td><span *ngIf="emp.Status==1; else SAI;" style="color: green;">Hoạt động</span>
+                        <td><span *ngIf="cus.Status==1; else SAI;" style="color: green;">Hoạt động</span>
                           <ng-template #SAI> <span style="color: red;">Bị Cấm</span></ng-template>
                         </td>
                         <td class="text-center">
-                              <button (click)="showedit(emp)" class="bg-success" style="border:0">
+                              <button (click)="showedit(cus)" class="bg-success" style="border:0">
                               <i class="fa fa-edit"></i>
                               </button>
                               
@@ -118,8 +113,8 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title w-100 text-center" *ngIf="this.type==1" >Thêm Nhân Viên</h4>
-          <h4 class="modal-title w-100 text-center" *ngIf="this.type==2" >Cập Nhật Nhân Viên</h4>
+          <h4 class="modal-title w-100 text-center" *ngIf="this.type==1" >Thêm Người Chơi</h4>
+          <h4 class="modal-title w-100 text-center" *ngIf="this.type==2" >Cập Nhật Người Chơi</h4>
           <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -138,33 +133,34 @@
                       <input #myInput type="file" (change)="onFileChanged($event)" />
                       <input name="Image" #Image1="ngModel" [(ngModel)]="service.formData.Image" hidden>
                   </div>
-                    <div class="form-group row">
-                    <label class="col-sm-3 col-form-label text-dark h3">EMAIL</label>
-                    <input name="Email" #Email1="ngModel" [(ngModel)]="service.formData.Email" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"  maxlength="100" required class="form-control col-sm-9" 
-                    [ngClass]="{ 'is-invalid':(Email1.errors && Email1.touched),'is-valid': !Email1.errors && Email1.touched}"
-                    >
-                    <span class="text-danger offset-sm-3" *ngIf="Email1.invalid && Email1.dirty">
-                      Phải có dạng email e.g a@gmail.com và dài nhiều nhất 100 kí tự
-                    </span>
-                  </div>
+
                     <input name="Password" #Password1="ngModel" [(ngModel)]="service.formData.Password"  hidden>
                   <div class="form-group row">
-                    <label  class="col-sm-3 col-form-label text-dark h3">HỌ</label>
-                    <input name="Lastname" #Lastname1="ngModel" [(ngModel)]="service.formData.Lastname" minlength="3" maxlength="50"  required class="form-control col-sm-9"
-                    [ngClass]="{ 'is-invalid':(Lastname1.errors && Lastname1.touched),'is-valid': !Lastname1.errors && Lastname1.touched}">
-                    <span class="text-danger offset-sm-3" *ngIf="Lastname1.invalid && Lastname1.dirty">
-                      Họ phải từ 3 đến 50 kí tự
+                    <label  class="col-sm-3 col-form-label text-dark h3">USERNAME</label>
+                    <input name="Username" #Username1="ngModel" [(ngModel)]="service.formData.Username" minlength="3" maxlength="50"  required class="form-control col-sm-9"
+                    [ngClass]="{ 'is-invalid':(Username1.errors && Username1.touched),'is-valid': !Username1.errors && Username1.touched}">
+                    <span class="text-danger offset-sm-3" *ngIf="Username1.invalid && Username1.dirty">
+                        Tài Khoản phải từ 3 đến 50 kí tự
                     </span>
                     
                   </div>
                   <div class="form-group row">
-                    <label  class="col-sm-3 col-form-label text-dark h3">TÊN</label>
-                    <input name="Firstname" #Firstname1="ngModel" [(ngModel)]="service.formData.Firstname"  minlength="3" maxlength="50"   required class="form-control col-sm-9"
-                    [ngClass]="{ 'is-invalid':(Firstname1.errors && Firstname1.touched),'is-valid': !Firstname1.errors && Firstname1.touched}">
-                    <span class="text-danger offset-sm-3" *ngIf="Firstname1.invalid && Firstname1.dirty">
-                        Tên phải từ 3 đến 50 kí tự
+                    <label  class="col-sm-3 col-form-label text-dark h3">HỌ TÊN</label>
+                    <input name="Fullname" #Fullname1="ngModel" [(ngModel)]="service.formData.Fullname"  minlength="3" maxlength="50"   required class="form-control col-sm-9"
+                    [ngClass]="{ 'is-invalid':(Fullname1.errors && Fullname1.touched),'is-valid': !Fullname1.errors && Fullname1.touched}">
+                    <span class="text-danger offset-sm-3" *ngIf="Fullname1.invalid && Fullname1.dirty">
+                        Họ Tên phải từ 3 đến 50 kí tự
                     </span>
                   </div>
+                  <div class="form-group row">
+                  <label class="col-sm-3 col-form-label text-dark h3">EMAIL</label>
+                  <input name="Email" #Email1="ngModel" [(ngModel)]="service.formData.Email" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"  maxlength="100" required class="form-control col-sm-9" 
+                  [ngClass]="{ 'is-invalid':(Email1.errors && Email1.touched),'is-valid': !Email1.errors && Email1.touched}"
+                  >
+                  <span class="text-danger offset-sm-3" *ngIf="Email1.invalid && Email1.dirty">
+                    Phải có dạng email e.g a@gmail.com và dài nhiều nhất 100 kí tự
+                  </span>
+                </div>
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">SĐT</label>
                     <input name="Phone" #Phone1="ngModel" [(ngModel)]="service.formData.Phone"  pattern="(09|03)+([0-9]{8})\b" required class="form-control col-sm-9"
@@ -192,13 +188,7 @@
                     class="form-control col-sm-9 form-control col-sm-9-rounded"
               >
                   </div>
-                  <div class="form-group row">
-                    <label  class="col-sm-3 col-form-label text-dark h3">VỊ TRÍ</label>
-                    <select name="Position" #Position1="ngModel" [(ngModel)]="service.formData.Position" required class="form-control col-sm-9">
-                      <option  [ngValue]="0" >Quản trị</option>
-                      <option  [ngValue]="1">Quản lí</option>
-                    </select>
-                  </div>
+
                   <div class="form-group row" *ngIf="this.type==2;else status">
                     <label  class="col-sm-3 col-form-label text-dark h3">HOẠT ĐỘNG</label>
                     <select name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" required class="form-control col-sm-9">
