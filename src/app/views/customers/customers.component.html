@@ -164,7 +164,7 @@
                 </div>
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">SĐT</label>
-                    <input name="Phone" #Phone1="ngModel" [(ngModel)]="service.formData.Phone"  pattern="(09|03)+([0-9]{8})\b" required class="form-control col-sm-9"
+                    <input name="Phone" #Phone1="ngModel" [(ngModel)]="service.formData.Phone"  pattern="(09|03)+([0-9]{8})\b"  class="form-control col-sm-9"
                     [ngClass]="{ 'is-invalid':(Phone1.errors && Phone1.touched),'is-valid': !Phone1.errors && Phone1.touched}">
                     <span class="text-danger offset-sm-3" *ngIf="Phone1.invalid && Phone1.dirty">
                       SDT chỉ bao gồm số và có 10 số và bắt đầu là 09 hoặc 03
@@ -172,7 +172,7 @@
                   </div>
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">ĐỊA CHỈ</label>
-                    <textarea rows="2" name="Address" #Address1="ngModel" [(ngModel)]="service.formData.Address"  minlength="3" maxlength="200" required class="form-control col-sm-9"
+                    <textarea rows="2" name="Address" #Address1="ngModel" [(ngModel)]="service.formData.Address"  minlength="3" maxlength="200"  class="form-control col-sm-9"
                       [ngClass]="{ 'is-invalid':(Address1.errors && Address1.touched),'is-valid': !Address1.errors && Address1.touched}">
 
                     </textarea>

@@ -1,1 +1,181 @@
-<p>results works!</p>
+<section>
+    <div class="">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row justify-content-between">
+                            <div class="col-xs-12 col-sm-6">
+                                <h4>Quản Lí Xếp Hạng</h4>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 text-right">
+                                    <button type="button" class="btn btn-primary mr-1 text-light font-weight-bolder"
+                                    (click)="this.refresh()">
+                                    <i class="fa fa-retweet"></i>
+                                    Refresh
+                                </button>
+                                <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder"
+                                    (click)="this.delAllModal.show()">
+                                    <i class="fa fa-remove"></i>
+                                    Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mt-3 row justify-content-end">
+                        <div class="input-group-prepend mr-2">
+                            <select [(ngModel)]="slc_search" class="custom-select">
+                                <option [ngValue]="3" [selected]="true">Người Chơi</option>
+                                <option [ngValue]="5">Điểm</option>
+                            </select>
+                        </div>
+                        <div class="input-group-prepend">
+                            <input type="text" id="mySearchText" style="padding-left:5px;padding-right: 5px;"
+                                placeholder="Search..." [(ngModel)]="inp_search">
+                            <button id="mySearchButton" class="btn btn-light order" (click)="filter()"><i
+                                    class="fa fa-search" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="overflow-x: scroll;">
+                        <!--  START- LIST-->
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover"
+                            id="dttb">
+                            <thead class="bg-primary">
+                                <tr>
+                                    <th (click)="this.selectAll()"><i class="fa fa-square" *ngIf="this.slcAll"></i><i class="fa fa-check-square" *ngIf="!this.slcAll"></i></th>
+                                    <th>STT</th>
+                                    <th>ID</th>
+                                    <th>Người Chơi</th>
+                                    <th>ID Cuộc Thi</th>
+                                    <th>Điểm</th>
+                                    <th>Thời Gian Hoàn Thành (s)</th>
+                                    <th>Ngày Hoàn Thành</th>
+                                    <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let res of this.list;let i=index">
+                                    <td></td>
+                                    <td>{{i+1}}</td>
+                                    <th scope="row">{{res.Id}}</th>
+                                    <td>
+                                        {{this.objCus[res.Id_Cus].Username}}
+                                    </td>
+                                    <td>
+                                            {{res.Id_Con}}
+                                        </td>
+                                    <td>
+                                        {{res.Point}}
+                                    </td>
+                                    <td>
+                                            {{res.TimeLeft_Res}}
+                                        </td>
+                                    <td>
+                                        {{res.Date_Res}}
+                                    </td>
+                                    <td class="text-center">
+                                        <button (click)="showedit(res)" class="bg-primary" style="border:0">
+                                            <i class="fa fa-info"></i>
+                                        </button>
+                                        <button (click)="showdelete(res.Id)" class="bg-danger" style="border:0">
+                                                <i class="fa fa-remove"></i>
+                                            </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!--  END - LIST-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div bsModal #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title w-100 text-center">Thông Tin Xếp Hạng</h4>
+              <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                  <!-- START CREATE -->
+                  <form #form="ngForm" autocomplete="off">
+                      <div class="form-group row">
+                          <label  class="col-sm-6 col-form-label text-dark h3">NGƯỜI CHƠI</label>
+                          <input name="Id_Cus" [(ngModel)]="service.formData.Id_Cus"  required class="form-control col-sm-6" disabled>
+                        </div>
+                        <div class="form-group row">
+                                <label  class="col-sm-6 col-form-label text-dark h3">CUỘC THI</label>
+                                <input name="Id_Con"  [(ngModel)]="service.formData.Id_Con"  required class="form-control col-sm-6" disabled>
+                              </div>
+
+                              <div class="form-group row">
+                                    <label  class="col-sm-6 col-form-label text-dark h3">ĐIỂM</label>
+                                    <input name="Point" [(ngModel)]="service.formData.Point"  required class="form-control col-sm-6" disabled>
+                                  </div>
+                                  <div class="form-group row">
+                                        <label  class="col-sm-6 col-form-label text-dark h3">THỜI GIAN HOÀN THÀNH (s)</label>
+                                        <input name="TimeLeft_Res" [(ngModel)]="service.formData.TimeLeft_Res"  required class="form-control col-sm-6" disabled>
+                                      </div>
+                                      <div class="form-group row">
+                                            <label  class="col-sm-6 col-form-label text-dark h3">NGÀY HOÀN THÀNH</label>
+                                            <input name="Date_Res" [(ngModel)]="service.formData.Date_Res"  required class="form-control col-sm-6" disabled>
+                                          </div>
+
+                       
+                  
+                    </form>
+                  <!-- END -CREATE-->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM XÓA-->
+      <div bsModal #delModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title w-100 text-center">Thông Báo</h4>
+                  <button type="button" class="close" (click)="delModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body text-center">
+                      <!-- START DELETE -->
+                            Bạn Có Đồng Ý Xóa ?
+                      <!-- END -DELETE-->
+                </div>
+                <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" (click)="delete()">Đồng Ý</button>
+                        <button type="button" class="btn btn-secondary" (click)="delModal.hide()">Không</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+           <!-- FORM XÓA DANH SÁCH-->
+      <div bsModal #delAllModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title w-100 text-center">Thông Báo</h4>
+                  <button type="button" class="close" (click)="delAllModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body text-center">
+                      <!-- START DELETE -->
+                            Bạn Có Đồng Ý Xóa Danh Sách Được Chọn?
+                      <!-- END -DELETE-->
+                </div>
+                <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" (click)="deleteAll()">Đồng Ý</button>
+                        <button type="button" class="btn btn-secondary" (click)="delAllModal.hide()">Không</button>
+                </div>
+              </div>
+            </div>
+          </div>

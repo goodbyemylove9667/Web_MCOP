@@ -103,22 +103,28 @@
                     <input  *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id" hidden >
                         <div class="form-group row" >
                             <label class="col-sm-5 col-form-label text-dark h3">CHỦ ĐỀ</label>
-                            <select class="form-control" name="Id_Top" #Id_Top1="ngModel" class="form-control col-sm-7"
-                                [(ngModel)]="service.formData.Id_Top">
+                            <select class="form-control" name="Id_Top" #Id_Top1="ngModel" class="form-control col-sm-7" required
+                            [ngClass]="{ 'is-invalid':(Id_Top1.errors && Id_Top1.touched),'is-valid': !Id_Top1.errors && Id_Top1.touched}"
+                                [(ngModel)]="service.formData.Id_Top" required>
+                                <option *ngIf="this.type==1" value="" selected>
+                                        Vui Lòng Chọn Chủ Đề
+                                    </option>
                                 <ng-container *ngFor="let top of this.listTop;">
-                                    <option *ngIf="top.Status == 1" [ngValue]="top.Id">
+                                    <option *ngIf="top.Status == 1 || top.Id==service.formData.Id_Top" [ngValue]="top.Id">
                                         {{top.Name_Top}}
                                     </option>
                                 </ng-container>
                             </select>
-
+                            <span class="text-danger offset-sm-5" *ngIf="Id_Top1.invalid && Id_Top1.dirty">
+                                    Vui Lòng Chọn Chủ Đề
+                                </span>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label text-dark h3">ĐIỂM TỐI ĐA</label>
                             <input type="number" name="Max_Point" #Max_Point1="ngModel" min="0" max="100" 
                                 [(ngModel)]="service.formData.Max_Point" required class="form-control col-sm-7"
                                 [ngClass]="{ 'is-invalid':(Max_Point1.errors && Max_Point1.touched),'is-valid': !Max_Point1.errors && Max_Point1.touched}">
-                            <span class="text-danger offset-sm-4" *ngIf="Max_Point1.invalid && Max_Point1.dirty">
+                            <span class="text-danger offset-sm-5" *ngIf="Max_Point1.invalid && Max_Point1.dirty">
                                 Điểm Tối Đa phải từ 0 đến 100 điểm
                             </span>
                         </div>
@@ -128,7 +134,7 @@
                                 [(ngModel)]="service.formData.Time_Left" min="0" max="10000" required
                                 class="form-control col-sm-7"
                                 [ngClass]="{ 'is-invalid':(Time_Left1.errors && Time_Left1.touched),'is-valid': !Time_Left1.errors && Time_Left1.touched}">
-                            <span class="text-danger offset-sm-4" *ngIf="Time_Left1.invalid && Time_Left1.dirty">
+                            <span class="text-danger offset-sm-5" *ngIf="Time_Left1.invalid && Time_Left1.dirty">
                                 Thời Gian Tối Đa phải từ 0 đến 10000s
                             </span>
                         </div>
@@ -144,7 +150,7 @@
                         <ng-template #status><input name="Status" [(ngModel)]="service.formData.Status" hidden>
                         </ng-template>
                         <div class="form-group row pull-left ml-5">
-                            <button type="button" data-dismiss="modal" (click)="this.service.resetForm(this.type)"
+                            <button type="button" data-dismiss="modal" (click)="this.service.resetForm(this.type,this.firstTop)"
                                 class="btn btn-danger btn-block font-weight-bolder">RESET</button>
                         </div>
                         <div class="form-group row pull-right mr-5">

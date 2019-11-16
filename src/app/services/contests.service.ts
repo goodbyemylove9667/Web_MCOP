@@ -83,6 +83,7 @@ export class ContestsService {
       }
       ).
         catch((error) => {
+          console.log("Lỗi ",error);
           this.msg = "Không thể sửa";
         });
 

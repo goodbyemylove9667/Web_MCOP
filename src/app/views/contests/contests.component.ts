@@ -28,8 +28,22 @@ export class ContestsComponent implements OnInit {
   slc_search : number = 2;
   inp_search: '';
   type: number = 1;
-  firstTop: string='';
   ngOnInit(): void {
+    this.topservice.getList().then((res) => {
+      for (let key in res) {
+          this.listTop.push
+            ({
+              Id: key,
+              Name_Top: res[key].Name_Top,
+              Image: res[key].Image,
+              Status: res[key].Status
+            }
+            )
+        }
+        this.objTop=res;
+      }, error => {
+        this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
+      });
     this.service.getList().then((res) => {
     for (let key in res) {
         this.list.push
@@ -78,25 +92,7 @@ export class ContestsComponent implements OnInit {
       }
       return false;
     });
-    this.topservice.getList().then((res) => {
-      for (let key in res) {
-          this.listTop.push
-            ({
-              Id: key,
-              Name_Top: res[key].Name_Top,
-              Image: res[key].Image,
-              Status: res[key].Status
-            }
-            )
-            if (res[key].Status==1 && this.firstTop=='')
-            {
-              this.firstTop=key;
-            }
-        }
-        this.objTop=res;
-      }, error => {
-        this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
-      });
+  
       console.log(this.listTop);
     this.service.resetForm(1);
   }
@@ -122,6 +118,22 @@ export class ContestsComponent implements OnInit {
   refresh() {
     this.list = [];
     this.rerender();
+    this.listTop=[];
+    this.topservice.getList().then((res) => {
+      for (let key in res) {
+          this.listTop.push
+            ({
+              Id: key,
+              Name_Top: res[key].Name_Top,
+              Image: res[key].Image,
+              Status: res[key].Status
+            }
+            )
+        }
+        this.objTop=res;
+      }, error => {
+        this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
+      });
     this.service.getList().then((res) => {
       for (let key in res) {
           this.list.push
@@ -138,22 +150,6 @@ export class ContestsComponent implements OnInit {
       }, error => {
         this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
       });
-      this.listTop=[];
-      this.topservice.getList().then((res) => {
-        for (let key in res) {
-            this.listTop.push
-              ({
-                Id: key,
-                Name_Top: res[key].Name_Top,
-                Image: res[key].Image,
-                Status: res[key].Status
-              }
-              )
-          }
-          this.objTop=res;
-        }, error => {
-          this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
-        });
   }
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
@@ -175,7 +171,6 @@ export class ContestsComponent implements OnInit {
     this.type = 1;
     this.service.msg = "";
     this.service.showModal(null);
-    this.service.formData.Id_Top=this.firstTop;
     this.myModal.show();
   }
   showedit(data: Contest) {
