@@ -77,12 +77,12 @@ export class AuthinfoComponent implements OnInit {
   {
    await localStorage.setItem('currentUser', JSON.stringify(this.user));
     this.router.navigate(['']);
-    this.toastr.success('Cập Nhật Tài Khoản Thành Công','Thành Công!');
+    this.toastr.success('Cập Nhật Tài Khoản Thành Công','Thành Công!',{timeOut: 1000});
   }
   ).
   catch((error)=>
   {
-    this.toastr.error( 'Cập Nhật Tài Khoản Thất Bại','Thất Bại!');
+    this.toastr.error( 'Cập Nhật Tài Khoản Thất Bại','Thất Bại!',{timeOut: 1000});
   });
   }
 }

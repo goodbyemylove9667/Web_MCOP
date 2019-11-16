@@ -23,13 +23,13 @@
             <div class="input-group mt-3 row justify-content-end">
                 <div class="input-group-prepend mr-2">
                     <select [(ngModel)]="slc_search" class="custom-select">
-                        <option  [ngValue]="1" [selected]="true" >Tài Khoản</option>
-                        <option  [ngValue]="2">Họ Tên</option>
-                        <option  [ngValue]="3">Email</option>
-                        <option  [ngValue]="4">Điện Thoại</option>
-                        <option  [ngValue]="5">Địa Chỉ</option>
-                        <option  [ngValue]="6">Ngày Sinh</option>
-                        <option  [ngValue]="8">Hoạt Động</option>
+                        <option  [ngValue]="2" [selected]="true" >Tài Khoản</option>
+                        <option  [ngValue]="3">Họ Tên</option>
+                        <option  [ngValue]="4">Email</option>
+                        <option  [ngValue]="5">Điện Thoại</option>
+                        <option  [ngValue]="6">Địa Chỉ</option>
+                        <option  [ngValue]="7">Ngày Sinh</option>
+                        <option  [ngValue]="9">Hoạt Động</option>
                       </select>
                 </div>
                 <div class="input-group-prepend">
@@ -37,12 +37,13 @@
               <button id="mySearchButton" class="btn btn-light order" (click)="filter()"><i class="fa fa-search" aria-hidden="true"></i></button>
               </div>
               </div>
-            <div class="card-body table-responsive">
+            <div class="card-body" style="overflow-x: scroll;">
                  <!--  START- LIST-->
               <table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" id="dttb">
                 <thead class="bg-primary">
                   <tr>
                     <th>STT</th>
+                    <th>ID</th>
                     <th>Tài Khoản</th>
                     <th>Họ Tên</th>
                     <th>Email</th>
@@ -57,6 +58,7 @@
                 <tbody >
                     <tr *ngFor="let cus of this.list;let i=index">
                         <td>{{i+1}}</td>
+                        <th scope="row">{{cus.Id}}</th>
                         <td >
                             {{cus.Username}}
                         </td>
@@ -138,11 +140,10 @@
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">USERNAME</label>
                     <input name="Username" #Username1="ngModel" [(ngModel)]="service.formData.Username" minlength="3" maxlength="50"  required class="form-control col-sm-9"
-                    [ngClass]="{ 'is-invalid':(Username1.errors && Username1.touched),'is-valid': !Username1.errors && Username1.touched}">
+                    [ngClass]="{ 'is-invalid':(Username1.errors && Username1.touched),'is-valid': !Username1.errors && Username1.touched}" [disabled]="this.type==2">
                     <span class="text-danger offset-sm-3" *ngIf="Username1.invalid && Username1.dirty">
                         Tài Khoản phải từ 3 đến 50 kí tự
                     </span>
-                    
                   </div>
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">HỌ TÊN</label>
@@ -212,5 +213,3 @@
   </div>
   
   <!-- end modal create -->
-
-  

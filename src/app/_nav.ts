@@ -56,7 +56,7 @@ export const navItems: NavData[] = [
     },
     {
       name: 'Chủ Đề',
-      url: '/dashboard',
+      url: '/topic',
       icon: 'fa fa-folder-open'
     },
     {

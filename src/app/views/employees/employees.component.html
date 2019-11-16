@@ -23,13 +23,13 @@
             <div class="input-group mt-3 row justify-content-end">
                 <div class="input-group-prepend mr-2">
                     <select [(ngModel)]="slc_search" class="custom-select">
-                        <option  [ngValue]="1" [selected]="true" >Email</option>
-                        <option  [ngValue]="3">Tên</option>
-                        <option  [ngValue]="4">Điện Thoại</option>
-                        <option  [ngValue]="5">Địa Chỉ</option>
-                        <option  [ngValue]="6">Ngày Sinh</option>
-                        <option  [ngValue]="8">Vị Trí</option>
-                        <option  [ngValue]="9">Hoạt Động</option>
+                        <option  [ngValue]="2" [selected]="true" >Email</option>
+                        <option  [ngValue]="4">Tên</option>
+                        <option  [ngValue]="5">Điện Thoại</option>
+                        <option  [ngValue]="6">Địa Chỉ</option>
+                        <option  [ngValue]="7">Ngày Sinh</option>
+                        <option  [ngValue]="9">Vị Trí</option>
+                        <option  [ngValue]="10">Hoạt Động</option>
                       </select>
                 </div>
                 <div class="input-group-prepend">
@@ -37,12 +37,13 @@
               <button id="mySearchButton" class="btn btn-light order" (click)="filter()"><i class="fa fa-search" aria-hidden="true"></i></button>
               </div>
               </div>
-            <div class="card-body table-responsive">
+            <div class="card-body"  style="overflow-x: scroll;">
                  <!--  START- LIST-->
               <table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" id="dttb">
                 <thead class="bg-primary">
                   <tr>
                     <th>STT</th>
+                    <th>ID</th>
                     <th>Email</th>
                     <th>Họ</th>
                     <th>Tên</th>
@@ -58,6 +59,7 @@
                 <tbody >
                     <tr *ngFor="let emp of this.list;let i=index">
                         <td>{{i+1}}</td>
+                        <th scope="row">{{emp.Id}}</th>
                         <td>
                             {{emp.Email}}
                         </td>
@@ -141,11 +143,11 @@
                     <div class="form-group row">
                     <label class="col-sm-3 col-form-label text-dark h3">EMAIL</label>
                     <input name="Email" #Email1="ngModel" [(ngModel)]="service.formData.Email" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"  maxlength="100" required class="form-control col-sm-9" 
-                    [ngClass]="{ 'is-invalid':(Email1.errors && Email1.touched),'is-valid': !Email1.errors && Email1.touched}"
+                    [ngClass]="{ 'is-invalid':(Email1.errors && Email1.touched),'is-valid': !Email1.errors && Email1.touched}" [disabled]="this.type==2"
                     >
                     <span class="text-danger offset-sm-3" *ngIf="Email1.invalid && Email1.dirty">
-                      Phải có dạng email e.g a@gmail.com và dài nhiều nhất 100 kí tự
-                    </span>
+                        Phải có dạng email e.g a@gmail.com và dài nhiều nhất 100 kí tự
+                      </span>
                   </div>
                     <input name="Password" #Password1="ngModel" [(ngModel)]="service.formData.Password"  hidden>
                   <div class="form-group row">

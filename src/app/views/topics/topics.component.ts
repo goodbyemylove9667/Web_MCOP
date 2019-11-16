@@ -1,25 +1,26 @@
-import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit ,ElementRef} from '@angular/core';
-import { EmployeeService, Employee } from '../../services/employee.service';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { TopicsService, Topic } from '../../services/topics.service';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject, from } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 @Component({
-  selector: 'app-employees',
-  templateUrl: './employees.component.html',
-  styleUrls: ['./employees.component.scss']
+  selector: 'app-topics',
+  templateUrl: './topics.component.html',
+  styleUrls: ['./topics.component.scss']
 })
-export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
+export class TopicsComponent implements OnInit {
+
   @ViewChild('myModal', { static: false }) public myModal: ModalDirective;
   @ViewChild(DataTableDirective, { static: false })dtElement: DataTableDirective;
   @ViewChild('myInput', { static: false }) myInputVariable: ElementRef;
   dtTrigger: Subject<any> = new Subject();
-  constructor(private service: EmployeeService,private toastr: ToastrService) {
+  constructor(private service: TopicsService,private toastr: ToastrService) {
 
   }
-  list: Array<Employee> = [];
-  data: Employee;
+  list: Array<Topic> = [];
+  data: Topic;
   dtOptions: DataTables.Settings = {};
   image: any;
   slc_search : number = 2;
@@ -31,20 +32,12 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
         this.list.push
           ({
             Id: key,
-            Email: res[key].Email,
-            Password: res[key].Password,
-            Firstname: res[key].Firstname,
-            Lastname: res[key].Lastname,
-            Phone: res[key].Phone,
-            Address: res[key].Address,
-            Birthday: res[key].Birthday,
+            Name_Top: res[key].Name_Top,
             Image: res[key].Image,
-            Position: res[key].Position,
             Status: res[key].Status
           }
           )
       }
-
       this.rerender();
     }, error => {
       this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
@@ -54,7 +47,6 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
       pagingType: 'full_numbers',
       responsive: true,
       scrollCollapse: true,
-      autoWidth: true,
       dom : 'lrtip',
       language:
       {
@@ -64,7 +56,7 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
         info: "Hiển thị trang _PAGE_ trong _PAGES_ trang",
         infoEmpty: "Không có trường hợp lệ",
         infoFiltered: "(Lọc từ _MAX_ trên tổng số trường)",
-
+        
         paginate: {
           first: '<i class="fa fa-angle-double-left "></i>',
           last: '<i class="fa fa-angle-double-right "></i>',
@@ -111,15 +103,8 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
           this.list.push
             ({
               Id: key,
-              Email: res[key].Email,
-              Password: res[key].Password,
-              Firstname: res[key].Firstname,
-              Lastname: res[key].Lastname,
-              Phone: res[key].Phone,
-              Address: res[key].Address,
-              Birthday: res[key].Birthday,
+              Name_Top : res[key].Name_Top,
               Image: res[key].Image,
-              Position: res[key].Position,
               Status: res[key].Status
             }
             )
@@ -145,7 +130,6 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
       dtInstance.draw();
       this.inp_search="";
     });
-
   }
   showAdd() {
     this.type = 1;
@@ -163,7 +147,7 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
       this.service.formData.Image = this.imageShow;
     }
   }
-  showedit(data: Employee) {
+  showedit(data: Topic) {
     this.type = 2;
     this.service.msg = "";
     this.myInputVariable.nativeElement.value = "";
@@ -179,12 +163,12 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Thêm Thành Công Email '+form.value["Email"],'Thành Công!',{timeOut: 1000});
+          this.toastr.success('Thêm Thành Công Chủ Đề '+form.value["Name"],'Thành Công!',{timeOut: 1000});
           this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Thêm Thất Bại Email'+form.value["Email"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Thêm Thất Bại Chủ Đề'+form.value["Name"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
           }
         }
       )
@@ -196,15 +180,16 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Cập Nhật Thành Công Email'+form.value["Email"],'Thành Công!',{timeOut: 1000});
+          this.toastr.success('Cập Nhật Thành Công Chủ Đề'+form.value["Name"],'Thành Công!',{timeOut: 1000});
           this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Cập Nhật Thất Bại Email'+form.value["Email"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Cập Nhật Thất Bại Chủ Đề'+form.value["Name"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
           }
         }
       )
     }
   }
+
 }

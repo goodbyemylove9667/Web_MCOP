@@ -23,12 +23,11 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
   data: Customer;
   dtOptions: DataTables.Settings = {};
   image: any;
-  slc_search : number = 1;
+  slc_search : number = 2;
   inp_search: '';
   type: number = 1;
   ngOnInit(): void {
     this.service.getList().then((res) => {
-      console.log(res);
     for (let key in res) {
         this.list.push
           ({
@@ -45,17 +44,15 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
           }
           )
       }
-      console.log(this.list);
       this.rerender();
     }, error => {
-      console.log(error);
+      this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
     });
 
     this.dtOptions = {
       pagingType: 'full_numbers',
       responsive: true,
       scrollCollapse: true,
-      autoWidth: true,
       dom : 'lrtip',
       language:
       {
@@ -65,7 +62,7 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
         info: "Hiển thị trang _PAGE_ trong _PAGES_ trang",
         infoEmpty: "Không có trường hợp lệ",
         infoFiltered: "(Lọc từ _MAX_ trên tổng số trường)",
-
+        
         paginate: {
           first: '<i class="fa fa-angle-double-left "></i>',
           last: '<i class="fa fa-angle-double-right "></i>',
@@ -127,7 +124,7 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
   
         this.rerender();
       }, error => {
-        console.log(error);
+        this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
       });
   }
   ngOnDestroy(): void {
@@ -178,12 +175,12 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Thêm Thành Công Email '+form.value["Username"],'Thành Công!');
+          this.toastr.success('Thêm Thành Công Tài Khoản '+form.value["Username"],'Thành Công!',{timeOut: 1000});
           this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Thêm Thất Bại Email'+form.value["Username"]+ ".Lỗi: "+this.service.msg,'Thất Bại!');
+            this.toastr.error( 'Thêm Thất Bại Tài Khoản'+form.value["Username"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
           }
         }
       )
@@ -195,12 +192,12 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Cập Nhật Thành Công Email'+form.value["Email"],'Thành Công!');
+          this.toastr.success('Cập Nhật Thành Công Tài Khoản'+form.value["Username"],'Thành Công!',{timeOut: 1000});
           this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Cập Nhật Thất Bại Email'+form.value["Email"]+ ".Lỗi: "+this.service.msg,'Thất Bại!');
+            this.toastr.error( 'Cập Nhật Thất Bại Tài Khoản'+form.value["Username"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
           }
         }
       )

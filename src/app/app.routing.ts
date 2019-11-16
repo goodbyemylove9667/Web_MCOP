@@ -11,6 +11,7 @@ import {EmployeesComponent} from './views/employees/employees.component';
 import { CustomersComponent } from './views/customers/customers.component';
 import { AuthinfoComponent } from './views/authinfo/authinfo.component';
 import { ChangepassComponent } from './views/changepass/changepass.component';
+import { TopicsComponent } from './views/topics/topics.component';
 export const routes: Routes = [
   {
     path: '',
@@ -71,6 +72,13 @@ export const routes: Routes = [
         component: ChangepassComponent,
         data: {
           title: 'Thay Đổi Mật Khẩu'
+        }
+      },
+      {
+        path: 'topic',
+        component: TopicsComponent,
+        data: {
+          title: 'Quản Lí Chủ Đề'
         }
       },
       

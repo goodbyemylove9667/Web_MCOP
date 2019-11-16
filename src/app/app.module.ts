@@ -55,6 +55,11 @@ import { CookieService } from 'ngx-cookie-service';
 import { CustomersComponent } from './views/customers/customers.component';
 import { AuthinfoComponent } from './views/authinfo/authinfo.component';
 import { ChangepassComponent } from './views/changepass/changepass.component';
+import { IncludesComponent } from './views/includes/includes.component';
+import { ContestsComponent } from './views/contests/contests.component';
+import { QuestionsComponent } from './views/questions/questions.component';
+import { TopicsComponent } from './views/topics/topics.component';
+import { ResultsComponent } from './views/results/results.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -92,7 +97,12 @@ import { ChangepassComponent } from './views/changepass/changepass.component';
     EmployeesComponent,
     CustomersComponent,
     AuthinfoComponent,
-    ChangepassComponent
+    ChangepassComponent,
+    IncludesComponent,
+    ContestsComponent,
+    QuestionsComponent,
+    TopicsComponent,
+    ResultsComponent
   ],
   providers: [AuthService,CookieService , {
     provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true
