@@ -163,12 +163,12 @@ export class TopicsComponent implements OnInit {
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Thêm Thành Công Chủ Đề '+form.value["Name"],'Thành Công!',{timeOut: 1000});
+          this.toastr.success('Thêm Thành Công Chủ Đề '+form.value["Name_Top"],'Thành Công!',{timeOut: 1000});
           this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Thêm Thất Bại Chủ Đề'+form.value["Name"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Thêm Thất Bại Chủ Đề'+form.value["Name_Top"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
           }
         }
       )
@@ -180,12 +180,12 @@ export class TopicsComponent implements OnInit {
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Cập Nhật Thành Công Chủ Đề'+form.value["Name"],'Thành Công!',{timeOut: 1000});
+          this.toastr.success('Cập Nhật Thành Công Chủ Đề'+form.value["Name_Top"],'Thành Công!',{timeOut: 1000});
           this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Cập Nhật Thất Bại Chủ Đề'+form.value["Name"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Cập Nhật Thất Bại Chủ Đề'+form.value["Name_Top"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
           }
         }
       )

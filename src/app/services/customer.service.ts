@@ -55,6 +55,13 @@ export class CustomerService {
         resolve(value.toJSON()), (error) => reject(error))
     });
   }
+  getCkList()
+  {
+    return new Promise<Object>((resolve) => {
+      this.firebase.database.ref('Customer').orderByChild("Status").equalTo(1).once("value",(value)=>
+      resolve(value.toJSON()),(error)=>reject(error))
+    });
+  }
   showModal(obj: Customer) {
     if (obj != null) {
       this.formData = Object.assign({}, obj);

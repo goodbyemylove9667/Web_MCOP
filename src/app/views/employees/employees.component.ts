@@ -5,6 +5,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject, from } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
@@ -15,7 +16,7 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DataTableDirective, { static: false })dtElement: DataTableDirective;
   @ViewChild('myInput', { static: false }) myInputVariable: ElementRef;
   dtTrigger: Subject<any> = new Subject();
-  constructor(private service: EmployeeService,private toastr: ToastrService) {
+  constructor(private service: EmployeeService,private toastr: ToastrService, public router: Router) {
 
   }
   list: Array<Employee> = [];
@@ -25,7 +26,14 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
   slc_search : number = 2;
   inp_search: '';
   type: number = 1;
+  user: any;
   ngOnInit(): void {
+    var user=JSON.parse(localStorage.getItem('currentUser'));
+    console.log(user["Position"]);
+    if (user["Position"]!=0)
+    {
+      this.router.navigate(['']);
+    }
     this.service.getList().then((res) => {
     for (let key in res) {
         this.list.push

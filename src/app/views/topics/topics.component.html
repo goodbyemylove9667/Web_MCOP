@@ -88,7 +88,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title w-100 text-center" *ngIf="this.type==1" >Thêm Chủ Đề</h4>
-              <h4 class="modal-title w-100 text-center" *ngIf="this.type==2" >Cập Nhật Chủ Đ</h4>
+              <h4 class="modal-title w-100 text-center" *ngIf="this.type==2" >Cập Nhật Chủ Đề</h4>
               <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -108,13 +108,13 @@
                           <input name="Image" #Image1="ngModel" [(ngModel)]="service.formData.Image" hidden>
                       </div>
                       <div class="form-group row">
-                        <label  class="col-sm-3 col-form-label text-dark h3">TÊN</label>
-                        <input name="Name_Top" #Name_Top1="ngModel" [(ngModel)]="service.formData.Name_Top" minlength="3" maxlength="50"  required class="form-control col-sm-9"
-                        [ngClass]="{ 'is-invalid':(Name_Top1.errors && Name_Top1.touched),'is-valid': !Name_Top1.errors && Name_Top1.touched}" [disabled]="this.type==2">
-                        <span class="text-danger offset-sm-3" *ngIf="Name_Top1.invalid && Name_Top1.dirty">
-                            Tên Chủ Đề phải từ 3 đến 50 kí tự.
+                          <label  class="col-sm-3 col-form-label text-dark h3">HỌ TÊN</label>
+                          <input name="Name_Top" #Name_Top1="ngModel" [(ngModel)]="service.formData.Name_Top"  minlength="3" maxlength="50"   required class="form-control col-sm-9"
+                          [ngClass]="{ 'is-invalid':(Name_Top1.errors && Name_Top1.touched),'is-valid': !Name_Top1.errors && Name_Top1.touched}" [disabled]="this.type==2">
+                          <span class="text-danger offset-sm-3" *ngIf="Name_Top1.invalid && Name_Top1.dirty">
+                            Tên Chủ Đề phải từ 3 đến 50 kí tự
                           </span>
-                      </div>
+                        </div>
                       <div class="form-group row" *ngIf="this.type==2;else status">
                         <label  class="col-sm-3 col-form-label text-dark h3">HOẠT ĐỘNG</label>
                         <select name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" required class="form-control col-sm-9">

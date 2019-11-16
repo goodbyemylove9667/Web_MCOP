@@ -1,1 +1,162 @@
-<p>contests works!</p>
+<section>
+    <div class="">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row justify-content-between">
+                            <div class="col-xs-12 col-sm-6">
+                                <h4>Quản Lí Cuộc Thi</h4>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 text-right">
+                                <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder"
+                                    (click)="this.refresh()">
+                                    <i class="fa fa-retweet"></i>
+                                    Refresh
+                                </button>
+                                <button type="button" class="btn btn-info mr-1 text-light font-weight-bolder"
+                                    data-toggle="modal" (click)="this.showAdd()">
+                                    <i class="fa fa-plus" aria-hidden="true"> </i>
+                                    Thêm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mt-3 row justify-content-end">
+                        <div class="input-group-prepend mr-2">
+                            <select [(ngModel)]="slc_search" class="custom-select">
+                                <option [ngValue]="2" [selected]="true">Chủ Đề</option>
+                                <option [ngValue]="5">Hoạt Động</option>
+                            </select>
+                        </div>
+                        <div class="input-group-prepend">
+                            <input type="text" id="mySearchText" style="padding-left:5px;padding-right: 5px;"
+                                placeholder="Search..." [(ngModel)]="inp_search">
+                            <button id="mySearchButton" class="btn btn-light order" (click)="filter()"><i
+                                    class="fa fa-search" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="overflow-x: scroll;">
+                        <!--  START- LIST-->
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover"
+                            id="dttb">
+                            <thead class="bg-primary">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>ID</th>
+                                    <th>Chủ Đề</th>
+                                    <th>Điểm Tối Đa</th>
+                                    <th>Thời Gian Tối Đa (s)</th>
+                                    <th>Hoạt Động</th>
+                                    <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let con of this.list;let i=index">
+                                    <td>{{i+1}}</td>
+                                    <th scope="row">{{con.Id}}</th>
+                                    <td>
+                                        {{this.objTop[con.Id_Top].Name_Top}}
+                                    </td>
+                                    <td>
+                                        {{con.Max_Point}}
+                                    </td>
+                                    <td>
+                                        {{con.Time_Left}}
+                                    </td>
+                                    <td><span *ngIf="con.Status==1; else SAI;" style="color: green;">Hoạt động</span>
+                                        <ng-template #SAI> <span style="color: red;">Bị Cấm</span></ng-template>
+                                    </td>
+                                    <td class="text-center">
+                                        <button (click)="showedit(con)" class="bg-success" style="border:0">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!--  END - LIST-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- begin modal create -->
+
+<div bsModal #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title w-100 text-center" *ngIf="this.type==1">Thêm Cuộc Thi</h4>
+                <h4 class="modal-title w-100 text-center" *ngIf="this.type==2">Cập Nhật Cuộc Thi</h4>
+                <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- START CREATE -->
+                <form #form="ngForm" autocomplete="off">
+                    <input  *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id" hidden >
+                        <div class="form-group row" >
+                            <label class="col-sm-5 col-form-label text-dark h3">CHỦ ĐỀ</label>
+                            <select class="form-control" name="Id_Top" #Id_Top1="ngModel" class="form-control col-sm-7"
+                                [(ngModel)]="service.formData.Id_Top">
+                                <ng-container *ngFor="let top of this.listTop;">
+                                    <option *ngIf="top.Status == 1" [ngValue]="top.Id">
+                                        {{top.Name_Top}}
+                                    </option>
+                                </ng-container>
+                            </select>
+
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label text-dark h3">ĐIỂM TỐI ĐA</label>
+                            <input type="number" name="Max_Point" #Max_Point1="ngModel" min="0" max="100" 
+                                [(ngModel)]="service.formData.Max_Point" required class="form-control col-sm-7"
+                                [ngClass]="{ 'is-invalid':(Max_Point1.errors && Max_Point1.touched),'is-valid': !Max_Point1.errors && Max_Point1.touched}">
+                            <span class="text-danger offset-sm-4" *ngIf="Max_Point1.invalid && Max_Point1.dirty">
+                                Điểm Tối Đa phải từ 0 đến 100 điểm
+                            </span>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label text-dark h3">THỜI GIAN TỐI ĐA (s)</label>
+                            <input type="number" name="Time_Left" #Time_Left1="ngModel"
+                                [(ngModel)]="service.formData.Time_Left" min="0" max="10000" required
+                                class="form-control col-sm-7"
+                                [ngClass]="{ 'is-invalid':(Time_Left1.errors && Time_Left1.touched),'is-valid': !Time_Left1.errors && Time_Left1.touched}">
+                            <span class="text-danger offset-sm-4" *ngIf="Time_Left1.invalid && Time_Left1.dirty">
+                                Thời Gian Tối Đa phải từ 0 đến 10000s
+                            </span>
+                        </div>
+                        <div class="form-group row" *ngIf="this.type==2;else status">
+                            <label class="col-sm-5 col-form-label text-dark h3">HOẠT ĐỘNG</label>
+                            <select name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" required
+                                class="form-control col-sm-7">
+                                <option [ngValue]="0">Bị Cấm</option>
+                                <option [ngValue]="1">Hoạt Động</option>
+                            </select>
+
+                        </div>
+                        <ng-template #status><input name="Status" [(ngModel)]="service.formData.Status" hidden>
+                        </ng-template>
+                        <div class="form-group row pull-left ml-5">
+                            <button type="button" data-dismiss="modal" (click)="this.service.resetForm(this.type)"
+                                class="btn btn-danger btn-block font-weight-bolder">RESET</button>
+                        </div>
+                        <div class="form-group row pull-right mr-5">
+                            <button type="button" (click)="this.onSubmit(form)" [disabled]="form.invalid"
+                                data-dismiss="modal"
+                                class="btn btn-info btn-block text-light font-weight-bolder">SUBMIT</button>
+                        </div>
+                </form>
+                <!-- END -CREATE-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end modal create -->

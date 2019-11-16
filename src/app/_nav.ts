@@ -51,7 +51,7 @@ export const navItems: NavData[] = [
     },
     {
       name: 'Cuộc Thi',
-      url: '/dashboard',
+      url: '/contest',
       icon: 'fa fa-laptop'
     },
     {
@@ -61,17 +61,17 @@ export const navItems: NavData[] = [
     },
     {
       name: 'QH Chủ Đề - Cuộc Thi',
-      url: '/dashboard',
+      url: '/include',
       icon: 'fa fa-file'
     },
     {
       name: 'Bộ Đề',
-      url: '/dashboard',
+      url: '/question',
       icon: 'fa fa-book'
     },
     {
       name: 'Xếp Hạng',
-      url: '/dashboard',
+      url: '/result',
       icon: 'fa fa-trophy'
     }
   // },

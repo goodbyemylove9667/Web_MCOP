@@ -12,6 +12,10 @@ import { CustomersComponent } from './views/customers/customers.component';
 import { AuthinfoComponent } from './views/authinfo/authinfo.component';
 import { ChangepassComponent } from './views/changepass/changepass.component';
 import { TopicsComponent } from './views/topics/topics.component';
+import { ContestsComponent } from './views/contests/contests.component';
+import { QuestionsComponent } from './views/questions/questions.component';
+import { IncludesComponent } from './views/includes/includes.component';
+import { ResultsComponent } from './views/results/results.component';
 export const routes: Routes = [
   {
     path: '',
@@ -81,7 +85,34 @@ export const routes: Routes = [
           title: 'Quản Lí Chủ Đề'
         }
       },
-      
+      {
+        path: 'result',
+        component: ResultsComponent,
+        data: {
+          title: 'Quản Lí Xếp Hạng'
+        }
+      },
+      {
+        path: 'contest',
+        component: ContestsComponent,
+        data: {
+          title: 'Quản Lí Cuộc Thi'
+        }
+      },
+      {
+        path: 'question',
+        component: QuestionsComponent,
+        data: {
+          title: 'Quản Lí Bộ Đề'
+        }
+      },
+      {
+        path: 'include',
+        component: IncludesComponent,
+        data: {
+          title: 'Quản Lí QH Chủ Đề-Cuộc Thi'
+        }
+      },
       // {
       //   path: 'base',
       //   loadChildren: () => import('./views/base/base.module').then(m => m.BaseModule)

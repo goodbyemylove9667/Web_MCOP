@@ -44,6 +44,13 @@ export class TopicsService {
         resolve(value.toJSON()),(error)=>reject(error))
       });
     }
+    getCkList()
+    {
+      return new Promise<Object>((resolve) => {
+        this.firebase.database.ref('Topic').orderByChild("Status").equalTo(1).once("value",(value)=>
+        resolve(value.toJSON()),(error)=>reject(error))
+      });
+    }
   showModal(obj: Topic) {
     if (obj != null) {
       this.formData = Object.assign({}, obj);
@@ -76,7 +83,6 @@ async update(form :NgForm)
   if (form.value["Id"]!=null)
   this.firebase.database.ref('Topic/'+form.value["Id"]).update(
     {
-      Name_Top :  form.value["Name_Top"],
       Image : form.value["Image"],
       Status : form.value["Status"],
    }
