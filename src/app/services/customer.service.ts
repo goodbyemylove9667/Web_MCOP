@@ -3,7 +3,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { NgForm } from '@angular/forms';
 import { ApiService } from './api.service';
-import { reject } from 'q';
+import { reject, async } from 'q';
 export interface Customer {
 
   Id: string,
@@ -29,7 +29,7 @@ export class CustomerService {
   msg: any;
   loading: boolean;
   constructor(private firebase: AngularFireDatabase) { }
-  resetForm(type) {
+ async resetForm(type) {
     if (type == 1) {
       this.formData = {
         Id: '',
@@ -45,8 +45,7 @@ export class CustomerService {
       };
     }
     else {
-      this.formData = this.data;
-      this.data = this.formData;
+      this.formData=await JSON.parse(localStorage.getItem("customer_data"));
     }
   }
   getList() {
@@ -65,7 +64,7 @@ export class CustomerService {
   showModal(obj: Customer) {
     if (obj != null) {
       this.formData = Object.assign({}, obj);
-      this.data = obj;
+      localStorage.setItem("customer_data",JSON.stringify( this.formData));
 
     } else {
       this.resetForm(1);

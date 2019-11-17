@@ -5,7 +5,8 @@
           <img src="../../../assets/img/logo.png" class="col-md-4 mx-auto"/>
       </div>
       <div class="row">
-          <h3  class="col-md-4 mx-auto text-center text-light">ĐĂNG NHẬP</h3>
+          <h3  class="col-md-4 mx-auto text-center text-light" *ngIf="this.type==1" >ĐĂNG NHẬP</h3>
+          <h3  class="col-md-4 mx-auto text-center text-light" *ngIf="this.type==2">QUÊN MẬT KHẨU</h3>
       </div>
       <div class="row">
         <div class="col-md-4 mx-auto">
@@ -19,31 +20,41 @@
                     </div>
                     <input type="email" class="form-control"  placeholder="Email" #email1="ngModel" [(ngModel)]="this.email" name="email" autocomplete="email" pattern="[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})" required minlength="6" maxlength="50" [ngClass]="{ 'is-invalid' :email1.errors && email1.touched,'is-valid': !email1.errors && email1.touched}">
                   </div>
-                  <span *ngIf="email1.invalid && email1.touched" class="text-danger ml-5">
+                  <span *ngIf="email1.invalid && email1.touched" class="text-danger ml-5"  >
                       Lỗi định dạng Email!
                   </span>
-                  <div class="input-group mt-2 mb-2">
+                  <div *ngIf="this.type==1">
+                  <div class="input-group mt-2 mb-2" >
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-unlock-alt fa-2x"></i></span>
                     </div>
                     <input type="password" class="form-control" placeholder="Password" autocomplete="current-password" 
-                  #password1="ngModel" id="password" [(ngModel)]="password" name="password" required minlength="6" maxlength="50"  > 
+                  #password1="ngModel" id="password" [(ngModel)]="password" name="password" required minlength="6" maxlength="50" > 
                     <div class="input-group-prepend">
                         <span class="input-group-text hidden-pass" *ngIf="!this.showpass"><i class="fa fa-eye fa-2x" (click)="this.showpss()"></i></span>
                         <span class="input-group-text hidden-pass " *ngIf="this.showpass"><i class="fa fa-eye-slash fa-2x" (click)="this.hidpss()"></i></span>
                       </div>
                   </div>
+                 
                   <span *ngIf="password1.invalid && password1.touched" class="text-danger ml-5">
                       Mật khẩu phải từ 6 đến 20 kí tự!
                 </span>
-                  <div class="row justify-content-center w-100 mt-2">
+              </div>
+                  <div class="row justify-content-center mt-2">
                     <div class="col-auto">
-                      <button type="button" (click)="login()" [disabled]="form.invalid"  class="btn btn-primary px-4">Đăng Nhập</button>
+                      <button type="button" (click)="login()" [disabled]="form.invalid"  class="btn btn-primary px-4" *ngIf="this.type==1">Đăng Nhập</button>
+                      <button type="button" (click)="forgot()" [disabled]="form.invalid"  class="btn btn-primary px-4" *ngIf="this.type==2">Gửi Yêu Cầu </button>
                     </div>
+                  
                   </div>
                   <div class="row justify-content-center">
                   <img *ngIf="this.service.loading" src="../../../assets/img/ajax-loader.gif" width="30px" height="30px" />
-                  <p *ngIf="!this.service.loading" class="text-danger">{{this.service.errorMessage}}</p>
+                  <p *ngIf="!this.service.loading" class="text-danger w-100 text-center">{{this.service.errorMessage}}</p>
+                  <a (click)="change()" class="text-light  mt-2 w-100 text-center"  *ngIf="this.type==2">Đăng Nhập
+                  </a>
+                  <a (click)="change()" class="text-light mt-2 w-100 text-center" *ngIf="this.type==1">
+                      Quên Mật Khẩu
+                  </a>
                 </div>
                 </form>
               </div>

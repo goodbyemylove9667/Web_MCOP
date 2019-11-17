@@ -10,6 +10,7 @@ export  class  LoginComponent  implements  OnInit {
   email="";
   password="";
   message="";
+  type=1;
   showpass=false;
   constructor(private  service:  AuthService) { }
   ngOnInit() {
@@ -19,6 +20,29 @@ export  class  LoginComponent  implements  OnInit {
       this.service.login(this.email,this.password);
       this.message=this.service.errorMessage;
   }
+  change()
+  { 
+    if(this.type==1) this.type=2
+    else this.type=1;
+  }
+  forgot()
+  {
+    this.service.loading=true;
+      this.service.sendPasswordResetEmail(this.email).then
+      (()=>
+      {
+      this.message=this.service.errorMessage;
+        this.type=1;
+      this.service.loading=false;
+    }).catch
+    (()=>
+    {
+      this.message=this.service.errorMessage;
+      this.type=1;
+    this.service.loading=false;
+    }
+    );
+    }
   showpss()
   {
     this.showpass=true;

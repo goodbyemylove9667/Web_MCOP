@@ -123,7 +123,13 @@ export class AuthService {
     this.router.navigate(['admin/verify-email']);
   }
   async sendPasswordResetEmail(passwordResetEmail: string) {  
-    return await this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail);
+    return await this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail).then(()=>
+    {
+      this.errorMessage="";
+    }).catch(()=>
+    {
+      this.errorMessage="Email Không Tồn Tại Hoặc Lỗi Server";
+    });
   }
   async logout() {
     await this.afAuth.auth.signOut();

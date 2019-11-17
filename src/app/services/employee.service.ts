@@ -30,7 +30,7 @@ export class EmployeeService {
   msg: any;
   loading: boolean;
   constructor(private firebase : AngularFireDatabase,private af:AngularFireAuth,private api:ApiService) { }
-  resetForm(type) {
+ async resetForm(type) {
     if (type==1)
     {
     this.formData = {
@@ -49,8 +49,7 @@ export class EmployeeService {
   }
   else
   {
-    this.formData=this.data;
-    this.data=this.formData;
+    this.formData=await JSON.parse(localStorage.getItem("employee_data"));
   }
   }
     getList() {
@@ -75,7 +74,7 @@ export class EmployeeService {
   showModal(obj: Employee) {
     if (obj != null) {
       this.formData = Object.assign({}, obj);
-      this.data = obj;
+      localStorage.setItem("employee_data",JSON.stringify( this.formData));
 
     } else {
       this.resetForm(1);

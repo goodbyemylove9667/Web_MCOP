@@ -7,7 +7,7 @@ export interface Include
 
     Id: string,
     Id_Con: string,
-    Id_Quest: string,
+    Id_Ques: string,
 }
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class IncludesService {
     this.formData = {
       Id: '',
       Id_Con: '',
-      Id_Quest: ''
+      Id_Ques: ''
     };
   }
     getList() {
@@ -33,6 +33,21 @@ export class IncludesService {
         this.firebase.database.ref('Include').once("value",(value)=>
         resolve(value.toJSON()),(error)=>reject(error))
       });
+    }
+    getConList(Id_Con) {
+      return new Promise<Object>((resolve) => {
+        this.firebase.database.ref('Include').orderByChild("Id_Con").equalTo(Id_Con).once("value",(value)=>
+        resolve(value.toJSON()),(error)=>reject(error))
+      });
+    }
+    async insert(Id_Con,Id_Ques)
+    {
+     return await this.firebase.database.ref('Include').push(
+        {
+          Id_Con: Id_Con,
+          Id_Ques: Id_Ques
+        }
+      ).key;
     }
    async delete(key)
     {

@@ -16,6 +16,7 @@ import { ContestsComponent } from './views/contests/contests.component';
 import { QuestionsComponent } from './views/questions/questions.component';
 import { IncludesComponent } from './views/includes/includes.component';
 import { ResultsComponent } from './views/results/results.component';
+import { RegisterComponent } from './views/register/register.component';
 export const routes: Routes = [
   {
     path: '',
@@ -41,6 +42,13 @@ export const routes: Routes = [
     component: LoginComponent,
     data: {
       title: 'Đăng Nhập'
+    }
+  },
+  {
+    path: 'forgot',
+    component: RegisterComponent,
+    data: {
+      title: 'Quên Mật Khẩu'
     }
   },
   {

@@ -20,7 +20,8 @@
                     <div class="card-body row justify-content-between">
                         <!--  START- LIST-->
                         <div class="col-12 col-sm-3">
-                            <select class="form-control" [(ngModel)]="this.Id_Top">
+                            <p class="w-100 font-weight-bold text-center">CHỦ ĐỀ</p>
+                            <select class="form-control" [(ngModel)]="this.Id_Top" (change)="initTop()">
                                 <option [ngValue]="this.temp">
                                     Chọn Chủ Đề
                                 </option>
@@ -31,35 +32,37 @@
                                 </ng-container>
                             </select>
                             <div class="row justify-content-center mt-2" *ngIf="this.Id_Top!=this.temp">
-                                    <table class="table table-bordered table-hover  text-center" id="tb_db">
-                                        <tr class="bg-primary">
-                                            <th >Tên</th>
-                                            <th>Ảnh</th>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                    <div  *ngIf="this.objTop && this.objTop.hasOwnProperty(this.Id_Top)">
-                                                            {{this.objTop[this.Id_Top].Name_Top}}
-                                                        </div>
-                                                        <div *ngIf="this.objTop && !this.objTop.hasOwnProperty(this.Id_Top)">
-                                                            Không Xác Định
-                                                        </div>
-                                            </td>
-                                            <td>
-                                                    <div *ngIf="this.objTop && this.objTop.hasOwnProperty(this.Id_Top)">
-                                                            <img [src]="this.objTop[this.Id_Top].Image" width="50px" height="50px"/>
-                                                        </div>
-                                                        <div *ngIf="this.objTop && !this.objTop.hasOwnProperty(this.Id_Top)">
-                                                            Không Xác Định
-                                                        </div>
-                                            </td>
-                                        </tr>
+                                <table class="table table-bordered table-hover  text-center" id="tb_db">
+                                    <tr class="bg-primary">
+                                        <th>Tên</th>
+                                        <th>Ảnh</th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div *ngIf="this.objTop && this.objTop.hasOwnProperty(this.Id_Top)">
+                                                {{this.objTop[this.Id_Top].Name_Top}}
+                                            </div>
+                                            <div *ngIf="this.objTop && !this.objTop.hasOwnProperty(this.Id_Top)">
+                                                Không Xác Định
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div *ngIf="this.objTop && this.objTop.hasOwnProperty(this.Id_Top)">
+                                                <img [src]="this.objTop[this.Id_Top].Image" width="50px"
+                                                    height="50px" />
+                                            </div>
+                                            <div *ngIf="this.objTop && !this.objTop.hasOwnProperty(this.Id_Top)">
+                                                Không Xác Định
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                                    </table>
-                                  </div>
+                                </table>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-3">
-                            <select class="form-control" *ngIf="this.Id_Top!=this.temp" [(ngModel)]="this.Id_Con">
+                                <p class="w-100 font-weight-bold text-center">CUỘC THI</p>
+                            <select class="form-control" *ngIf="this.Id_Top!=this.temp" [(ngModel)]="this.Id_Con" (change)="initCon()">
                                 <option [ngValue]="this.temp">
                                     Chọn Cuộc Thi
                                 </option>
@@ -69,39 +72,88 @@
                                     </option>
                                 </ng-container>
                             </select>
-                            <div class="row justify-content-center mt-2" *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp">
-                                    <table class="table table-bordered table-hover  text-center" id="tb_db">
-                                        <tr class="bg-primary">
-                                            <th >Điểm Tối Đa</th>
-                                            <th>Thời Gian Tối Đa</th>
-                                        </tr>
-                                        <tr>
-                                            <td style="height: 75px;">
-                                                    <div  *ngIf="this.objCon && this.objCon.hasOwnProperty(this.Id_Con)">
-                                                            {{this.objCon[this.Id_Con].Max_Point}}
-                                                        </div>
-                                                        <div *ngIf="this.objCon && !this.objCon.hasOwnProperty(this.Id_Con)">
-                                                            Không Xác Định
-                                                        </div>
-                                            </td>
-                                            <td>
-                                                    <div  *ngIf="this.objCon && this.objCon.hasOwnProperty(this.Id_Con)">
-                                                            {{this.objCon[this.Id_Con].Time_Left}}
-                                                        </div>
-                                                        <div *ngIf="this.objCon && !this.objCon.hasOwnProperty(this.Id_Con)">
-                                                            Không Xác Định
-                                                        </div>
-                                            </td>
-                                        </tr>
+                            <div class="row justify-content-center mt-2"
+                                *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp">
+                                <table class="table table-bordered table-hover  text-center" id="tb_db">
+                                    <tr class="bg-primary">
+                                        <th>Điểm Tối Đa</th>
+                                        <th>Thời Gian Tối Đa</th>
+                                    </tr>
+                                    <tr>
+                                        <td style="height: 75px;">
+                                            <div *ngIf="this.objCon && this.objCon.hasOwnProperty(this.Id_Con)">
+                                                {{this.objCon[this.Id_Con].Max_Point}}
+                                            </div>
+                                            <div *ngIf="this.objCon && !this.objCon.hasOwnProperty(this.Id_Con)">
+                                                Không Xác Định
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div *ngIf="this.objCon && this.objCon.hasOwnProperty(this.Id_Con)">
+                                                {{this.objCon[this.Id_Con].Time_Left}}
+                                            </div>
+                                            <div *ngIf="this.objCon && !this.objCon.hasOwnProperty(this.Id_Con)">
+                                                Không Xác Định
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                                    </table>
-                                  </div>
+                                </table>
+                            </div>
                         </div>
-                        <div class="col-12 col-sm-3">
-                            áas
+                        <div class="col-12 col-sm-3  overflow-auto" style="max-height:500px">
+                                <p class="w-100 font-weight-bold text-center">DANH SÁCH CÂU HỎI</p>
+                            <div  *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp">
+                                    <div id="lb_quest" *ngIf=" this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="d-inline-block px-2 py-2"> 
+                                            <input type="checkbox"  (change)="checkall()" [checked]="this.chk"  class="d-inline" style="height: 15px;width: 15px;" > 
+                                    </div>
+                                <ng-container *ngFor="let ques of this.listQues;">
+                                     <div id="lb_quest" *ngIf="ques.Id_Top==this.Id_Top && this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="d-inline-block px-2 py-2" (click)="showques(ques.Id)"> 
+                              
+                                    <input type="checkbox" [checked]="this.objInc && this.objInc.hasOwnProperty(ques.Id)" (change)="submit(ques.Id)" [value]="ques.Id" class="d-inline" style="height: 15px;width: 15px;" > 
+                                    <label class="d-inline" >{{this.changeCon(ques.Content_Ques)}}</label>
+                                        </div>
+                                </ng-container>
+                                </div>
+            
                         </div>
-                        <div class="col-12 col-sm-3">
-                            áas
+                        <div class="col-12 col-sm-3" >
+                            <div class="border" *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp && this.Id_Ques!=this.temp && this.objQues && this.objQues.hasOwnProperty(this.Id_Ques)">
+                                 <p class="text-center font-weight-bold w-100">NỘI DUNG CÂU HỎI</p>
+                                 <div class=" w-100 text-left d-inline-block px-1 mb-2">
+                                 <p class=" text-danger font-weight-bold d-inline" >
+                                         Câu hỏi: 
+                                 </p>
+                                 <p class="d-inline">{{this.objQues[this.Id_Ques].Content_Ques}} ?
+                                 </p>
+                                 </div>
+                                 <ul class="w-100 list-group">
+                                     <li class="list-group-item d-inline-block"  *ngIf="this.objQues[this.Id_Ques].Answer!=1">
+                                        <p class="d-inline font-weight-bold text-primary">1. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer1}}</p>
+                                     </li>
+                                     <li class="list-group-item active" *ngIf="this.objQues[this.Id_Ques].Answer==1">
+                                            <p class="d-inline font-weight-bold text-dark">1. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer1}}</p>
+                                         </li>
+                                     <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer!=2">
+                                            <p class="d-inline font-weight-bold text-primary">2. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer2}}</p>
+                                        </li>
+                                        <li class="list-group-item active"  *ngIf="this.objQues[this.Id_Ques].Answer==2">
+                                                <p class="d-inline font-weight-bold text-dark">2. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer2}}</p>
+                                            </li>
+                                        <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer!=3">
+                                                <p class="d-inline font-weight-bold text-primary">3. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer3}}</p>
+                                            </li>
+                                            <li class="list-group-item active"  *ngIf="this.objQues[this.Id_Ques].Answer==3">
+                                                    <p class="d-inline font-weight-bold text-dark">3. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer3}}</p>
+                                                </li>
+                                            <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer!=4">
+                                                    <p class="d-inline font-weight-bold text-primary">4. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer4}}</p>
+                                                </li>
+                                                <li class="list-group-item active"  *ngIf="this.objQues[this.Id_Ques].Answer==4">
+                                                        <p class="d-inline font-weight-bold text-dark">4. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer4}}</p>
+                                                    </li>
+                                 </ul>
+                            </div>
                         </div>
                         <!--  END - LIST-->
                     </div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { NgForm } from '@angular/forms';
-import { reject } from 'q';
+import { reject, async } from 'q';
 export interface Question {
 
   Id: string,
@@ -28,7 +28,7 @@ export class QuestionsService {
   msg: any;
   loading: boolean;
   constructor(private firebase: AngularFireDatabase) { }
-  resetForm(type) {
+ async resetForm(type) {
     var data=JSON.parse(localStorage.getItem('keyUser'));
     console.log(data);
     if (type == 1) {
@@ -47,8 +47,7 @@ export class QuestionsService {
       };
     }
     else {
-      this.formData = this.data;
-      this.data = this.formData;
+      this.formData=await JSON.parse(localStorage.getItem("question_data"));
     }
   }
   getList() {
@@ -67,7 +66,7 @@ export class QuestionsService {
   showModal(obj: Question) {
     if (obj != null) {
       this.formData = Object.assign({}, obj);
-      this.data = obj;
+      localStorage.setItem("question_data",JSON.stringify( this.formData));
 
     } else {
       this.resetForm(1);

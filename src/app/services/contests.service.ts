@@ -22,7 +22,7 @@ export class ContestsService {
   msg: any;
   loading: boolean;
   constructor(private firebase: AngularFireDatabase) { }
-  resetForm(type) {
+ async resetForm(type) {
     if (type == 1) {
       this.formData = {
         Id: '',
@@ -33,8 +33,7 @@ export class ContestsService {
       };
     }
     else {
-      this.formData = this.data;
-      this.data = this.formData;
+      this.formData=await JSON.parse(localStorage.getItem("contest_data"));
     }
   }
   getList() {
@@ -53,7 +52,7 @@ export class ContestsService {
   showModal(obj: Contest) {
     if (obj != null) {
       this.formData = Object.assign({}, obj);
-      this.data = obj;
+      localStorage.setItem("contest_data",JSON.stringify( this.formData));
 
     } else {
       this.resetForm(1);
