@@ -40,6 +40,12 @@ export class ResultsService {
         resolve(value.toJSON()),(error)=>reject(error))
       });
     }
+    getorderList() {
+      return new Promise<any>((resolve) => {
+        this.firebase.database.ref('Result').orderByChild("Point").once("value",(value)=>
+        resolve(value),(error)=>reject(error))
+      });
+    }
    async delete(key)
     {
       await this.firebase.database.ref('Result/'+key).remove().then(()=>

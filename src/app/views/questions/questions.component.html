@@ -53,7 +53,6 @@
                                     <th>Câu Trả Lời 2</th>
                                     <th>Câu Trả Lời 3</th>
                                     <th>Câu Trả Lời 4</th>
-                                    <th>Đáp Án</th>
                                     <th>Ngày Tạo</th>
                                     <th>Hoạt Động</th>
                                     <th>Hành Động</th>
@@ -84,35 +83,52 @@
                                         </button>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-outline-secondary text-dark"
+                                            <button type="button" class="btn btn-outline-secondary text-light bg-success" *ngIf="ques.Answer==1"
+                                            ngbPopover="{{ques.Answer1}}" triggers="mouseenter:mouseleave"
+                                            popoverTitle="Câu Trả Lời 1">
+                                            {{this.changeCon(ques.Answer1)}}
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary text-dark"  *ngIf="ques.Answer!=1"
                                             ngbPopover="{{ques.Answer1}}" triggers="mouseenter:mouseleave"
                                             popoverTitle="Câu Trả Lời 1">
                                             {{this.changeCon(ques.Answer1)}}
                                         </button>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-outline-secondary text-dark"
+                                            <button type="button" class="btn btn-outline-secondary text-light bg-success" *ngIf="ques.Answer==2"
+                                            ngbPopover="{{ques.Answer2}}" triggers="mouseenter:mouseleave"
+                                            popoverTitle="Câu Trả Lời 2">
+                                            {{this.changeCon(ques.Answer2)}}
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary text-dark"  *ngIf="ques.Answer!=2"
                                             ngbPopover="{{ques.Answer2}}" triggers="mouseenter:mouseleave"
                                             popoverTitle="Câu Trả Lời 2">
                                             {{this.changeCon(ques.Answer2)}}
                                         </button>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-outline-secondary text-dark"
+                                            <button type="button" class="btn btn-outline-secondary text-light bg-success" *ngIf="ques.Answer==3"
+                                            ngbPopover="{{ques.Answer3}}" triggers="mouseenter:mouseleave"
+                                            popoverTitle="Câu Trả Lời 3">
+                                            {{this.changeCon(ques.Answer3)}}
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary text-dark"  *ngIf="ques.Answer!=3"
                                             ngbPopover="{{ques.Answer3}}" triggers="mouseenter:mouseleave"
                                             popoverTitle="Câu Trả Lời 3">
                                             {{this.changeCon(ques.Answer3)}}
                                         </button>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-outline-secondary text-dark"
+                                            <button type="button" class="btn btn-outline-secondary text-light bg-success" *ngIf="ques.Answer==4"
                                             ngbPopover="{{ques.Answer4}}" triggers="mouseenter:mouseleave"
                                             popoverTitle="Câu Trả Lời 4">
                                             {{this.changeCon(ques.Answer4)}}
                                         </button>
-                                    </td>
-                                    <td>
-                                        {{ques.Answer}}
+                                        <button type="button" class="btn btn-outline-secondary text-dark"  *ngIf="ques.Answer!=4"
+                                            ngbPopover="{{ques.Answer4}}" triggers="mouseenter:mouseleave"
+                                            popoverTitle="Câu Trả Lời 4">
+                                            {{this.changeCon(ques.Answer4)}}
+                                        </button>
                                     </td>
                                     <td>
                                         {{ques.Create_Date | date:'dd-MM-yyyy'}}
