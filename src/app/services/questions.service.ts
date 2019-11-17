@@ -29,11 +29,13 @@ export class QuestionsService {
   loading: boolean;
   constructor(private firebase: AngularFireDatabase) { }
   resetForm(type) {
+    var data=JSON.parse(localStorage.getItem('keyUser'));
+    console.log(data);
     if (type == 1) {
       this.formData = {
         Id: '',
         Id_Top: '',
-        Id_Author: '',
+        Id_Author: data,
         Content_Ques: '',
         Answer1: '',
         Answer2: '',

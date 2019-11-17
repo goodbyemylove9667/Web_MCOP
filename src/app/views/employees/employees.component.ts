@@ -187,12 +187,12 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Thêm Thành Công Email '+form.value["Email"],'Thành Công!',{timeOut: 1000});
+          this.toastr.success('Thêm Thành Công Câu Hỏi','Thành Công!',{timeOut: 1000});
           this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Thêm Thất Bại Email'+form.value["Email"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Thêm Thất Bại Câu Hỏi','Thất Bại!',{timeOut: 1000});
           }
         }
       )
@@ -204,12 +204,12 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Cập Nhật Thành Công Email'+form.value["Email"],'Thành Công!',{timeOut: 1000});
+          this.toastr.success('Cập Nhật Thành Công Câu Hỏi','Thành Công!',{timeOut: 1000});
           this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Cập Nhật Thất Bại Email'+form.value["Email"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Cập Nhật Thất Bại Câu Hỏi','Thất Bại!',{timeOut: 1000});
           }
         }
       )

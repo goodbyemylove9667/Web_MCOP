@@ -58,8 +58,11 @@
                                     <td></td>
                                     <td>{{i+1}}</td>
                                     <th scope="row">{{res.Id}}</th>
-                                    <td>
+                                    <td *ngIf="this.objCus.hasOwnProperty(res.Id_Cus)">
                                         {{this.objCus[res.Id_Cus].Username}}
+                                    </td>
+                                    <td *ngIf="!this.objCus.hasOwnProperty(res.Id_Cus)">
+                                        Không Xác Định
                                     </td>
                                     <td>
                                             {{res.Id_Con}}

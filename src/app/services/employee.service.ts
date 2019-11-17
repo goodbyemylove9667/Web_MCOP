@@ -59,6 +59,12 @@ export class EmployeeService {
         resolve(value.toJSON()),(error)=>reject(error))
       });
     }
+    getAllList() {
+      return new Promise<Object>((resolve) => {
+        this.firebase.database.ref('Employee').once("value",(value)=>
+        resolve(value.toJSON()),(error)=>reject(error))
+      });
+    }
     getCkList()
     {
       return new Promise<Object>((resolve) => {

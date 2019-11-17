@@ -34,6 +34,7 @@ export class AuthService {
     await this.firebase.database.ref('Employee').orderByChild('Email').equalTo(email).once("value", (value) => {
       if (value.exists()) {
         value.forEach((element) => {
+          localStorage.setItem('keyUser', JSON.stringify(element.key));
           localStorage.setItem('currentUser', JSON.stringify(element));
           if (element.toJSON()["Status"] == 0) {
             status=0;

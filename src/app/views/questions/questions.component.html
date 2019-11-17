@@ -1,1 +1,284 @@
-<p>questions works!</p>
+<section>
+    <div class="">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row justify-content-between">
+                            <div class="col-xs-12 col-sm-6">
+                                <h4>Quản Lí Bộ Đề</h4>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 text-right">
+                                <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder"
+                                    (click)="this.refresh()">
+                                    <i class="fa fa-retweet"></i>
+                                    Refresh
+                                </button>
+                                <button type="button" class="btn btn-info mr-1 text-light font-weight-bolder"
+                                    data-toggle="modal" (click)="this.showAdd()">
+                                    <i class="fa fa-plus" aria-hidden="true"> </i>
+                                    Thêm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mt-3 row justify-content-end">
+                        <div class="input-group-prepend mr-2">
+                            <select [(ngModel)]="slc_search" class="custom-select">
+                                <option [ngValue]="2" [selected]="true">Chủ Đề</option>
+                                <option [ngValue]="3">Tác Giả</option>
+                                <option [ngValue]="10">Ngày Tạo</option>
+                                <option [ngValue]="11">Hoạt Động</option>
+                            </select>
+                        </div>
+                        <div class="input-group-prepend">
+                            <input type="text" id="mySearchText" style="padding-left:5px;padding-right: 5px;"
+                                placeholder="Search..." [(ngModel)]="inp_search">
+                            <button id="mySearchButton" class="btn btn-light order" (click)="filter()"><i
+                                    class="fa fa-search" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="overflow-x: scroll;">
+                        <!--  START- LIST-->
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover"
+                            id="dttb">
+                            <thead class="bg-primary">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>ID</th>
+                                    <th>Chủ Đề</th>
+                                    <th>Tác Giả</th>
+                                    <th>Nội Dung</th>
+                                    <th>Câu Trả Lời 1</th>
+                                    <th>Câu Trả Lời 2</th>
+                                    <th>Câu Trả Lời 3</th>
+                                    <th>Câu Trả Lời 4</th>
+                                    <th>Đáp Án</th>
+                                    <th>Ngày Tạo</th>
+                                    <th>Hoạt Động</th>
+                                    <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let ques of this.list;let i=index">
+                                    <td>{{i+1}}</td>
+                                    <th scope="row">{{ques.Id}}</th>
+                                    <td *ngIf="this.objTop.hasOwnProperty(ques.Id_Top)">
+                                        {{this.objTop[ques.Id_Top].Name_Top}}
+                                    </td>
+                                    <td *ngIf="!this.objTop.hasOwnProperty(ques.Id_Top)">
+                                        Không Xác Định
+                                    </td>
+                                    <td *ngIf="this.objEmp.hasOwnProperty(ques.Id_Author)">
+                                        {{this.objEmp[ques.Id_Author].Email}}
+                                    </td>
+                                    <td *ngIf="!this.objEmp.hasOwnProperty(ques.Id_Author)">
+                                        Không Xác Định
+                                    </td>
+                                    <td>
+
+                                        <button type="button" class="btn btn-outline-secondary text-dark"
+                                            ngbPopover="{{ques.Content_Ques}}" triggers="mouseenter:mouseleave"
+                                            popoverTitle="Nội Dung">
+                                            {{this.changeCon(ques.Content_Ques)}}
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-secondary text-dark"
+                                            ngbPopover="{{ques.Answer1}}" triggers="mouseenter:mouseleave"
+                                            popoverTitle="Câu Trả Lời 1">
+                                            {{this.changeCon(ques.Answer1)}}
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-secondary text-dark"
+                                            ngbPopover="{{ques.Answer2}}" triggers="mouseenter:mouseleave"
+                                            popoverTitle="Câu Trả Lời 2">
+                                            {{this.changeCon(ques.Answer2)}}
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-secondary text-dark"
+                                            ngbPopover="{{ques.Answer3}}" triggers="mouseenter:mouseleave"
+                                            popoverTitle="Câu Trả Lời 3">
+                                            {{this.changeCon(ques.Answer3)}}
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-secondary text-dark"
+                                            ngbPopover="{{ques.Answer4}}" triggers="mouseenter:mouseleave"
+                                            popoverTitle="Câu Trả Lời 4">
+                                            {{this.changeCon(ques.Answer4)}}
+                                        </button>
+                                    </td>
+                                    <td>
+                                        {{ques.Answer}}
+                                    </td>
+                                    <td>
+                                        {{ques.Create_Date | date:'dd-MM-yyyy'}}
+                                    </td>
+                                    <td><span *ngIf="ques.Status==1; else SAI;" style="color: green;">Hoạt động</span>
+                                        <ng-template #SAI> <span style="color: red;">Bị Cấm</span></ng-template>
+                                    </td>
+                                    <td class="text-center">
+                                        <button (click)="showedit(ques)" class="bg-success" style="border:0">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!--  END - LIST-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- begin modal create -->
+
+<div bsModal #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title w-100 text-center" *ngIf="this.type==1">Thêm Bộ Đề</h4>
+                <h4 class="modal-title w-100 text-center" *ngIf="this.type==2">Cập Nhật Bộ Đề</h4>
+                <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- START CREATE -->
+                <form #form="ngForm" autocomplete="off">
+                    <input *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id" hidden>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-dark h3">CHỦ ĐỀ</label>
+                        <select class="form-control" name="Id_Top" #Id_Top1="ngModel" class="form-control col-sm-8"
+                        required
+                            [ngClass]="{ 'is-invalid':(Id_Top1.errors && Id_Top1.touched),'is-valid': !Id_Top1.errors && Id_Top1.touched}"
+                            [(ngModel)]="service.formData.Id_Top" required>
+                            <option *ngIf="this.type==1" value="" selected>
+                                Chọn Chủ Đề
+                            </option>
+                            <ng-container *ngFor="let top of this.listTop;">
+                                <option *ngIf="top.Status == 1 || top.Id==service.formData.Id_Top" [ngValue]="top.Id">
+                                    {{top.Name_Top}}
+                                </option>
+                            </ng-container>
+                        </select>
+                        <span class="text-danger offset-sm-4" *ngIf="Id_Top1.invalid && Id_Top1.dirty">
+                            Vui Lòng Chọn Chủ Đề
+                        </span>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-dark h3">TÁC GIẢ</label>
+                        <select class="form-control" name="Id_Author" #Id_Author="ngModel" class="form-control col-sm-8"  [(ngModel)]="service.formData.Id_Author" >
+                                <option [ngValue]="service.formData.Id_Author" *ngIf="this.objEmp && this.objEmp.hasOwnProperty(service.formData.Id_Author)">
+                                    {{this.objEmp[service.formData.Id_Author].Email}}
+                                </option>
+                        </select>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-dark h3">NỘI DUNG</label>
+                        <textarea rows="4" name="Content_Ques" #Content_Ques1="ngModel"
+                            [(ngModel)]="service.formData.Content_Ques" minlength="3" maxlength="1000" required
+                            class="form-control col-sm-8"
+                            [ngClass]="{ 'is-invalid':(Content_Ques1.errors && Content_Ques1.touched),'is-valid': !Content_Ques1.errors && Content_Ques1.touched}">
+
+                                    </textarea>
+                        <span class="text-danger offset-sm-4" *ngIf="Content_Ques1.invalid && Content_Ques1.dirty">
+                            Nội Dung phải từ 3 đến 1000 kí tự
+                        </span>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-dark h3">CÂU TRẢ LỜI 1</label>
+                        <textarea rows="2" name="Answer1" #Answer_1="ngModel" [(ngModel)]="service.formData.Answer1"
+                            minlength="1" maxlength="500" required class="form-control col-sm-8"
+                            [ngClass]="{ 'is-invalid':(Answer_1.errors && Answer_1.touched),'is-valid': !Answer_1.errors && Answer_1.touched}">
+
+                                        </textarea>
+                        <span class="text-danger offset-sm-4" *ngIf="Answer_1.invalid && Answer_1.dirty">
+                            Câu Trả Lời1 phải từ 1 đến 500 kí tự
+                        </span>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-dark h3">CÂU TRẢ LỜI 2</label>
+                        <textarea rows="2" name="Answer2" #Answer_2="ngModel" [(ngModel)]="service.formData.Answer2"
+                            minlength="1" maxlength="500" required class="form-control col-sm-8"
+                            [ngClass]="{ 'is-invalid':(Answer_2.errors && Answer_2.touched),'is-valid': !Answer_2.errors && Answer_2.touched}">
+
+                                            </textarea>
+                        <span class="text-danger offset-sm-4" *ngIf="Answer_2.invalid && Answer_2.dirty">
+                            Câu Trả Lời 2 phải từ 1 đến 500 kí tự
+                        </span>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-dark h3">CÂU TRẢ LỜI 3</label>
+                        <textarea rows="2" name="Answer3" #Answer_3="ngModel" [(ngModel)]="service.formData.Answer3"
+                            minlength="1" maxlength="500" required class="form-control col-sm-8"
+                            [ngClass]="{ 'is-invalid':(Answer_3.errors && Answer_3.touched),'is-valid': !Answer_3.errors && Answer_3.touched}">
+
+                                                </textarea>
+                        <span class="text-danger offset-sm-4" *ngIf="Answer_3.invalid && Answer_3.dirty">
+                            Câu Trả Lời 3 phải từ 1 đến 500 kí tự
+                        </span>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-dark h3">CÂU TRẢ LỜI 4</label>
+                        <textarea rows="2" name="Answer4" #Answer_4="ngModel" [(ngModel)]="service.formData.Answer4"
+                            minlength="1" maxlength="500" required class="form-control col-sm-8"
+                            [ngClass]="{ 'is-invalid':(Answer_4.errors && Answer_4.touched),'is-valid': !Answer_4.errors && Answer_4.touched}">
+
+                                                    </textarea>
+                        <span class="text-danger offset-sm-4" *ngIf="Answer_4.invalid && Answer_4.dirty">
+                            Câu Trả Lời 4 phải từ 1 đến 500 kí tự
+                        </span>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-dark h3">ĐÁP ÁN</label>
+                        <input name="Answer" #Answer0="ngModel" [(ngModel)]="service.formData.Answer" pattern="[1-4]"
+                            required class="form-control col-sm-8"
+                            [ngClass]="{ 'is-invalid':(Answer0.errors && Answer0.touched),'is-valid': !Answer0.errors && Answer0.touched}">
+                        <span class="text-danger offset-sm-4" *ngIf="Answer0.invalid && Answer0.dirty">
+                            Đáp Án Từ 1 Đến 4
+                        </span>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-dark h3">NGÀY TẠO</label>
+                        <input type="date" [ngModel]="service.formData.Create_Date | date:'yyyy-MM-dd'"
+                            (ngModelChange)="service.formData.Create_Date = $event" name="Create_Date"
+                            class="form-control col-sm-8 form-control col-sm-9-rounded" >
+                    </div>
+
+                    <div class="form-group row" *ngIf="this.type==2;else status">
+                        <label class="col-sm-4 col-form-label text-dark h3">HOẠT ĐỘNG</label>
+                        <select name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" required
+                            class="form-control col-sm-8">
+                            <option [ngValue]="0">Bị Cấm</option>
+                            <option [ngValue]="1">Hoạt Động</option>
+                        </select>
+
+                    </div>
+                    <ng-template #status><input name="Status" [(ngModel)]="service.formData.Status" hidden>
+                    </ng-template>
+                    <div class="form-group row pull-left ml-5">
+                        <button type="button" data-dismiss="modal"
+                            (click)="this.service.resetForm(this.type,this.firstTop)"
+                            class="btn btn-danger btn-block font-weight-bolder">RESET</button>
+                    </div>
+                    <div class="form-group row pull-right mr-5">
+                        <button type="button" (click)="this.onSubmit(form)" [disabled]="form.invalid"
+                            data-dismiss="modal"
+                            class="btn btn-info btn-block text-light font-weight-bolder">SUBMIT</button>
+                    </div>
+                </form>
+                <!-- END -CREATE-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end modal create -->

@@ -1,12 +1,12 @@
-<div class="animated fadeIn">
-  <div class="row">
+<div class="animated fadeIn" >
+  <div class="row" >
     <div class="col-sm-6 col-lg-4">
       <div class="card text-white bg-primary">
         <div class="card-body pb-0">
           <div class="btn-group float-right" >
             <i class="fa fa-user-circle-o fa-5x"></i>
           </div>
-          <div class="text-value">9.823</div>
+          <div class="text-value">{{this.emp_sl}}</div>
           <div>Nhân Viên</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
@@ -27,7 +27,7 @@
 
               <i class="fa fa-user fa-5x" ></i>
           </div>
-          <div class="text-value">9.823</div>
+          <div class="text-value">{{this.cus_sl}}</div>
           <div>Người Chơi</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
@@ -47,7 +47,7 @@
           <div class="btn-group float-right" >
             <i class="fa fa-laptop fa-5x"></i>
           </div>
-          <div class="text-value">9.823</div>
+          <div class="text-value">{{this.con_sl}}</div>
           <div>Cuộc Thi</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
@@ -67,7 +67,7 @@
           <div class="btn-group float-right" >
             <i class="fa fa-folder-open fa-5x"></i>
           </div>
-          <div class="text-value">9.823</div>
+          <div class="text-value">{{this.top_sl}}</div>
           <div>Chủ Đề</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
@@ -87,7 +87,7 @@
           <div class="btn-group float-right" >
             <i class="fa fa-file fa-5x"></i>
           </div>
-          <div class="text-value">9.823</div>
+          <div class="text-value">{{this.inc_sl}}</div>
           <div>QH Chủ Đề - Cuộc Thi</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
@@ -107,7 +107,7 @@
               <div class="btn-group float-right" >
             <i class="fa fa-book fa-5x"></i>
           </div>
-          <div class="text-value">9.823</div>
+          <div class="text-value">{{this.quest_sl}}</div>
           <div>Bộ Đề</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
@@ -126,16 +126,15 @@
     <div class="card-body">
       <div class="row">
         <div class="col-sm-5">
-          <h4 class="card-title mb-0">Traffic</h4>
-          <div class="small text-muted">November 2017</div>
+          <h4 class="card-title mb-0">Xếp Hạng</h4>
         </div><!--/.col-->
         <div class="col-sm-7 d-none d-md-block">
-          <button type="button" class="btn btn-primary float-right"><i class="icon-cloud-download"></i></button>
-          <div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
-            <label class="btn btn-outline-secondary" [(ngModel)]="radioModel" btnRadio="Day" id="option1">Day</label>
-            <label class="btn btn-outline-secondary" [(ngModel)]="radioModel" btnRadio="Month" id="option2">Month</label>
-            <label class="btn btn-outline-secondary" [(ngModel)]="radioModel" btnRadio="Year" id="option3">Year</label>
-          </div>
+            <select  required>
+                <option  value="" selected>
+                        Vui Lòng Chọn Chủ Đề
+                    </option>
+           
+            </select>
         </div><!--/.col-->
       </div><!--/.row-->
       <div class="chart-wrapper" style="height:300px;margin-top:40px;">

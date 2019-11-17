@@ -55,8 +55,11 @@
                                 <tr *ngFor="let con of this.list;let i=index">
                                     <td>{{i+1}}</td>
                                     <th scope="row">{{con.Id}}</th>
-                                    <td>
-                                        {{this.objTop[con.Id_Top].Name_Top}}
+                                    <td *ngIf="this.objTop.hasOwnProperty(con.Id_Top)">
+                                            {{this.objTop[con.Id_Top].Name_Top}}
+                                    </td>
+                                    <td *ngIf="!this.objTop.hasOwnProperty(con.Id_Top)">
+                                            Không Xác Định
                                     </td>
                                     <td>
                                         {{con.Max_Point}}
@@ -107,7 +110,7 @@
                             [ngClass]="{ 'is-invalid':(Id_Top1.errors && Id_Top1.touched),'is-valid': !Id_Top1.errors && Id_Top1.touched}"
                                 [(ngModel)]="service.formData.Id_Top" required>
                                 <option *ngIf="this.type==1" value="" selected>
-                                        Vui Lòng Chọn Chủ Đề
+                                        Chọn Chủ Đề
                                     </option>
                                 <ng-container *ngFor="let top of this.listTop;">
                                     <option *ngIf="top.Status == 1 || top.Id==service.formData.Id_Top" [ngValue]="top.Id">

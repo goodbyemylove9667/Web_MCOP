@@ -1,12 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+import { AngularFireDatabase } from '@angular/fire/database';
+import { Result, ResultsService } from '../../services/results.service';
+import { Topic, TopicsService } from '../../services/topics.service';
+import { EmployeeService } from '../../services/employee.service';
+import { CustomerService } from '../../services/customer.service';
+import { QuestionsService } from '../../services/questions.service';
+import { ContestsService } from '../../services/contests.service';
+import { IncludesService } from '../../services/includes.service';
 
 @Component({
+  selector: 'app-contests',
   templateUrl: 'dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
-
+  constructor(private empservice: EmployeeService,private cusservice: CustomerService,private quesservice: QuestionsService,private topservice: TopicsService,private conservice: ContestsService,private incservice: IncludesService,private resservice: ResultsService
+    ,) { }
+  emp_sl:number=0;
+  cus_sl:number=0;
+  quest_sl:number=0;
+  top_sl:number=0;
+  con_sl:number=0;
+  inc_sl:number=0;
+  listRes: Array<Result> = [];
+  listTop: Array<Topic> = [];
   radioModel: string = 'Month';
 
   // lineChart1
@@ -377,12 +395,85 @@ export class DashboardComponent implements OnInit {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  ngOnInit(): void {
-    // generate random values for mainChart
-    for (let i = 0; i <= this.mainChartElements; i++) {
-      this.mainChartData1.push(this.random(50, 200));
-      this.mainChartData2.push(this.random(80, 100));
-      this.mainChartData3.push(65);
-    }
+ async ngOnInit() {
+
+  //  await this.firebase.database.ref('Employee').once('value',(value)=>
+  //   {
+  //       if (value.exists)
+  //       {
+  //         this.emp_sl=value.numChildren();         
+  //       }
+  //       else
+  //       {
+  //         this.emp_sl=0;
+  //       }
+  //   });
+  //   await this.firebase.database.ref('Customer').once('value',(value)=>
+  //   {
+  //       if (value.exists)
+  //       {
+  //         this.cus_sl=value.numChildren();         
+  //       }
+  //       else
+  //       {
+  //         this.cus_sl=0;
+  //       }
+  //   });
+  //   await this.firebase.database.ref('Topic').once('value',(value)=>
+  //   {
+  //       if (value.exists)
+  //       {
+  //         this.top_sl=value.numChildren();     
+  //         console.log(value);
+  //         for (let key in value) {
+  //           this.listTop.push
+  //             ({
+  //               Id: key,
+  //               Name_Top: value[key].Name_Top,
+  //               Image: value[key].Image,
+  //               Status: value[key].Status
+  //             }
+  //             )
+  //         }    
+  //         console.log(this.listTop);
+  //       }
+  //       else
+  //       {
+  //         this.top_sl=0;
+  //       }
+  //   });
+  //   await this.firebase.database.ref('Question').once('value',(value)=>
+  //   {
+  //       if (value.exists)
+  //       {
+  //         this.quest_sl=value.numChildren();         
+  //       }
+  //       else
+  //       {
+  //         this.quest_sl=0;
+  //       }
+  //   });
+  //   await this.firebase.database.ref('Contest').once('value',(value)=>
+  //   {
+  //       if (value.exists)
+  //       {
+  //         this.con_sl=value.numChildren();         
+  //       }
+  //       else
+  //       {
+  //         this.con_sl=0;
+  //       }
+  //   });
+  //   await this.firebase.database.ref('Include').once('value',(value)=>
+  //   {
+  //       if (value.exists)
+  //       {
+  //         this.inc_sl=value.numChildren();         
+  //       }
+  //       else
+  //       {
+  //         this.inc_sl=0;
+  //       }
+  //   });
   }
 }
