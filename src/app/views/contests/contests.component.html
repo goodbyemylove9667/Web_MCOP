@@ -124,21 +124,21 @@
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label text-dark h3">ĐIỂM TỐI ĐA</label>
-                            <input type="number" name="Max_Point" #Max_Point1="ngModel" min="0" max="100" 
+                            <input type="number" name="Max_Point" #Max_Point1="ngModel" pattern="^[0-9]{1,3}$"
                                 [(ngModel)]="service.formData.Max_Point" required class="form-control col-sm-7"
                                 [ngClass]="{ 'is-invalid':(Max_Point1.errors && Max_Point1.touched),'is-valid': !Max_Point1.errors && Max_Point1.touched}">
                             <span class="text-danger offset-sm-5" *ngIf="Max_Point1.invalid && Max_Point1.dirty">
-                                Điểm Tối Đa phải từ 0 đến 100 điểm
+                                Điểm Tối Đa phải từ 0 đến 999 điểm
                             </span>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label text-dark h3">THỜI GIAN TỐI ĐA (s)</label>
-                            <input type="number" name="Time_Left" #Time_Left1="ngModel"
-                                [(ngModel)]="service.formData.Time_Left" min="0" max="10000" required
+                            <input type="number" name="Time_Left" #Time_Left1="ngModel" 
+                                [(ngModel)]="service.formData.Time_Left" pattern="^[0-9]{1,4}$" required
                                 class="form-control col-sm-7"
                                 [ngClass]="{ 'is-invalid':(Time_Left1.errors && Time_Left1.touched),'is-valid': !Time_Left1.errors && Time_Left1.touched}">
                             <span class="text-danger offset-sm-5" *ngIf="Time_Left1.invalid && Time_Left1.dirty">
-                                Thời Gian Tối Đa phải từ 0 đến 10000s
+                                Thời Gian Tối Đa phải từ 0 đến 9999s
                             </span>
                         </div>
                         <div class="form-group row" *ngIf="this.type==2;else status">

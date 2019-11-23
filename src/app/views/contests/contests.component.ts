@@ -96,6 +96,12 @@ export class ContestsComponent implements OnInit {
       console.log(this.listTop);
     this.service.resetForm(1);
   }
+  checkPoint(point)
+  {
+    console.log(point >=0 && point <=1000);
+      if (point >=0 && point <=1000) return false
+      else true;
+  }
   accentsTidy (s){
     var r=s+"";
     r=r.toLowerCase();

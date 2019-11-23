@@ -191,7 +191,7 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label text-dark h3">TÁC GIẢ</label>
-                        <select class="form-control" name="Id_Author" #Id_Author="ngModel" class="form-control col-sm-8"  [(ngModel)]="service.formData.Id_Author" >
+                        <select class="form-control" name="Id_Author" #Id_Author="ngModel" class="form-control col-sm-8"  [(ngModel)]="service.formData.Id_Author" readonly>
                                 <option [ngValue]="service.formData.Id_Author" *ngIf="this.objEmp && this.objEmp.hasOwnProperty(service.formData.Id_Author)">
                                     {{this.objEmp[service.formData.Id_Author].Email}}
                                 </option>
@@ -264,7 +264,7 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label text-dark h3">NGÀY TẠO</label>
-                        <input type="date" [ngModel]="service.formData.Create_Date | date:'yyyy-MM-dd'"
+                        <input type="date" [ngModel]="service.formData.Create_Date | date:'yyyy-MM-dd'" readonly
                             (ngModelChange)="service.formData.Create_Date = $event" name="Create_Date"
                             class="form-control col-sm-8 form-control col-sm-9-rounded" >
                     </div>

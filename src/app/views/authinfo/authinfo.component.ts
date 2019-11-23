@@ -61,6 +61,14 @@ export class AuthinfoComponent implements OnInit {
       this.user.Image = this.imageShow;
     }
   }
+  compareDate(date)
+{
+ var date_now= new Date();
+ var date0=new Date(date);
+ console.log(date0>date_now);
+    if (date0>=date_now) return true
+    else return false;
+}
   Update(form :NgForm)
   {
     if ( this.key!=null)

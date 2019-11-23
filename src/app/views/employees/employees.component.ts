@@ -29,7 +29,6 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
   user: any;
   ngOnInit(): void {
     var user=JSON.parse(localStorage.getItem('currentUser'));
-    console.log(user["Position"]);
     if (user["Position"]!=0)
     {
       this.router.navigate(['']);
@@ -107,6 +106,13 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
     r = r.replace(new RegExp(/[yýỳỹỷỵ]/g),"y");
     return r;
 };
+compareDate(date)
+{
+ var date_now= new Date();
+ var date0=new Date(date);
+    if (date0>=date_now) return true
+    else return false;
+}
   ngAfterViewInit(): void {
 
     this.dtTrigger.next();
