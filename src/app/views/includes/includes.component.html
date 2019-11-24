@@ -104,11 +104,11 @@
                         <div class="col-12 col-sm-3  overflow-auto" style="max-height:500px">
                                 <p class="w-100 font-weight-bold text-center">DANH SÁCH CÂU HỎI</p>
                             <div  *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp">
-                                    <div id="lb_quest" *ngIf=" this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="d-inline-block px-2 py-2"> 
+                                    <div id="lb_quest" *ngIf=" this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="d-inline-block px-2 py-2 w-100"> 
                                             <input type="checkbox"  (change)="checkall()" [checked]="this.chk"  class="d-inline" style="height: 15px;width: 15px;" > 
                                     </div>
                                 <ng-container *ngFor="let ques of this.listQues;">
-                                     <div id="lb_quest" *ngIf="ques.Id_Top==this.Id_Top && this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="d-inline-block px-2 py-2" (click)="showques(ques.Id)"> 
+                                     <div id="lb_quest" *ngIf="ques.Id_Top==this.Id_Top && this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="d-inline-block px-2 py-2 w-100" (click)="showques(ques.Id)"> 
                               
                                     <input type="checkbox" [checked]="this.objInc && this.objInc.hasOwnProperty(ques.Id)" (change)="submit(ques.Id)" [value]="ques.Id" class="d-inline" style="height: 15px;width: 15px;" > 
                                     <label class="d-inline" >{{this.changeCon(ques.Content_Ques)}}</label>

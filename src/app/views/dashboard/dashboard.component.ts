@@ -80,7 +80,7 @@ export class DashboardComponent implements OnInit {
           Date_Res:  data.toJSON().Date_Res
         })
     })
-this.listRes.reverse();
+this.listRes.sort((a, b)=> Number ( b.Point-a.Point || (b.Point==a.Point && a.TimeLeft_Res>b.TimeLeft_Res)));
 var count=0;
 var table = <HTMLTableElement>document.getElementById("tb_db");
   for (var res of this.listRes)
@@ -130,6 +130,7 @@ row.innerHTML='<tr><th>STT</th><th>Tài Khoản</th><th>Điểm</th></tr>';
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
         var cell3   = row.insertCell(2);
+        cell3.className="text-danger";
         cell1.innerHTML = count.toString();
         cell2.innerHTML = this.OjbCus[res.Id_Cus].Username.toString();
         cell3.innerHTML =  res.Point.toString()+"đ";
