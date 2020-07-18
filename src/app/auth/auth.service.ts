@@ -31,7 +31,7 @@ export class AuthService {
     this.loading = true;
     var status =1;
     this.errorMessage="";
-    await this.firebase.database.ref('Employee').orderByChild('Email').equalTo(email).once("value", (value) => {
+    await this.firebase.database.ref('Employee').orderByChild('Email').equalTo(email).limitToFirst(1).once("value", (value) => {
       if (value.exists()) {
         value.forEach((element) => {
           localStorage.setItem('keyUser', JSON.stringify(element.key));

@@ -14,7 +14,7 @@ export class DefaultLayoutComponent implements OnInit,OnDestroy {
   public element: HTMLElement;
   user : any;
   len : number= 0;
-  constructor(  private authservice : AuthService,private  firebase: AngularFireDatabase,@Inject(DOCUMENT) _document?: any) {
+  constructor(  private authservice : AuthService,@Inject(DOCUMENT) _document?: any) {
 
     this.changes = new MutationObserver((mutations) => {
       this.sidebarMinimized = _document.body.classList.contains('sidebar-minimized');

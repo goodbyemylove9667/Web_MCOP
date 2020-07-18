@@ -5,56 +5,51 @@
     background-size: cover;
     background-repeat: no-repeat;
 }
-.btn
-{
-    border-radius: 8px;
-    background: #0000FF;
-    font-weight: bolder;
-}
-.btn:hover
-{
-    border-radius: 8px;
-    background: #9900CC;
-    font-weight: bolder;
-}
-.card
-{
-    background: none;
-    border: none;
-}
-.input-group
-{
-    padding-top: 5px;
-    padding-bottom:5px;
-    border-radius: 30px;
-    border: solid white 2px;
-}
-.input-group-text
-{
-    background: none;
-    border: none;
-    color: white;
-}
 .form-control
 {
-    background: none;
-    border: none;
-    color: white;
-    font-weight: bolder;
+    display: block;
+    width: 100%;
+    height: calc(1.5em + 1.2rem + 2px);
+    padding: .6rem 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgba(255,255,255,.85);
+    background-color: transparent;
+    background-clip: padding-box;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 0;
+    -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
 }
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+::placeholder { 
     color: white;
-    opacity: 1; /* Firefox */
-  }
-  
-  :-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: white;
-  }
-  
-  ::-ms-input-placeholder { /* Microsoft Edge */
-    color: white;
+    opacity: 0.6;
   }
   .hidden-pass
   {
       opacity: 0.5;
   }
+  .login__block {
+    max-width: 400px;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    -webkit-animation-name: fadeInUp;
+    animation-name: fadeInUp;
+    -webkit-animation-duration: .3s;
+    animation-duration: .3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    background-color: rgba(0,0,0,.2);
+    border:none;
+    
+    -webkit-box-shadow: 0 1px 5px rgba(0,0,0,.1);
+    box-shadow: 0 1px 5px rgba(0,0,0,.1);
+}
+.btn-theme {
+    background-color: rgba(255,255,255,.125);
+    color: #fff;
+}

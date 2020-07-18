@@ -1,6 +1,8 @@
 import { Component,OnInit } from '@angular/core';
 import {AuthService} from '../../auth/auth.service';
 import { NgForm } from '@angular/forms';
+
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: 'login.component.html',
@@ -12,6 +14,7 @@ export  class  LoginComponent  implements  OnInit {
   message="";
   type=1;
   showpass=false;
+  FB: any;
   constructor(private  service:  AuthService) { }
   ngOnInit() {
   }
@@ -43,6 +46,7 @@ export  class  LoginComponent  implements  OnInit {
     }
     );
     }
+
   showpss()
   {
     this.showpass=true;

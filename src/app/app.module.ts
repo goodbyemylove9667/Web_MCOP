@@ -27,7 +27,8 @@ import { P404Component } from './views/error/404.component';
 import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
-import { AuthService } from '../app/auth/auth.service'
+import { AuthService } from '../app/auth/auth.service';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 const APP_CONTAINERS = [
   DefaultLayoutComponent
 ];
@@ -60,6 +61,7 @@ import { ContestsComponent } from './views/contests/contests.component';
 import { QuestionsComponent } from './views/questions/questions.component';
 import { TopicsComponent } from './views/topics/topics.component';
 import { ResultsComponent } from './views/results/results.component';
+import { GroupsComponent } from './views/groups/groups.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -85,7 +87,8 @@ import { ResultsComponent } from './views/results/results.component';
     DataTablesModule,
     NgbModule,
     ModalModule.forRoot(),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    LoggerModule.forRoot({serverLoggingUrl: '/api/logs', level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR})
   ],
   declarations: [
     AppComponent,
@@ -102,7 +105,8 @@ import { ResultsComponent } from './views/results/results.component';
     ContestsComponent,
     QuestionsComponent,
     TopicsComponent,
-    ResultsComponent
+    ResultsComponent,
+    GroupsComponent
   ],
   providers: [AuthService,CookieService , {
     provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true

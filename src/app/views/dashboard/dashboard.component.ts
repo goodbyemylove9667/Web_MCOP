@@ -30,7 +30,6 @@ export class DashboardComponent implements OnInit {
   radioModel: string = 'Month';
 
  async ngOnInit() {
-
   this.empservice.getAllList().then((value)=>
   {
     this.emp_sl=Object.getOwnPropertyNames(value).length;     
