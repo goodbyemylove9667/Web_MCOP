@@ -20,6 +20,7 @@ export interface NavData {
   icon?: string;
   badge?: NavBadge;
   title?: boolean;
+  color?: string;
   children?: NavData[];
   variant?: string;
   attributes?: NavAttributes;
@@ -29,7 +30,7 @@ export interface NavData {
   wrapper?: NavWrapper;
 }
 
-export const navItems: NavData[] = [
+export let navItems: NavData[] = [
   {
     name: 'Dashboard',
     url: '/dashboard',

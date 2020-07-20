@@ -1,3 +1,4 @@
+<block-ui>
 <app-header
   [navbarBrandRouterLink]="['/dashboard']"
   [fixed]="true"
@@ -26,7 +27,9 @@
 </app-header>
 <div class="app-body">
   <app-sidebar [fixed]="true" [display]="'lg'">
-    <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="sidebarMinimized"></app-sidebar-nav>
+    <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="sidebarMinimized" *ngIf="Nav_loading">
+
+    </app-sidebar-nav>
     <app-sidebar-minimizer></app-sidebar-minimizer>
   </app-sidebar>
   <!-- Main content -->
@@ -45,3 +48,4 @@
   <span><a href="https://www.facebook.com/groups/1182020445201800">M.C.O.P</a> &copy; F4-CNTT1 Forever 2016-2019 </span>
   <span class="ml-auto">Người thực hiện <a href="https://www.facebook.com/good.love.1997/">Lâm Khánh Hào</a></span>
 </app-footer>
+</block-ui>

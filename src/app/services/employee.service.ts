@@ -54,7 +54,7 @@ export class EmployeeService {
   }
     getList() {
       return new Promise<Object>((resolve) => {
-        this.firebase.database.ref('Employee').orderByChild("Position").equalTo(1).once("value",(value)=>
+        this.firebase.database.ref('Employee').orderByChild("Group").equalTo(1).once("value",(value)=>
         resolve(value.toJSON()),(error)=>reject(error))
       });
     }

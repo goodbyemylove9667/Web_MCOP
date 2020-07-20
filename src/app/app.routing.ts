@@ -17,6 +17,8 @@ import { QuestionsComponent } from './views/questions/questions.component';
 import { IncludesComponent } from './views/includes/includes.component';
 import { ResultsComponent } from './views/results/results.component';
 import { RegisterComponent } from './views/register/register.component';
+import { MenusComponent } from './views/menus/menus.component';
+import { GroupsComponent } from './views/groups/groups.component';
 export const routes: Routes = [
   {
     path: '',
@@ -119,6 +121,20 @@ export const routes: Routes = [
         component: IncludesComponent,
         data: {
           title: 'Quản Lí QH Chủ Đề-Cuộc Thi'
+        }
+      },
+      {
+        path: 'menu',
+        component: MenusComponent,
+        data: {
+          title: 'Quản Lí Menu'
+        }
+      },
+      {
+        path: 'group',
+        component: GroupsComponent,
+        data: {
+          title: 'Quản Lí Nhóm Quyền'
         }
       },
       // {

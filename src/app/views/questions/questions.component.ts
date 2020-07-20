@@ -43,7 +43,7 @@ export class QuestionsComponent implements OnInit {
           }
           )
       }
-      this.objTop = res;
+      this.objTop = {...res};
     }, error => {
       this.toastr.error('Không Tải Được Dữ Liệu Chủ Đề', 'Thông Báo!', { timeOut: 1000 });
     });

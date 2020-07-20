@@ -1,96 +1,28 @@
+<style>
+  .quick-stats__item 
+  {
+       padding: 1.85rem 1.75rem 1.75rem 2rem;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 1px 5px rgba(0,0,0,.1);
+    box-shadow: 0 1px 5px rgba(0,0,0,.1);
+    margin-bottom: 30px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: white;
+  }
+  .quick-stats__info {
+    min-width: 0;
+  }
+  .quick-stats__info small{
+    color: rgba(255,255,255,.5);
+  }
+</style>
 <div class="animated fadeIn">
-  <div class="row">
-    <a class="col-sm-6 col-lg-4" href="/employee">
-      <div class="card text-white bg-primary">
-        <div class="card-body pb-0">
-          <div class="btn-group float-right">
-            <i class="fa fa-user-circle-o fa-5x"></i>
-          </div>
-          <div class="text-value">{{this.emp_sl}}</div>
-          <div>Nhân Viên</div>
-        </div>
-        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-          <canvas ></canvas>
-        </div>
-      </div>
-    </a>
-    <!--/.col-->
-    <a class="col-sm-6 col-lg-4" href="/customer">
-      <div class="card text-white bg-primary">
-        <div class="card-body pb-0">
-          <div class="btn-group float-right">
-
-            <i class="fa fa-user fa-5x"></i>
-          </div>
-          <div class="text-value">{{this.cus_sl}}</div>
-          <div>Người Chơi</div>
-        </div>
-        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-          <canvas ></canvas>
-        </div>
-      </div>
-    </a>
-    <!--/.col-->
-    <a class="col-sm-6 col-lg-4" href="/contest">
-      <div class="card text-white bg-primary">
-        <div class="card-body pb-0">
-          <div class="btn-group float-right">
-            <i class="fa fa-laptop fa-5x"></i>
-          </div>
-          <div class="text-value">{{this.con_sl}}</div>
-          <div>Cuộc Thi</div>
-        </div>
-        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-          <canvas ></canvas>
-        </div>
-      </div>
-    </a>
-    <!--/.col-->
-    <a class="col-sm-6 col-lg-4" href="/topic">
-      <div class="card text-white bg-primary">
-        <div class="card-body pb-0">
-          <div class="btn-group float-right">
-            <i class="fa fa-folder-open fa-5x"></i>
-          </div>
-          <div class="text-value">{{this.top_sl}}</div>
-          <div>Chủ Đề</div>
-        </div>
-        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-          <canvas ></canvas>
-        </div>
-      </div>
-    </a>
-    <!--/.col-->
-    <a class="col-sm-6 col-lg-4" href="/include">
-      <div class="card text-white bg-primary">
-        <div class="card-body pb-0">
-          <div class="btn-group float-right">
-            <i class="fa fa-file fa-5x"></i>
-          </div>
-          <div class="text-value">{{this.inc_sl}}</div>
-          <div>QH Chủ Đề - Cuộc Thi</div>
-        </div>
-        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-          <canvas ></canvas>
-        </div>
-      </div>
-    </a>
-    <!--/.col-->
-    <a class="col-sm-6 col-lg-4" href="/question">
-      <div class="card text-white bg-primary">
-        <div class="card-body pb-0">
-          <div class="btn-group float-right">
-            <i class="fa fa-book fa-5x"></i>
-          </div>
-          <div class="text-value">{{this.quest_sl}}</div>
-          <div>Bộ Đề</div>
-        </div>
-        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-          <canvas ></canvas>
-        </div>
-      </div>
-    </a>
-    <!--/.col-->
+  <div class="row" id="db_menu">
   </div>
   <!--/.row-->
   <div class="card">
@@ -98,7 +30,7 @@
         <div class="d-flex justify-content-between">
               <h4 class="card-title mb-0">Xếp Hạng</h4>
 
-                <select  id="slc_db" (change)="change()">
+                <select class="custom-select w-auto" id="slc_db" (change)="change()">
                 </select>
           </div>
           <div class="row justify-content-center mt-2">

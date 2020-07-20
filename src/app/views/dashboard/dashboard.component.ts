@@ -1,27 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { Result, ResultsService } from '../../services/results.service';
 import { Topic, TopicsService } from '../../services/topics.service';
-import { EmployeeService } from '../../services/employee.service';
 import { CustomerService } from '../../services/customer.service';
-import { QuestionsService } from '../../services/questions.service';
 import { ContestsService } from '../../services/contests.service';
-import { IncludesService } from '../../services/includes.service';
-
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { navItems } from '../../_nav';
+import { MenusService } from '../../services/menus.service';
 @Component({
   selector: 'app-contests',
   templateUrl: 'dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
-  constructor(private empservice: EmployeeService,private cusservice: CustomerService,private quesservice: QuestionsService,private topservice: TopicsService,private conservice: ContestsService,private incservice: IncludesService,private resservice: ResultsService) { }
-  emp_sl:number=0;
+  @BlockUI() blockUI: NgBlockUI;
+  constructor(private cusservice: CustomerService,
+    private topservice: TopicsService,private conservice: ContestsService,private menuservice: MenusService,private resservice:ResultsService) {
+    this.blockUI.start('Loading...'); 
+   }
   cus_sl:number=0;
-  quest_sl:number=0;
   top_sl:number=0;
   con_sl:number=0;
-  inc_sl:number=0;
   listRes: Array<Result> = [];
   listTop: Array<Topic> = [];
   award : Array<Object> =[];
@@ -30,16 +27,12 @@ export class DashboardComponent implements OnInit {
   radioModel: string = 'Month';
 
  async ngOnInit() {
-  this.empservice.getAllList().then((value)=>
-  {
-    this.emp_sl=Object.getOwnPropertyNames(value).length;     
-  });
-  this.cusservice.getList().then((value)=>
+  await  this.cusservice.getList().then((value)=>
   {
     this.cus_sl=Object.getOwnPropertyNames(value).length; 
     this.OjbCus=value;
   });
-  this.conservice.getList().then((value)=>
+ await  this.conservice.getList().then((value)=>
   {
     this.con_sl=Object.getOwnPropertyNames(value).length; 
     this.OjbCon=value;
@@ -47,7 +40,7 @@ export class DashboardComponent implements OnInit {
   var x = document.getElementById("slc_db");
   var chck=1;
   var dfkey='';
-  this.topservice.getList().then((value)=>
+  await   this.topservice.getList().then((value)=>
   {
     this.top_sl=Object.getOwnPropertyNames(value).length; 
     for (let key in value) {
@@ -62,11 +55,7 @@ export class DashboardComponent implements OnInit {
       x.appendChild(option);
     }
   }); 
-  this.quesservice.getList().then((value)=>
-  {
-    this.quest_sl=Object.getOwnPropertyNames(value).length; 
-  });
-  this.resservice.getorderList().then((value)=>
+  await  this.resservice.getorderList().then((value)=>
   {
     value.forEach((data)=>
     {
@@ -100,7 +89,78 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
     if (count==10) break;
   }
   });
-  
+  var db_menu = document.getElementById("db_menu");
+  var str=db_menu.attributes[0].nodeName;
+  navItems.forEach(async(element)=>
+  {
+    if (element.url=='/customer')
+    {
+      db_menu.innerHTML+=`<a `+str+` class="col-6 col-sm-3 text-decoration-none" href="`+element.url+`">
+      <div `+str+` class="card text-white" style="background-color:`+element.color+`">
+        <div `+str+` class="card-body py-2">
+          <div `+str+` class="btn-group float-right">
+            <i `+str+` class="`+element.icon+` fa-3x"></i>
+          </div>
+          <div `+str+` class="text-value">`+element.name+`</div>
+          <div `+str+` style="opacity:0.8;">`+ this.cus_sl+`</div>
+        </div>
+      </div>
+    </a>`
+    }
+    else
+    if (element.url=='/contest')
+    {
+      db_menu.innerHTML+=`<a `+str+` class="col-6 col-sm-3 text-decoration-none" href="`+element.url+`">
+      <div `+str+` class="card text-white" style="background-color:`+element.color+`">
+        <div `+str+` class="card-body py-4">
+          <div `+str+` class="btn-group float-right">
+            <i `+str+` class="`+element.icon+` fa-3x"></i>
+          </div>
+          <div `+str+` class="text-value">`+element.name+`</div>
+          <div `+str+` style="opacity:0.8;">`+ this.con_sl+`</div>
+        </div>
+      </div>
+    </a>`
+    }
+    else
+    if (element.url=='/topic')
+    {
+      db_menu.innerHTML+=`<a `+str+` class="col-6 col-sm-3 text-decoration-none" href="`+element.url+`">
+      <div `+str+` class="card text-white" style="background-color:`+element.color+`">
+        <div `+str+` class="card-body py-4">
+          <div `+str+` class="btn-group float-right">
+            <i `+str+` class="`+element.icon+` fa-3x"></i>
+          </div>
+          <div `+str+` class="text-value">`+element.name+`</div>
+          <div `+str+` style="opacity:0.8;">`+ this.top_sl+`</div>
+        </div>
+      </div>
+    </a>`
+    }
+   else
+   if (element.url!='/dashboard')
+   {
+     var tb=element.url.substr(2);
+     tb=element.url[1].toUpperCase()+tb;
+     var sl=0;
+     await this.menuservice.getCkList_Count(tb).then((value)=>
+     {
+       sl=value;
+     }).catch(()=>{sl=0});
+     db_menu.innerHTML+=`<a `+str+` class="col-6 col-sm-3 text-decoration-none" href="`+element.url+`">
+      <div `+str+` class="card text-white" style="background-color:`+element.color+`">
+        <div `+str+` class="card-body py-4">
+          <div `+str+` class="btn-group float-right">
+            <i `+str+` class="`+element.icon+` fa-3x"></i>
+          </div>
+          <div `+str+` class="text-value">`+element.name+`</div>
+          <div `+str+` style="opacity:0.8;">`+ sl+`</div>
+        </div>
+      </div>
+    </a>`
+   }
+  });
+  this.blockUI.stop(); 
  }
  change()
  {

@@ -14,6 +14,8 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 import { ToastrModule } from 'ngx-toastr';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { Select2Module } from 'ng2-select2';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
@@ -29,6 +31,8 @@ import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 import { AuthService } from '../app/auth/auth.service';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { BlockUIModule } from 'ng-block-ui';
+import { IconPickerModule } from 'ngx-icon-picker';
 const APP_CONTAINERS = [
   DefaultLayoutComponent
 ];
@@ -61,6 +65,7 @@ import { ContestsComponent } from './views/contests/contests.component';
 import { QuestionsComponent } from './views/questions/questions.component';
 import { TopicsComponent } from './views/topics/topics.component';
 import { ResultsComponent } from './views/results/results.component';
+import { MenusComponent } from './views/menus/menus.component';
 import { GroupsComponent } from './views/groups/groups.component';
 @NgModule({
   imports: [
@@ -86,9 +91,14 @@ import { GroupsComponent } from './views/groups/groups.component';
     ChartsModule,
     DataTablesModule,
     NgbModule,
+    ReactiveFormsModule,
     ModalModule.forRoot(),
     ToastrModule.forRoot(),
-    LoggerModule.forRoot({serverLoggingUrl: '/api/logs', level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR})
+    LoggerModule.forRoot({serverLoggingUrl: '/api/logs', level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR}),
+    BlockUIModule.forRoot(),
+    ColorPickerModule,
+    Select2Module,
+    IconPickerModule
   ],
   declarations: [
     AppComponent,
@@ -106,6 +116,7 @@ import { GroupsComponent } from './views/groups/groups.component';
     QuestionsComponent,
     TopicsComponent,
     ResultsComponent,
+    MenusComponent,
     GroupsComponent
   ],
   providers: [AuthService,CookieService , {

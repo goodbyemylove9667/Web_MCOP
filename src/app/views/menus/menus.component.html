@@ -1,141 +1,173 @@
 <section>
-    <div class="">
+  <div class="">
       <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <div class="row justify-content-between">
-                <div class="col-xs-12 col-sm-6">
-                  <h4>Quản Lí Menu</h4>
-                </div>
-                <div class="col-xs-12 col-sm-6 text-right">
-                    <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder" (click)="this.refresh()">
-                        <i class="fa fa-retweet"></i>
-                        Refresh
-                      </button>
-                  <button type="button" class="btn btn-info mr-1 text-light font-weight-bolder" data-toggle="modal" (click)="this.showAdd()">
-                    <i class="fa fa-plus" aria-hidden="true"> </i>
-                    Thêm
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="input-group mt-3 row justify-content-end">
-                <div class="input-group-prepend mr-2">
-                    <select [(ngModel)]="slc_search" class="custom-select">
-                        <option  [ngValue]="2" [selected]="true" >Tên</option>
-                        <option  [ngValue]="4">Hoạt Động</option>
-                      </select>
-                </div>
-                <div class="input-group-prepend">
-              <input type="text" id="mySearchText" style="padding-left:5px;padding-right: 5px;" placeholder="Search..." [(ngModel)]="inp_search">
-              <button id="mySearchButton" class="btn btn-light order" (click)="filter()"><i class="fa fa-search" aria-hidden="true"></i></button>
-              </div>
-              </div>
-            <div class="card-body" style="overflow-x: scroll;">
-                 <!--  START- LIST-->
-              <table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" id="dttb">
-                <thead class="bg-primary">
-                  <tr>
-                    <th>STT</th>
-                    <th>ID</th>
-                    <th>Tên</th>
-                    <th>Icon</th>
-                    <th>Group</th>
-                    <th>Hoạt Động</th>
-                    <th>Hành Động</th>
-                  </tr>
-                </thead>
-                <tbody >
-                    <tr *ngFor="let memnu of this.list;let i=index">
-                        <td>{{i+1}}</td>
-                        <th scope="row">{{menu.Id}}</th>
-                        <td >
-                            {{menu.Name_Top}}
-                        </td>
-                        <td class="row justify-content-center w-100">
-                          <div *ngIf="menu.Image!=null">
-                            <img [src]="menu.Image"  width="40px" height="40px"/>
-                            </div>
-
-                            <div *ngIf="menu.Image==null">
-                                <img src="https://www.clipartwiki.com/clipimg/detail/99-996598_technology-icons-clip-art-clip-art-information-technology.png" width="40px" height="40px" />
-                                </div>
-                        </td>
-                        <td><span *ngIf="menu.Status==1; else SAI;" style="color: green;">Hoạt động</span>
-                          <ng-template #SAI> <span style="color: red;">Bị Cấm</span></ng-template>
-                        </td>
-                        <td class="text-center">
-                              <button (click)="showedit(top)" class="bg-success" style="border:0">
-                              <i class="fa fa-edit"></i>
+          <div class="col-md-12">
+              <div class="card">
+                  <div class="card-header">
+                      <div class="row justify-content-between">
+                          <div class="col-xs-12 col-sm-6">
+                              <h4>Quản Lí Menu</h4>
+                          </div>
+                          <div class="col-xs-12 col-sm-6 text-right">
+                              <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder"
+                                  (click)="this.refresh()">
+                                  <i class="fa fa-retweet"></i>
+                                  Refresh
                               </button>
-                              
+                              <button type="button" class="btn mr-1 text-light font-weight-bolder" style="background-color: #2719b2;"
+                              data-toggle="modal" (click)="this.showAdd()">
+                              <i class="fa fa-plus" aria-hidden="true"> </i>
+                              Thêm
+                          </button>
+                        </div>
+                    </div>
+                </div>
+                          <div class="input-group mt-3 row justify-content-end">
+                            <div class="input-group-prepend mr-2">
+                                <select [(ngModel)]="slc_search" class="custom-select">
+                                    <option [ngValue]="1" [selected]="true">Tên</option>
+                                    <option [ngValue]="4">Hoạt Động</option>
+                                </select>
+                            </div>
+                            <div class="input-group-prepend">
+                                <input type="text" class="form-control" id="mySearchText" style="padding-left:5px;padding-right: 5px;"
+                                    placeholder="Search..." [(ngModel)]="inp_search">
+                                <button id="mySearchButton" class="btn btn-light order" (click)="filter()"><i
+                                        class="fa fa-search" aria-hidden="true"></i></button>
+                            </div>
+                          </div>
+
+
+                  <div class="card-body" style="overflow-x: scroll;">
+                      <!--  START- LIST-->
+                      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover"
+                      id="dttb">
+                      <thead class="bg-primary">
+                          <tr>
+                              <th>STT</th>
+                              <th>Tên</th>
+                              <th>Url</th>
+                              <th>Group</th>
+                              <th>Màu</th>
+                              <th>Hoạt Động</th>
+                              <th>Hành Động</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let menu of this.list;let i=index">
+                              <td>{{i+1}}</td>
+                             <td>
+                                  {{menu.Name}}
+                              </td>
+                              <td>
+                                {{menu.Url}}
+                            </td>
+                            <td>
+                              {{menu.Group}}
                           </td>
-                      </tr>
-                </tbody>
-              </table>
-              <!--  END - LIST-->
-            </div>
+                          <td>
+                            {{menu.Color}}
+                        </td>
+                              <td><span *ngIf="menu.Status==1; else SAI;" style="color: green;">Hoạt động</span>
+                                  <ng-template #SAI> <span style="color: red;">Bị Cấm</span></ng-template>
+                              </td>
+                              <td class="text-center">
+                                  <button (click)="showedit(menu)" class="bg-success" style="border:0">
+                                      <i class="fa fa-edit"></i>
+                                  </button>
+
+                              </td>
+                          </tr>
+                      </tbody>
+                        </table>
+                     <!--  END- LIST-->
+                  </div>
+              </div>
           </div>
-        </div>
       </div>
-    </div>
-  </section>
-  
-  <!-- begin modal create -->
-  
-  <div bsModal #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title w-100 text-center" *ngIf="this.type==1" >Thêm Chủ Đề</h4>
-          <h4 class="modal-title w-100 text-center" *ngIf="this.type==2" >Cập Nhật Chủ Đề</h4>
-          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-              <!-- START CREATE -->
-              <form #form="ngForm" autocomplete="off">
-                  <input *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id"  hidden>
-                  <div class="row justify-content-center mb-2 w-100">
-                  <img [src]="service.formData.Image" class="col" style="max-height:300px;max-width:300px;"/>
-               
-                  </div>
-                  <div class="form-group row">
-          
-                      <label class="col-sm-3 col-form-label text-dark h3">ẢNH</label>
-                      <input #myInput type="file" (change)="onFileChanged($event)" />
-                      <input name="Image" #Image1="ngModel" [(ngModel)]="service.formData.Image" hidden>
-                  </div>
-                  <div class="form-group row">
-                      <label  class="col-sm-3 col-form-label text-dark h3">TÊN</label>
-                      <input name="Name_Top" #Name_Top1="ngModel" [(ngModel)]="service.formData.Name_Top"  minlength="3" maxlength="100"   required class="form-control col-sm-9"
-                      [ngClass]="{ 'is-invalid':(Name_Top1.errors && Name_Top1.touched),'is-valid': !Name_Top1.errors && Name_Top1.touched}" [disabled]="this.type==2">
-                      <span class="text-danger offset-sm-3" *ngIf="Name_Top1.invalid && Name_Top1.dirty">
-                        Tên Chủ Đề phải từ 3 đến 100 kí tự
-                      </span>
-                    </div>
-                  <div class="form-group row" *ngIf="this.type==2;else status">
-                    <label  class="col-sm-3 col-form-label text-dark h3">HOẠT ĐỘNG</label>
-                    <select name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" required class="form-control col-sm-9">
-                      <option  [ngValue]="0" >Bị Cấm</option>
-                      <option  [ngValue]="1">Hoạt Động</option>
-                    </select>
-                   
-                  </div>
-                  <ng-template #status><input name="Status" [(ngModel)]="service.formData.Status" hidden></ng-template>
-                  <div class="form-group row pull-left ml-5">
-                    <button type="button"  data-dismiss="modal" (click)="this.service.resetForm(this.type)"  class="btn btn-danger btn-block font-weight-bolder">RESET</button>
-                  </div>
-                    <div class="form-group row pull-right mr-5">
-                      <button type="button" (click)="this.onSubmit(form)"  [disabled]="form.invalid" data-dismiss="modal" class="btn btn-info btn-block text-light font-weight-bolder">SUBMIT</button>
-                    </div>
-                </form>
-              <!-- END -CREATE-->
-        </div>
-      </div>
-    </div>
   </div>
-  
-  <!-- end modal create -->
+
+</section>
+<!-- begin modal create -->
+
+<div bsModal #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title w-100 text-center" *ngIf="this.type==1">Thêm Menu</h4>
+                <h4 class="modal-title w-100 text-center" *ngIf="this.type==2">Cập Nhật Menu</h4>
+                <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- START CREATE -->
+                <form #form="ngForm" autocomplete="off">
+                    <input *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id"  hidden>
+                    <div class="form-group row">
+                        <label  class="col-sm-3 col-form-label text-dark h3">TÊN</label>
+                        <input name="Name" #Name1="ngModel" [(ngModel)]="service.formData.Name"  minlength="3" maxlength="100"   required class="form-control col-sm-9"
+                        [ngClass]="{ 'is-invalid':Name1.errors && Name1.dirty,'is-valid': !Name1.errors && Name1.dirty}" >
+                        <span class="text-danger offset-sm-3" *ngIf="Name1.invalid && Name1.dirty">
+                          Tên Menu phải từ 3 đến 100 kí tự
+                        </span>
+                      </div>
+                      <div class="form-group row">
+                        <label  class="col-sm-3 col-form-label text-dark h3">URL</label>
+                        <input name="Url" #Url1="ngModel" [(ngModel)]="service.formData.Url"  minlength="3" maxlength="100"   required class="form-control col-sm-9"
+                        [ngClass]="{ 'is-invalid':Url1.errors && Url1.dirty,'is-valid': !Url1.errors && Url1.dirty}" >
+                        <span class="text-danger offset-sm-3" *ngIf="Url1.invalid && Url1.dirty">
+                            Url phải từ 3 đến 100 kí tự
+                        </span>
+                      </div>
+                      <div class="form-group row">
+                        <label  class="col-sm-3 col-form-label text-dark h3">NHÓM</label>
+                        <select2 [data]="this.listGroup" [value]="this.value_group"
+                        [options]="options_group" class="col-sm-9 px-0" *ngIf="loading"  (valueChanged)="changed($event)" ></select2>
+                        <input name="Group" #Group1="ngModel" [(ngModel)]="service.formData.Group" required hidden >  
+                        <span class="text-danger offset-sm-3" *ngIf="Group1.errors">
+                            Nhóm quyền không được để trống 
+                        </span>
+                    </div>
+                    <div class="form-group row">
+                        <label  class="col-sm-3 col-form-label text-dark h3">ICON</label>
+                        <div class="input-group col-sm-9 px-0">                       
+                            <input [iconPicker]="icon" />
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                        <label  class="col-sm-3 col-form-label text-dark h3">MÀU</label>
+                        <div class="input-group col-sm-9 px-0">
+                            <input #ignoredInput type="text" class="form-control" [value]="service.formData.Color"
+                            [(colorPicker)]="service.formData.Color"              
+                            [(cpToggle)]="toggle" readonly
+                            >
+                            <div class="input-group-append">
+                              <span class="input-group-text" style="width: 40px;" [ngStyle]="{'background-color': service.formData.Color}" #ignoredButton (click)="toggle=!toggle"></span>
+                            </div>
+                          </div>
+                      </div>
+                    <div class="form-group row" *ngIf="this.type==2;else status">
+                      <label  class="col-sm-3 col-form-label text-dark h3">HOẠT ĐỘNG</label>
+                      <select name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" required class="form-control col-sm-9">
+                        <option  [ngValue]="0" >Bị Cấm</option>
+                        <option  [ngValue]="1">Hoạt Động</option>
+                      </select>
+                     
+                    </div>
+                    <ng-template #status><input name="Status" [(ngModel)]="service.formData.Status" hidden></ng-template>
+                    <div class="form-group row pull-left ml-5">
+                      <button type="button"  data-dismiss="modal" (click)="this.service.resetForm(this.type)"  class="btn btn-danger btn-block font-weight-bolder">RESET</button>
+                    </div>
+                      <div class="form-group row pull-right mr-5">
+                        <button type="button" (click)="this.onSubmit(form)"  [disabled]="form.invalid" data-dismiss="modal" class="btn btn-info btn-block text-light font-weight-bolder">SUBMIT</button>
+                      </div>
+                </form>
+                <!-- END -CREATE-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end modal create -->

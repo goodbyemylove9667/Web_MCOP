@@ -10,6 +10,7 @@ export interface Menu
     Icon:  string,
     Url:  string,
     Group : string,
+    Color: string,
     Status : number
 }
 @Injectable({
@@ -31,7 +32,8 @@ export class MenusService {
       Name: '',
       Icon: '',
       Url: '',
-      Group:'0',
+      Group:'',
+      Color:'#23282c',
       Status : 1
     };
   }
@@ -53,10 +55,17 @@ export class MenusService {
         resolve(value.toJSON()),(error)=>reject(error))
       });
     }
+    getCkList_Count(tb:string)
+    {
+      return new Promise<any>((resolve) => {
+        this.firebase.database.ref(tb).orderByChild("Status").equalTo(1).once("value",(value)=>
+        resolve(value.numChildren()))
+      });
+    }
   showModal(obj: Menu) {
     if (obj != null) {
       this.formData = Object.assign({}, obj);
-      localStorage.setItem("topic_data",JSON.stringify( this.formData));
+      localStorage.setItem("Menu_data",JSON.stringify( this.formData));
 
     } else {
       this.resetForm(1);
@@ -65,9 +74,9 @@ export class MenusService {
 
  async insert(form :NgForm)
  {
-  await this.firebase.database.ref('Topic').orderByChild("Name").equalTo(form.value["Name"]).once("value", (value) => {
+  await this.firebase.database.ref('Menu').orderByChild("Name").equalTo(form.value["Name"]).once("value", (value) => {
     if (value.exists()) {
-      this.msg = "Chủ Đề Đã Tồn Tại";
+      this.msg = "Menu Đã Tồn Tại";
     }
     else {
       this.firebase.database.ref('Menu').push(
@@ -88,6 +97,7 @@ async update(form :NgForm)
       Name:  form.value["Name"],
       Icon:  form.value["Icon"],
       Group: form.value["Group"],
+      Color: form.value["Color"],
       Status : form.value["Status"],
    }
   ).then(()=>
