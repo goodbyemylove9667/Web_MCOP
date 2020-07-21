@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { GroupsService, Group } from '../../services/groups.service';
 import { Select2OptionData } from 'ng2-select2';
+declare var $:any;
 @Component({
   selector: 'app-questions',
   templateUrl: './menus.component.html',
@@ -40,9 +41,11 @@ export class MenusComponent implements OnInit {
       language: {
         "noResults": function(){
             return "Không tìm thấy";
-        }
+        },
+        allowClear: true
     },
-      multiple:true
+      multiple:true,
+      allowClear:true
     }
     this.loading=false;
    await this.groupservice.getList().then((res) => {
@@ -112,7 +115,38 @@ export class MenusComponent implements OnInit {
    ngOnInit(): void {  
     this.service.resetForm(1);
     this.initTable();
+    $(function() {
+      var pickerOption={
+        align: 'center', 
+        arrowClass: 'btn-primary',
+        arrowPrevIconClass: 'fa fa-angle-left text-light',
+        arrowNextIconClass: 'fa fa-angle-right text-light',
+        cols: 10,
+        footer: true,
+        header: true,
+        icon: 'fa-fas fa-user',
+        iconset: 'fontawesome4',
+        labelHeader: '{0} của {1} trang',
+        labelFooter: '{0} - {1} của {2} các icon',
+        placement: 'bottom', 
+        rows: 5,
+        search: true,
+        searchText: 'Tìm Kiém',
+        selectedClass: 'btn-success',
+        unselectedClass: ''
+       };
+          $('#iconpicker').iconpicker(pickerOption);
+        function setIcon(icon)
+        {
+          pickerOption.icon=icon;
+          $('#iconpicker').iconpicker(pickerOption);
+        }
+        $('#iconpicker').on('change', function(e) {
+            $('#iconpicker_txt').val(e.icon);
+        });
+    });   
   }
+ 
   changeCon(s)
   {
     if (s.length>50)
@@ -135,28 +169,12 @@ export class MenusComponent implements OnInit {
     return r;
   };
   ngAfterViewInit(): void {
-
     this.dtTrigger.next();
   }
-  refresh() {
+   refresh() {
     this.list = [];
-    this.listGroup= [];
-    this.objGroup={};
     this.rerender();
-    this.groupservice.getList().then((res) => {
-      for (let key in res) {
-        this.listGroup.push
-          ({
-            id: key,
-            text: res[key].Name,
-          }
-          )
-      }
-      this.objGroup = {...res};
-    }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu Nhóm Quyền', 'Thông Báo!', { timeOut: 1000 });
-    });
-    this.service.getList().then((res) => {
+     this.service.getList().then((res) => {
       for (let key in res) {
         this.list.push
           ({
@@ -171,7 +189,6 @@ export class MenusComponent implements OnInit {
           )
       }
       this.rerender();
-    
     }, error => {
       this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 1000 });
     });
@@ -200,15 +217,26 @@ export class MenusComponent implements OnInit {
     this.service.msg = "";
     this.form.form.markAsPristine();
     this.service.showModal(null);
-    this.value_group=[];
+    if (this.listGroup.length>0)
+    {
+      $('#select2_group select').select2(this.options_group).select2('val',[this.listGroup[this.listGroup.length-1].id])
+       this.service.formData.Group=this.listGroup[this.listGroup.length-1].id;
+    }
+    else
+    {
+      $('#select2_group select').select2(this.options_group).select2('val',[]);
+      this.service.formData.Group='';
+    }
     this.myModal.show();
   }
   showedit(data: Menu) {
     this.type = 2;
     this.service.msg = "";
     this.form.form.markAsPristine();
-    this.value_group=data.Group.split(';');
     this.service.showModal(data);
+    this.value_group=data.Group.split(';');
+    $('#select2_group select').select2(this.options_group).select2('val',this.value_group);
+    $('#iconpicker').iconpicker('setIcon',data.Icon);
     this.myModal.show();
   }
   onSubmit(form: NgForm) {
@@ -228,6 +256,7 @@ export class MenusComponent implements OnInit {
       )
     }
     else {
+      console.log(form.value);
       this.service.update(form).then(
         () => {
           if (this.service.msg.length == 0 || this.service.msg.length == "") {

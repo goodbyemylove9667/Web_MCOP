@@ -30,7 +30,7 @@ export class MenusService {
     this.formData = {
       Id:'',
       Name: '',
-      Icon: '',
+      Icon: 'fa-fas fa-user',
       Url: '',
       Group:'',
       Color:'#23282c',

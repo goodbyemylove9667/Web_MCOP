@@ -22,6 +22,7 @@
             "styles": [
               "node_modules/@coreui/icons/css/coreui-icons.css",
               "node_modules/flag-icon-css/css/flag-icon.css",
+              "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/font-awesome/css/font-awesome.css",
               "node_modules/simple-line-icons/css/simple-line-icons.css",
               "src/scss/style.scss",
@@ -29,17 +30,20 @@
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/datatables.net-select-dt/css/select.dataTables.css",
               "src/assets/select2/select2.min.css",
-              "src/assets/styles/styles.less"
+              "src/assets/iconpicker/dist/css/bootstrap-iconpicker.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["./node_modules"]
             },
             "scripts": [
-              "node_modules/chart.js/dist/Chart.min.js",
               "node_modules/jquery/dist/jquery.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/chart.js/dist/Chart.min.js",
               "node_modules/datatables.net/js/jquery.dataTables.js",
               "node_modules/datatables.net-select/js/dataTables.select.js",
-              "src/assets/select2/select2.min.js"
+              "src/assets/select2/select2.min.js",
+              "src/assets/iconpicker/dist/js/iconset-fontawesome-4-all.js",
+              "src/assets/iconpicker/dist/js/bootstrap-iconpicker.js"
             ]
           },
           "configurations": {
