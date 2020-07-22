@@ -52,8 +52,8 @@ export class MenusService {
   }
     getList() {
       return new Promise<Object>((resolve) => {
-        this.firebase.database.ref('Menu').once("value",(value)=>
-        resolve(value.toJSON()),(error)=>reject(error))
+        this.firebase.database.ref('Menu').orderByChild("Date_Create").once("value",snapshot=>
+        resolve(snapshot.toJSON()),(error)=>reject(error))
       });
     }
     getCkList()
@@ -72,9 +72,8 @@ export class MenusService {
     }
   showModal(obj: Menu) {
     if (obj != null) {
-      this.formData = Object.assign({}, obj);
-      localStorage.setItem("Menu_data",JSON.stringify( this.formData));
-
+      this.formData = Object.assign({}, obj); 
+      this.data={...  this.formData}
     } else {
       this.resetForm(1);
     }
@@ -83,7 +82,15 @@ export class MenusService {
  async insert(form :NgForm)
  {
   var date=new Date();
-  var dt=date.getFullYear()+'/'+date.getMonth()+'/'+date.getDate()+' '+date.getHours()+'/'+date.getMinutes()+'/'+date.getSeconds();
+  var y=date.getFullYear();
+  var m=date.getMonth()+1;
+  var d=date.getDate();
+  var hour=date.getHours();
+  var min=date.getMinutes();
+  var sec=date.getSeconds();
+  var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
+  form.value["Employee_Create"]=user["Id"];
+  form.value["Employee_Edit"]=user["Id"];
   form.value["Date_Create"]=dt;
    form.value["Date_Edit"]=dt;
   await this.firebase.database.ref('Menu').orderByChild("Name").equalTo(form.value["Name"]).once("value", (value) => {
@@ -103,27 +110,39 @@ export class MenusService {
 }
 async update(form :NgForm)
 {
-  var date=new Date();
   if (form.value["Id"]!=null)
-  this.firebase.database.ref('Menu/'+form.value["Id"]).update(
-    {
-      Name:  form.value["Name"],
-      Icon:  form.value["Icon"],
-      Group: form.value["Group"],
-      Color: form.value["Color"],
-      Employee_Edit: user["Id"],     
-      Date_Edit: date.getFullYear()+'/'+date.getMonth()+'/'+date.getDate()+' '+date.getHours()+'/'+date.getMinutes()+'/'+date.getSeconds(),
-      Status : form.value["Status"],
-   }
-  ).then(()=>
   {
-    this.msg="";
+    var date=new Date();
+    var y=date.getFullYear();
+    var m=date.getMonth()+1;
+    var d=date.getDate();
+    var hour=date.getHours();
+    var min=date.getMinutes();
+    var sec=date.getSeconds();
+    var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
+    this.firebase.database.ref('Menu/'+form.value["Id"]).update(
+        {
+          Name:  form.value["Name"],
+          Icon:  form.value["Icon"],
+          Group: form.value["Group"],
+          Color: form.value["Color"],
+          Employee_Edit: user["Id"],     
+          Date_Edit: dt,
+          Status : form.value["Status"],
+      }
+      ).then(()=>
+      {
+        this.msg="";
+      }
+      ).
+      catch((error)=>
+      {
+        this.msg = "Không thể sửa";
+      });
   }
-  ).
-  catch((error)=>
+  else
   {
-    this.msg = "Không thể sửa";
-  });
-
+    this.msg = "Phần tử rỗng";
+  }
 }
 }

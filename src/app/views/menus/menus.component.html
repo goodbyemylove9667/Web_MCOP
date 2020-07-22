@@ -52,6 +52,10 @@
                               <th>Nhóm Quyền</th>
                               <th>Icon</th>
                               <th>Background</th>
+                              <th>Người tạo</th>
+                              <th>Ngày tạo</th>
+                              <th>Người sửa</th>
+                              <th>Ngày sửa</th>
                               <th>Hoạt Động</th>
                               <th>Hành Động</th>
                           </tr>
@@ -73,6 +77,18 @@
                         </td>
                           <td>
                             <span style="width: 35px;height: 35px;display: inline-block;border-radius: 100%;" [ngStyle]="{'background-color': menu.Color}"></span>
+                        </td>
+                        <td>
+                            {{getObj_Name(objCus,menu.Employee_Create,'Email')}}
+                        </td>
+                        <td>
+                            {{getDate(menu.Date_Create)}}
+                        </td>
+                        <td>
+                            {{getObj_Name(objCus,menu.Employee_Edit,'Email')}}
+                        </td>
+                        <td>
+                            {{getDate(menu.Date_Edit)}}
                         </td>
                               <td><span *ngIf="menu.Status==1; else SAI;" style="color: green;"><i class="fa fa-check-square-o fa-2x"></i></span>
                                   <ng-template #SAI> <span style="color: red;"><i class="fa fa-window-close-o fa-2x"></i></span></ng-template>
@@ -168,7 +184,7 @@
                     </div>
                     <ng-template #status><input name="Status" [(ngModel)]="service.formData.Status" hidden></ng-template>
                     <div class="form-group row pull-left ml-5">
-                      <button type="button"  data-dismiss="modal" (click)="this.service.resetForm(this.type)"  class="btn btn-danger btn-block font-weight-bolder">RESET</button>
+                      <button type="button"  data-dismiss="modal" (click)="resetForm()"  class="btn btn-danger btn-block font-weight-bolder">RESET</button>
                     </div>
                       <div class="form-group row pull-right mr-5">
                         <button type="button" (click)="this.onSubmit(form)"  [disabled]="form.invalid" data-dismiss="modal" class="btn btn-info btn-block text-light font-weight-bolder">SUBMIT</button>

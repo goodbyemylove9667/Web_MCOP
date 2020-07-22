@@ -47,24 +47,7 @@ export class QuestionsComponent implements OnInit {
     }, error => {
       this.toastr.error('Không Tải Được Dữ Liệu Chủ Đề', 'Thông Báo!', { timeOut: 1000 });
     });
-    this.empservice.getAllList().then((res) => {
-      // for (let key in res) {
-      //   this.listEmp.push
-      //     ({
-      //       Id: key,
-      //       Email: res[key].Email,
-      //       Password: res[key].Password,
-      //       Firstname: res[key].Firstname,
-      //       Lastname: res[key].Lastname,
-      //       Phone: res[key].Phone,
-      //       Address: res[key].Address,
-      //       Birthday: res[key].Birthday,
-      //       Image: res[key].Image,
-      //       Position: res[key].Position,
-      //       Status: res[key].Status
-      //     }
-      //     )
-      // }
+    this.empservice.getList().then((res) => {
       this.objEmp = res;
     }, error => {
       this.toastr.error('Không Tải Được Dữ Liệu Chủ Đề', 'Thông Báo!', { timeOut: 1000 });
@@ -169,27 +152,10 @@ export class QuestionsComponent implements OnInit {
       this.toastr.error('Không Tải Được Dữ Liệu Chủ Đề', 'Thông Báo!', { timeOut: 1000 });
     });
     this.listEmp = [];
-    this.empservice.getAllList().then((res) => {
-      // for (let key in res) {
-      //   this.listEmp.push
-      //     ({
-      //       Id: key,
-      //       Email: res[key].Email,
-      //       Password: res[key].Password,
-      //       Firstname: res[key].Firstname,
-      //       Lastname: res[key].Lastname,
-      //       Phone: res[key].Phone,
-      //       Address: res[key].Address,
-      //       Birthday: res[key].Birthday,
-      //       Image: res[key].Image,
-      //       Position: res[key].Position,
-      //       Status: res[key].Status
-      //     }
-      //     )
-      // }
+    this.empservice.getList().then((res) => {
       this.objEmp = res;
     }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu Chủ Đề', 'Thông Báo!', { timeOut: 1000 });
+      this.toastr.error('Không Tải Được Dữ Liệu Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
     });
     this.service.getList().then((res) => {
       for (let key in res) {

@@ -8,6 +8,8 @@ import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { GroupsService, Group } from '../../services/groups.service';
 import { Select2OptionData } from 'ng2-select2';
+import { user } from '../../containers';
+import { EmployeeService } from '../../services/employee.service';
 declare var $:any;
 @Component({
   selector: 'app-questions',
@@ -20,12 +22,12 @@ export class MenusComponent implements OnInit {
   @ViewChild('form', { static: false }) public form: NgForm;
   @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
   dtTrigger: Subject<any> = new Subject();
-  constructor(private service:MenusService,private groupservice:GroupsService, private toastr: ToastrService) {
+  constructor(private service:MenusService,private groupservice:GroupsService, private empservice:EmployeeService,private toastr: ToastrService) {
     this.blockUI.start('Loading...'); 
   }
   list: Array<Menu> = [];
   listGroup: Array<Select2OptionData> = [];
-  objGroup:any;
+  objCus:any={};
   data: Menu;
   options_group: Select2Options;
   value_group: string[]=[];
@@ -50,20 +52,26 @@ export class MenusComponent implements OnInit {
     this.loading=false;
    await this.groupservice.getList().then((res) => {
       for (let key in res) {
-        this.listGroup.push
+        if (res[key].Status==1)
+        this.listGroup.unshift
           ({
             id: key,
             text: res[key].Name,
           }
           )
       }
-      this.objGroup = {...res};
       this.loading=true;
     }, error => {
       this.toastr.error('Không Tải Được Dữ Liệu Nhóm Quyền', 'Thông Báo!', { timeOut: 1000 });
     });
+    await this.empservice.getCkList().then((res) => {
+      this.objCus=res;
+    }, error => {
+      this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
+    });
     await this.service.getList().then((res) => {
       for (let key in res) {
+        console.log(this.list);
         this.list.push
           ({
             Id: key,
@@ -84,7 +92,7 @@ export class MenusComponent implements OnInit {
     }, error => {
       this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 1000 });
     });
-
+    this.blockUI.stop();
     $.fn['dataTable'].ext.search.push((settings, data, dataIndex) => {
       const inp = this.accentsTidy(data[this.slc_search]);
       const inp_search = this.accentsTidy(this.inp_search);
@@ -93,7 +101,6 @@ export class MenusComponent implements OnInit {
       }
       return false;
     });
-    this.blockUI.stop();
   }
    ngOnInit(): void {  
     this.service.resetForm(1);
@@ -178,7 +185,7 @@ export class MenusComponent implements OnInit {
     this.rerender();
      this.service.getList().then((res) => {
       for (let key in res) {
-        this.list.push
+        this.list.unshift
           ({
             Id: key,
             Name: res[key].Name,
@@ -229,7 +236,32 @@ export class MenusComponent implements OnInit {
        str.push(ele.text);
      }
     }
-    return str.join(';');
+    return str.join(' + ');
+  }
+  getDate(date_str) {
+    if (date_str!=null && date_str!='')
+    {
+      var date=new Date(date_str);
+      var y=date.getFullYear();
+      var m=date.getMonth()+1;
+      var d=date.getDate();
+      var hour=date.getHours();
+      var min=date.getMinutes();
+      var sec=date.getSeconds();
+      var dt=(d>9?d:('0'+d))+'/'+(m>9?m:('0'+m))+'/'+y+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
+      return dt;
+    }
+    else return '';
+  }
+  getObj_Name(obj,key,attr)
+  {
+    var x='';
+    try
+    {
+      x=obj[key][attr];
+    }
+    catch{};
+    return x;
   }
   showAdd() {
     this.type = 1;
@@ -258,6 +290,35 @@ export class MenusComponent implements OnInit {
     $('#select2_group select').select2(this.options_group).select2('val',this.value_group);
     $('#iconpicker').iconpicker('setIcon',data.Icon);
     this.myModal.show();
+  }
+  resetForm()
+  {
+    if (this.type==1)
+    {
+        this.service.msg = "";
+      this.form.form.markAsPristine();
+      this.service.showModal(null);
+      if (this.listGroup.length>0)
+      {
+        $('#select2_group select').select2(this.options_group).select2('val',[this.listGroup[this.listGroup.length-1].id])
+        this.service.formData.Group=this.listGroup[this.listGroup.length-1].id;
+      }
+      else
+      {
+        $('#select2_group select').select2(this.options_group).select2('val',[]);
+        this.service.formData.Group='';
+      }
+      $('#iconpicker').iconpicker('setIcon','fa-user');
+    }
+    else
+    {
+        this.service.msg = "";
+        this.form.form.markAsPristine();
+        this.service.showModal(this.service.data);
+        this.value_group=this.service.data.Group.split(';');
+        $('#select2_group select').select2(this.options_group).select2('val',this.value_group);
+        $('#iconpicker').iconpicker('setIcon',this.service.data.Icon);
+    }
   }
   onSubmit(form: NgForm) {
     form.value["Icon"]= $('#iconpicker_txt').val();

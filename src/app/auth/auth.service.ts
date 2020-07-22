@@ -8,7 +8,6 @@ import { AngularFireDatabase } from '@angular/fire/database';
   providedIn: 'root'
 })
 export class AuthService {
-  user: User;
   errorMessage = "";
   loading = false;
   constructor(public afAuth: AngularFireAuth, public router: Router, private firebase: AngularFireDatabase) {
@@ -17,9 +16,10 @@ export class AuthService {
         await this.firebase.database.ref('Employee').orderByChild('Email').equalTo(user.email).limitToFirst(1).once("value", (value) => {
           if (value.exists()) {
             value.forEach((element) => {
-              element["Id"]=element.key;
+              var user_info=element.toJSON();
+              user_info["Id"]=element.key;
               localStorage.setItem('keyUser', element.key);
-              localStorage.setItem('currentUser', JSON.stringify(element));
+              localStorage.setItem('currentUser', JSON.stringify(user_info));
               if (element.toJSON()["Status"] == 0) {
                 this.router.navigate(['/login']);
               }});

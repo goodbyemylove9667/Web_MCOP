@@ -97,7 +97,7 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
     {
       db_menu.innerHTML+=`<a `+str+` class="col-6 col-sm-3 text-decoration-none" href="`+element.url+`">
       <div `+str+` class="card text-white" style="background-color:`+element.color+`">
-        <div `+str+` class="card-body py-2">
+        <div `+str+` class="card-body py-4">
           <div `+str+` class="btn-group float-right">
             <i `+str+` class="fa `+element.icon+` fa-3x"></i>
           </div>

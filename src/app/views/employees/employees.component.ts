@@ -33,7 +33,7 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
     {
       this.router.navigate(['']);
     }
-    this.service.getList().then((res) => {
+    this.service.getCkList().then((res) => {
     for (let key in res) {
         this.list.push
           ({
@@ -120,7 +120,7 @@ compareDate(date)
   refresh() {
     this.list = [];
     this.rerender();
-    this.service.getList().then((res) => {
+    this.service.getCkList().then((res) => {
       for (let key in res) {
           this.list.push
             ({

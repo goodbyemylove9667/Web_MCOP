@@ -52,18 +52,13 @@ export class EmployeeService {
     this.formData=await JSON.parse(localStorage.getItem("employee_data"));
   }
   }
-    getList() {
-      return new Promise<Object>((resolve) => {
-        this.firebase.database.ref('Employee').orderByChild("Group").equalTo(1).once("value",(value)=>
-        resolve(value.toJSON()),(error)=>reject(error))
-      });
-    }
-    getAllList() {
-      return new Promise<Object>((resolve) => {
-        this.firebase.database.ref('Employee').once("value",(value)=>
-        resolve(value.toJSON()),(error)=>reject(error))
-      });
-    }
+  getList() {
+    return new Promise<Object>((resolve) => {
+      this.firebase.database.ref('Employee').orderByChild("Date_Create").once("value",(value)=>
+      resolve(value.toJSON()),(error)=>reject(error))
+    });
+  }
+
     getCkList()
     {
       return new Promise<Object>((resolve) => {

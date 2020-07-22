@@ -35,7 +35,7 @@ export class GroupsService {
   }
     getList() {
       return new Promise<Object>((resolve) => {
-        this.firebase.database.ref('Group').once("value",(value)=>
+        this.firebase.database.ref('Group').orderByChild("Date_Create").once("value",(value)=>
         resolve(value.toJSON()),(error)=>reject(error))
       });
     }
