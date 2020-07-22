@@ -14,16 +14,23 @@ export class AuthService {
   constructor(public afAuth: AngularFireAuth, public router: Router, private firebase: AngularFireDatabase) {
     this.afAuth.authState.subscribe(async(user) => {
       if (user) {
-        this.user = user;
-        localStorage.setItem('user', JSON.stringify(this.user));
-        this.afAuth.auth.currentUser.getIdToken().then(token => {
+        await this.firebase.database.ref('Employee').orderByChild('Email').equalTo(user.email).limitToFirst(1).once("value", (value) => {
+          if (value.exists()) {
+            value.forEach((element) => {
+              element["Id"]=element.key;
+              localStorage.setItem('keyUser', element.key);
+              localStorage.setItem('currentUser', JSON.stringify(element));
+              if (element.toJSON()["Status"] == 0) {
+                this.router.navigate(['/login']);
+              }});
+          }
+          else {
+            this.router.navigate(['/login']);
+          }
         });
-
       } else {
-        localStorage.setItem('user', null);
         this.router.navigate(['/login']);
       }
-
     })
 
   }
@@ -31,11 +38,12 @@ export class AuthService {
     this.loading = true;
     var status =1;
     this.errorMessage="";
+    var user=null;
     await this.firebase.database.ref('Employee').orderByChild('Email').equalTo(email).limitToFirst(1).once("value", (value) => {
       if (value.exists()) {
         value.forEach((element) => {
-          localStorage.setItem('keyUser', JSON.stringify(element.key));
-          localStorage.setItem('currentUser', JSON.stringify(element));
+          user=element;
+          user["Id"]=element.key;
           if (element.toJSON()["Status"] == 0) {
             status=0;
             this.loading = false;
@@ -52,8 +60,7 @@ export class AuthService {
     {
     this.afAuth.auth.signInWithEmailAndPassword(email, password).then
     (() => {
-      localStorage.setItem('email', JSON.stringify(email));
-      localStorage.setItem('password', JSON.stringify(password));
+      localStorage.setItem('currentUser', JSON.stringify(user));
       this.router.navigate(['']);
       this.loading = false;
     }
@@ -119,7 +126,7 @@ export class AuthService {
     this.sendEmailVerification();
   }
   async sendEmailVerification() {
-    await this.afAuth.auth.currentUser.sendEmailVerification()
+    await this.afAuth.auth.currentUser.sendEmailVerification();
     this.router.navigate(['admin/verify-email']);
   }
   async sendPasswordResetEmail(passwordResetEmail: string) {  
@@ -137,15 +144,7 @@ export class AuthService {
 
     this.router.navigate(['/login']);
   }
-  get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return user !== null;
-  }
   async getToken() {
     return await this.afAuth.auth.currentUser.getIdToken();
-  }
-  async  loginWithGoogle() {
-    await this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
-    this.router.navigate(['admin/list']);
   }
 }

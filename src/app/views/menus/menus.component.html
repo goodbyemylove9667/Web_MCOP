@@ -66,19 +66,19 @@
                                 {{menu.Url}}
                             </td>
                             <td>
-                              {{menu.Group}}
+                              {{getName(menu.Group)}}
                           </td>
                           <td>
-                          <i class="{{menu.Icon}} fa-2x"></i>  
+                          <i class="fa {{menu.Icon}} fa-2x"></i>  
                         </td>
                           <td>
                             <span style="width: 35px;height: 35px;display: inline-block;border-radius: 100%;" [ngStyle]="{'background-color': menu.Color}"></span>
                         </td>
-                              <td><span *ngIf="menu.Status==1; else SAI;" style="color: green;">Hoạt động</span>
-                                  <ng-template #SAI> <span style="color: red;">Bị Cấm</span></ng-template>
+                              <td><span *ngIf="menu.Status==1; else SAI;" style="color: green;"><i class="fa fa-check-square-o fa-2x"></i></span>
+                                  <ng-template #SAI> <span style="color: red;"><i class="fa fa-window-close-o fa-2x"></i></span></ng-template>
                               </td>
                               <td class="text-center" >
-                                  <button (click)="showedit(menu)" class="bg-success" style="border:0">
+                                  <button (click)="showedit(menu)" class="btn btn-outline-success">
                                       <i class="fa fa-edit"></i>
                                   </button>
 
@@ -109,7 +109,7 @@
             </div>
             <div class="modal-body">
                 <!-- START CREATE -->
-                <form #form="ngForm" autocomplete="off">
+                <form #form="ngForm" autocomplete="off" class="pr-3">
                     <input *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id"  hidden>
                     <div class="form-group row">
                         <label  class="col-sm-3 col-form-label text-dark h3">TÊN</label>

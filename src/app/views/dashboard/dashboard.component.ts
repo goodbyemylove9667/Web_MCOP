@@ -99,7 +99,7 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
       <div `+str+` class="card text-white" style="background-color:`+element.color+`">
         <div `+str+` class="card-body py-2">
           <div `+str+` class="btn-group float-right">
-            <i `+str+` class="`+element.icon+` fa-3x"></i>
+            <i `+str+` class="fa `+element.icon+` fa-3x"></i>
           </div>
           <div `+str+` class="text-value">`+element.name+`</div>
           <div `+str+` style="opacity:0.8;">`+ this.cus_sl+`</div>
@@ -114,7 +114,7 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
       <div `+str+` class="card text-white" style="background-color:`+element.color+`">
         <div `+str+` class="card-body py-4">
           <div `+str+` class="btn-group float-right">
-            <i `+str+` class="`+element.icon+` fa-3x"></i>
+            <i `+str+` class="fa `+element.icon+` fa-3x"></i>
           </div>
           <div `+str+` class="text-value">`+element.name+`</div>
           <div `+str+` style="opacity:0.8;">`+ this.con_sl+`</div>
@@ -129,7 +129,7 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
       <div `+str+` class="card text-white" style="background-color:`+element.color+`">
         <div `+str+` class="card-body py-4">
           <div `+str+` class="btn-group float-right">
-            <i `+str+` class="`+element.icon+` fa-3x"></i>
+            <i `+str+` class="fa `+element.icon+` fa-3x"></i>
           </div>
           <div `+str+` class="text-value">`+element.name+`</div>
           <div `+str+` style="opacity:0.8;">`+ this.top_sl+`</div>
@@ -151,7 +151,7 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
       <div `+str+` class="card text-white" style="background-color:`+element.color+`">
         <div `+str+` class="card-body py-4">
           <div `+str+` class="btn-group float-right">
-            <i `+str+` class="`+element.icon+` fa-3x"></i>
+            <i `+str+` class="fa `+element.icon+` fa-3x"></i>
           </div>
           <div `+str+` class="text-value">`+element.name+`</div>
           <div `+str+` style="opacity:0.8;">`+ sl+`</div>

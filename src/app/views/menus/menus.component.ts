@@ -72,6 +72,10 @@ export class MenusComponent implements OnInit {
             Url: res[key].Url,
             Group:res[key].Group,
             Color:res[key].Color,
+            Employee_Create:res[key].Employee_Create,
+            Date_Create:res[key].Date_Create,
+            Employee_Edit:res[key].Employee_Edit,
+            Date_Edit:res[key].Date_Edit,
             Status : res[key].Status
           }
           )
@@ -80,6 +84,19 @@ export class MenusComponent implements OnInit {
     }, error => {
       this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 1000 });
     });
+
+    $.fn['dataTable'].ext.search.push((settings, data, dataIndex) => {
+      const inp = this.accentsTidy(data[this.slc_search]);
+      const inp_search = this.accentsTidy(this.inp_search);
+      if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
+        return true;
+      }
+      return false;
+    });
+    this.blockUI.stop();
+  }
+   ngOnInit(): void {  
+    this.service.resetForm(1);
     this.dtOptions = {
       pagingType: 'full_numbers',
       responsive: true,
@@ -102,47 +119,32 @@ export class MenusComponent implements OnInit {
         }
       }
     };
-    $.fn['dataTable'].ext.search.push((settings, data, dataIndex) => {
-      const inp = this.accentsTidy(data[this.slc_search]);
-      const inp_search = this.accentsTidy(this.inp_search);
-      if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
-        return true;
-      }
-      return false;
-    });
-    this.blockUI.stop();
-  }
-   ngOnInit(): void {  
-    this.service.resetForm(1);
+    $.fn.dataTable.ext.classes.sLengthSelect = 'custom-select w-auto d-inline-block';
+    $.fn.dataTable.ext.classes.sPageButtonActive = 'btn btn-outline-secondary';
     this.initTable();
     $(function() {
-      var pickerOption={
-        align: 'center', 
-        arrowClass: 'btn-primary',
-        arrowPrevIconClass: 'fa fa-angle-left text-light',
-        arrowNextIconClass: 'fa fa-angle-right text-light',
-        cols: 10,
-        footer: true,
-        header: true,
-        icon: 'fa-fas fa-user',
-        iconset: 'fontawesome4',
-        labelHeader: '{0} của {1} trang',
-        labelFooter: '{0} - {1} của {2} các icon',
-        placement: 'bottom', 
-        rows: 5,
-        search: true,
-        searchText: 'Tìm Kiém',
-        selectedClass: 'btn-success',
-        unselectedClass: ''
-       };
-          $('#iconpicker').iconpicker(pickerOption);
-        function setIcon(icon)
-        {
-          pickerOption.icon=icon;
-          $('#iconpicker').iconpicker(pickerOption);
-        }
+          $('#iconpicker').iconpicker({
+            align: 'center', 
+            arrowClass: 'btn-primary',
+            arrowPrevIconClass: 'fa fa-angle-left text-light',
+            arrowNextIconClass: 'fa fa-angle-right text-light',
+            cols: 10,
+            footer: true,
+            header: true,
+            icon: 'fa-fas fa-user',
+            iconset: 'fontawesome4',
+            iconsetVersion: '4.7.0',
+            labelHeader: '{0} của {1} trang',
+            labelFooter: '{0} - {1} của {2} các icon',
+            placement: 'bottom', 
+            rows: 5,
+            search: true,
+            searchText: 'Tìm Kiém',
+            selectedClass: 'btn-success',
+            unselectedClass: ''
+           });
         $('#iconpicker').on('change', function(e) {
-            $('#iconpicker_txt').val(e.icon);
+          $('#iconpicker_txt').val(e.icon);
         });
     });   
   }
@@ -184,6 +186,10 @@ export class MenusComponent implements OnInit {
             Url: res[key].Url,
             Group:res[key].Group,
             Color:res[key].Color,
+            Employee_Create:res[key].Employee_Create,
+            Date_Create:res[key].Date_Create,
+            Employee_Edit:res[key].Employee_Edit,
+            Date_Edit:res[key].Date_Edit,
             Status : res[key].Status
           }
           )
@@ -212,6 +218,19 @@ export class MenusComponent implements OnInit {
   changed(data: {value: string[]}) {
     this.service.formData.Group = data.value.join(';');
   }
+  getName(group) {
+    var gr=group.split(";");
+    var str=[];
+    for (let i=0;i<gr.length;i++)
+    {
+     var ele=this.listGroup.find(x=>x.id==gr[i]);
+     if (ele!=null)
+     {
+       str.push(ele.text);
+     }
+    }
+    return str.join(';');
+  }
   showAdd() {
     this.type = 1;
     this.service.msg = "";
@@ -227,6 +246,7 @@ export class MenusComponent implements OnInit {
       $('#select2_group select').select2(this.options_group).select2('val',[]);
       this.service.formData.Group='';
     }
+    $('#iconpicker').iconpicker('setIcon','fa-user');
     this.myModal.show();
   }
   showedit(data: Menu) {
@@ -240,8 +260,8 @@ export class MenusComponent implements OnInit {
     this.myModal.show();
   }
   onSubmit(form: NgForm) {
+    form.value["Icon"]= $('#iconpicker_txt').val();
     if (this.type == 1) {
-      console.log(form.value);
       this.service.insert(form).then(
         () => {
           if (this.service.msg.length == 0 || this.service.msg.length == "") {
@@ -256,7 +276,6 @@ export class MenusComponent implements OnInit {
       )
     }
     else {
-      console.log(form.value);
       this.service.update(form).then(
         () => {
           if (this.service.msg.length == 0 || this.service.msg.length == "") {

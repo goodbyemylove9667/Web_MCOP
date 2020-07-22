@@ -2,15 +2,19 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase} from '@angular/fire/database';
 import { NgForm } from '@angular/forms';
 import { reject } from 'q';
+import { DefaultLayoutComponent, user } from '../containers';
 export interface Menu
 {
-
     Id: string,
     Name: string,
     Icon:  string,
     Url:  string,
     Group : string,
     Color: string,
+    Employee_Create:string,
+    Date_Create:Date,
+    Employee_Edit:string,
+    Date_Edit:Date,
     Status : number
 }
 @Injectable({
@@ -30,17 +34,21 @@ export class MenusService {
     this.formData = {
       Id:'',
       Name: '',
-      Icon: 'fa-fas fa-user',
+      Icon: 'fa-user',
       Url: '',
       Group:'',
       Color:'#23282c',
+      Employee_Create:'',
+      Date_Create:new Date(),
+      Employee_Edit:'',
+      Date_Edit:new Date(),
       Status : 1
     };
-  }
-  else
-  {
-    this.formData=await JSON.parse(localStorage.getItem("menu_data"));
-  }
+    }
+    else
+    {
+      this.formData={...this.data};
+    }
   }
     getList() {
       return new Promise<Object>((resolve) => {
@@ -74,6 +82,10 @@ export class MenusService {
 
  async insert(form :NgForm)
  {
+  var date=new Date();
+  var dt=date.getFullYear()+'/'+date.getMonth()+'/'+date.getDate()+' '+date.getHours()+'/'+date.getMinutes()+'/'+date.getSeconds();
+  form.value["Date_Create"]=dt;
+   form.value["Date_Edit"]=dt;
   await this.firebase.database.ref('Menu').orderByChild("Name").equalTo(form.value["Name"]).once("value", (value) => {
     if (value.exists()) {
       this.msg = "Menu Đã Tồn Tại";
@@ -91,6 +103,7 @@ export class MenusService {
 }
 async update(form :NgForm)
 {
+  var date=new Date();
   if (form.value["Id"]!=null)
   this.firebase.database.ref('Menu/'+form.value["Id"]).update(
     {
@@ -98,6 +111,8 @@ async update(form :NgForm)
       Icon:  form.value["Icon"],
       Group: form.value["Group"],
       Color: form.value["Color"],
+      Employee_Edit: user["Id"],     
+      Date_Edit: date.getFullYear()+'/'+date.getMonth()+'/'+date.getDate()+' '+date.getHours()+'/'+date.getMinutes()+'/'+date.getSeconds(),
       Status : form.value["Status"],
    }
   ).then(()=>
