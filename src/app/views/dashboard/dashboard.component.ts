@@ -6,6 +6,10 @@ import { ContestsService } from '../../services/contests.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { navItems } from '../../_nav';
 import { MenusService } from '../../services/menus.service';
+import { EmployeeService } from '../../services/employee.service';
+import { Color } from 'ng2-charts';
+import { TransitiveCompileNgModuleMetadata } from '@angular/compiler';
+import * as Chart from 'chart.js';
 @Component({
   selector: 'app-contests',
   templateUrl: 'dashboard.component.html'
@@ -13,24 +17,119 @@ import { MenusService } from '../../services/menus.service';
 export class DashboardComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
   constructor(private cusservice: CustomerService,
-    private topservice: TopicsService,private conservice: ContestsService,private menuservice: MenusService,private resservice:ResultsService) {
+    private topservice: TopicsService,private conservice: ContestsService,private menuservice: MenusService,private empservice: EmployeeService,private resservice:ResultsService) {
     this.blockUI.start('Loading...'); 
    }
   cus_sl:number=0;
   top_sl:number=0;
   con_sl:number=0;
+  emp_sl:number=0;
+  admin_sl:number=0;
   listRes: Array<Result> = [];
   listTop: Array<Topic> = [];
   award : Array<Object> =[];
   OjbCon: any={};
   OjbCus: any={};
-  radioModel: string = 'Month';
+  public doughnutChartLabels: string[] = ['Tài Khoản Người Dùng', 'Tài Khoản Nhân Viên', 'Tài Khoản Admin'];
+  public doughnutChartData: number[] = [];
+  public doughnutChartType = 'doughnut';
+  public doughnutChartColors: Color[] = [
+    {
+      backgroundColor: [
+        '#ff6384',
+        '#ffce56',
+        '#36a2eb'
+      ]
+    }
+  ];
+  public lineChartData: Array<any> = [
+    {data: [0,0,0,0,0,0,0]}
+  ];
+  public lineChartLabels: Array<any> = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+  public lineChartOptions: any = {
+    legend: {
+    	display: false
+    },
+    layout: {
+      padding: {
+        left: 0,
+        right: 0,
+        top: 15,
+        bottom: 0
+      }
+    },
+    tooltips: {
+      position: 'nearest',
+      mode: 'index',
+      intersect: false,
+      callbacks: {
+        label: function(tooltipItem, data) {
+            if (tooltipItem.value.length>0) {
+              return tooltipItem.label+' có '+tooltipItem.value+' lượt thi';
+            }
+            else
+            return 'Không có lượt thi trong ngày '+tooltipItem.label;
+        }
+    }
+    },
+    hover: {
+        animationDuration: 0
+    },
+    animation: {
+        duration: 1,
+        onComplete: function () {
+            var chartInstance = this.chart,
+                ctx = chartInstance.ctx;
+            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
 
+            this.data.datasets.forEach(function (dataset, i) {
+                var meta = chartInstance.controller.getDatasetMeta(i);
+                meta.data.forEach(function (bar, index) {
+                    var data = dataset.data[index];                            
+                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                });
+            });
+        }
+    },
+    scales: {
+      yAxes: [{
+          ticks: {
+              beginAtZero: true
+          }
+      }]
+   },
+    responsive: TransitiveCompileNgModuleMetadata
+  };
+  public lineChartColours: Array<any> = [
+    { // grey
+      backgroundColor: 'rgba(148,159,177,0.2)',
+      borderColor: 'rgba(148,159,177,1)',
+      pointBorderWidth:5,
+      pointBackgroundColor: 'red',
+      pointBorderColor: 'red',
+      pointHoverBackgroundColor: 'red',
+      pointHoverBorderColor: 'rgba(148,159,177,0.8)',
+      fill:false
+    }
+  ];
+   getWeekNumber(thisDate) {
+    var dt = new Date(thisDate);
+    var thisDay = dt.getDate(); 
+    var newDate = dt;
+    newDate.setDate(1); 
+    var digit = newDate.getDay(); 
+    var Q = (thisDay + digit) / 7;    
+    var R = (thisDay + digit) % 7;
+    if (R !== 0) return Math.ceil(Q);
+    else return Q;}
  async ngOnInit() {
   await  this.cusservice.getList().then((value)=>
   {
     this.cus_sl=Object.getOwnPropertyNames(value).length; 
     this.OjbCus=value;
+    this.doughnutChartData.push(this.cus_sl);
   });
  await  this.conservice.getList().then((value)=>
   {
@@ -55,20 +154,49 @@ export class DashboardComponent implements OnInit {
       x.appendChild(option);
     }
   }); 
+  await   this.empservice.getList().then((value)=>
+  {
+    for (let key in value) {
+        if (value[key].Group=='Group1')
+        {
+            this.admin_sl++;
+        }
+        else
+        if (value[key].Group=='Group2')
+        {
+          this.emp_sl++;
+        }
+    }
+    this.doughnutChartData.push(this.emp_sl);
+    this.doughnutChartData.push(this.admin_sl);
+  });
   await  this.resservice.getorderList().then((value)=>
   {
+    var now_week=0;
+    var dt = new Date();
+    var thisDay = dt.getDate(); 
+    var newDate = dt;
+    newDate.setDate(1); 
+    var digit = newDate.getDay(); 
+    var Q = (thisDay + digit) / 7;    
+    var R = (thisDay + digit) % 7;
+    if (R !== 0) now_week= Math.ceil(Q);
+    else now_week= Q;
     value.forEach((data)=>
     {
-        this.listRes.push({
+        this.listRes.unshift({
           Id: data.key,
           Id_Cus: data.toJSON().Id_Cus,
           Id_Con:  data.toJSON().Id_Con,
           Point :  data.toJSON().Point,
           TimeLeft_Res :  data.toJSON().TimeLeft_Res,
-          Date_Res:  data.toJSON().Date_Res
-        })
-    })
-this.listRes.sort((a, b)=> Number ( b.Point-a.Point || (b.Point==a.Point && a.TimeLeft_Res>b.TimeLeft_Res)));
+          Date_Res:  data.toJSON().Date_Res 
+        });
+        var date= new Date(data["Date_Res"]);
+          this.lineChartData[0]["data"][date.getDay()]++;
+        
+    });
+    console.log(this.lineChartData);
 var count=0;
 var table = <HTMLTableElement>document.getElementById("tb_db");
   for (var res of this.listRes)
@@ -93,10 +221,10 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
   var str=db_menu.attributes[0].nodeName;
   navItems.forEach(async(element)=>
   {
-    if (element.url=='/customer')
+    if (element.table=='Customer')
     {
-      db_menu.innerHTML+=`<a `+str+` class="col-6 col-sm-3 text-decoration-none" href="`+element.url+`">
-      <div `+str+` class="card text-white" style="background-color:`+element.color+`">
+      db_menu.innerHTML+=`<a `+str+` class="col-12 col-sm-3 text-decoration-none" href="`+element.url+`">
+      <div `+str+` class="card text-white" style="background-color:`+element.color+`;height:120px;">
         <div `+str+` class="card-body py-4">
           <div `+str+` class="btn-group float-right">
             <i `+str+` class="fa `+element.icon+` fa-3x"></i>
@@ -108,11 +236,26 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
     </a>`
     }
     else
-    if (element.url=='/contest')
+    if (element.table=='Employee')
     {
-      db_menu.innerHTML+=`<a `+str+` class="col-6 col-sm-3 text-decoration-none" href="`+element.url+`">
-      <div `+str+` class="card text-white" style="background-color:`+element.color+`">
+      db_menu.innerHTML+=`<a `+str+` class="col-12 col-sm-3 text-decoration-none" href="`+element.url+`">
+      <div `+str+` class="card text-white" style="background-color:`+element.color+`;height:120px;">
         <div `+str+` class="card-body py-4">
+          <div `+str+` class="btn-group float-right">
+            <i `+str+` class="fa `+element.icon+` fa-3x"></i>
+          </div>
+          <div `+str+` class="text-value">`+element.name+`</div>
+          <div `+str+` style="opacity:0.8;">`+(this.emp_sl+this.admin_sl)+`</div>
+        </div>
+      </div>
+    </a>`
+    }
+    else
+    if (element.table=='Contest')
+    {
+      db_menu.innerHTML+=`<a `+str+` class="col-12 col-sm-3 text-decoration-none"href="`+element.url+`">
+      <div `+str+` class="card text-white" style="background-color:`+element.color+`;height:120px;">
+        <div `+str+` class="card-body">
           <div `+str+` class="btn-group float-right">
             <i `+str+` class="fa `+element.icon+` fa-3x"></i>
           </div>
@@ -123,10 +266,10 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
     </a>`
     }
     else
-    if (element.url=='/topic')
+    if (element.table=='Topic')
     {
-      db_menu.innerHTML+=`<a `+str+` class="col-6 col-sm-3 text-decoration-none" href="`+element.url+`">
-      <div `+str+` class="card text-white" style="background-color:`+element.color+`">
+      db_menu.innerHTML+=`<a `+str+` class="col-12 col-sm-3 text-decoration-none" href="`+element.url+`">
+      <div `+str+` class="card text-white" style="background-color:`+element.color+`;height:120px;">
         <div `+str+` class="card-body py-4">
           <div `+str+` class="btn-group float-right">
             <i `+str+` class="fa `+element.icon+` fa-3x"></i>
@@ -138,17 +281,17 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
     </a>`
     }
    else
-   if (element.url!='/dashboard')
+   if (element.table!=null &&element.table!='')
    {
-     var tb=element.url.substr(2);
-     tb=element.url[1].toUpperCase()+tb;
      var sl=0;
-     await this.menuservice.getCkList_Count(tb).then((value)=>
+     var stt=true;
+     if (element.table=="Include" || element.table=="Result") stt=false;
+     await this.menuservice.getCkList_Count(element.table,stt).then((value)=>
      {
        sl=value;
      }).catch(()=>{sl=0});
-     db_menu.innerHTML+=`<a `+str+` class="col-6 col-sm-3 text-decoration-none" href="`+element.url+`">
-      <div `+str+` class="card text-white" style="background-color:`+element.color+`">
+     db_menu.innerHTML+=`<a `+str+` class="col-12 col-sm-3 text-decoration-none" href="`+element.url+`">
+      <div `+str+` class="card text-white" style="background-color:`+element.color+`;height:120px;">
         <div `+str+` class="card-body py-4">
           <div `+str+` class="btn-group float-right">
             <i `+str+` class="fa `+element.icon+` fa-3x"></i>
@@ -168,23 +311,12 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
   var count=0;
 var table = <HTMLTableElement>document.getElementById("tb_db");
 table.innerHTML="";
-var header = table.createTHead();
-var row = header.insertRow();
-row.className="bg-primary";
-var cell1 = row.insertCell(0);
-var cell2 = row.insertCell(1);
-var cell3   = row.insertCell(2);
-cell3.className="text-danger";
-cell1.innerHTML = "STT";
-cell2.innerHTML = "Tài Khoản";
-cell3.innerHTML =  "Điểm";
-row.innerHTML='<tr><th>STT</th><th>Tài Khoản</th><th>Điểm</th></tr>';
   for (var res of this.listRes)
   {
     if (this.OjbCon[res.Id_Con].Id_Top==x)
     {
         count++;
-        var row = table.insertRow();
+        var row = table.insertRow(0);
         row.className="font-weight-bolder";
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);

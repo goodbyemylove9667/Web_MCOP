@@ -71,12 +71,12 @@ export class MenusComponent implements OnInit {
     });
     await this.service.getList().then((res) => {
       for (let key in res) {
-        console.log(this.list);
-        this.list.push
+        this.list.unshift
           ({
             Id: key,
             Name: res[key].Name,
             Icon: res[key].Icon,
+            Table: res[key].Table,
             Url: res[key].Url,
             Group:res[key].Group,
             Color:res[key].Color,
@@ -93,9 +93,15 @@ export class MenusComponent implements OnInit {
       this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 1000 });
     });
     this.blockUI.stop();
-    $.fn['dataTable'].ext.search.push((settings, data, dataIndex) => {
+    $.fn['dataTable'].ext.search.push((settings, data, dataIndex,rowData) => {
       const inp = this.accentsTidy(data[this.slc_search]);
       const inp_search = this.accentsTidy(this.inp_search);
+      if (this.slc_search==10)
+      {
+          if (rowData[10].includes("true") && inp_search=="1") return true;
+          if (rowData[10].includes("false") && inp_search=="0") return true;
+          return false;
+      }
       if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
         return true;
       }
@@ -190,6 +196,7 @@ export class MenusComponent implements OnInit {
             Id: key,
             Name: res[key].Name,
             Icon: res[key].Icon,
+            Table: res[key].Table,
             Url: res[key].Url,
             Group:res[key].Group,
             Color:res[key].Color,
@@ -224,6 +231,10 @@ export class MenusComponent implements OnInit {
   }
   changed(data: {value: string[]}) {
     this.service.formData.Group = data.value.join(';');
+  }
+  changeUrl()
+  {
+    this.service.formData.Url='/'+this.service.formData.Table[0].toLocaleLowerCase()+this.service.formData.Table.substr(1);
   }
   getName(group) {
     var gr=group.split(";");
@@ -278,6 +289,7 @@ export class MenusComponent implements OnInit {
       $('#select2_group select').select2(this.options_group).select2('val',[]);
       this.service.formData.Group='';
     }
+    $('#iconpicker').iconpicker('reset');
     $('#iconpicker').iconpicker('setIcon','fa-user');
     this.myModal.show();
   }
@@ -286,13 +298,15 @@ export class MenusComponent implements OnInit {
     this.service.msg = "";
     this.form.form.markAsPristine();
     this.service.showModal(data);
-    this.value_group=data.Group.split(';');
+    this.value_group=data.Group.split(';');  
     $('#select2_group select').select2(this.options_group).select2('val',this.value_group);
+    $('#iconpicker').iconpicker('reset');
     $('#iconpicker').iconpicker('setIcon',data.Icon);
     this.myModal.show();
   }
   resetForm()
   {
+    $('#iconpicker').iconpicker('reset');
     if (this.type==1)
     {
         this.service.msg = "";
@@ -307,7 +321,7 @@ export class MenusComponent implements OnInit {
       {
         $('#select2_group select').select2(this.options_group).select2('val',[]);
         this.service.formData.Group='';
-      }
+      };
       $('#iconpicker').iconpicker('setIcon','fa-user');
     }
     else

@@ -7,6 +7,7 @@ export interface Menu
 {
     Id: string,
     Name: string,
+    Table:string,
     Icon:  string,
     Url:  string,
     Group : string,
@@ -34,6 +35,7 @@ export class MenusService {
     this.formData = {
       Id:'',
       Name: '',
+      Table: '',
       Icon: 'fa-user',
       Url: '',
       Group:'',
@@ -63,17 +65,25 @@ export class MenusService {
         resolve(value.toJSON()),(error)=>reject(error))
       });
     }
-    getCkList_Count(tb:string)
+    getCkList_Count(tb:string,stt:boolean)
     {
       return new Promise<any>((resolve) => {
-        this.firebase.database.ref(tb).orderByChild("Status").equalTo(1).once("value",(value)=>
-        resolve(value.numChildren()))
+        stt?this.firebase.database.ref(tb).orderByChild("Status").equalTo(1).once("value",(value)=>
+        {
+        resolve(value.numChildren()
+        )
+        }):
+        this.firebase.database.ref(tb).once("value",(value)=>
+        {
+        resolve(value.numChildren()
+        )
+        })
       });
     }
   showModal(obj: Menu) {
     if (obj != null) {
       this.formData = Object.assign({}, obj); 
-      this.data={...  this.formData}
+      this.data={...this.formData}
     } else {
       this.resetForm(1);
     }
@@ -123,6 +133,8 @@ async update(form :NgForm)
     this.firebase.database.ref('Menu/'+form.value["Id"]).update(
         {
           Name:  form.value["Name"],
+          Table:  form.value["Table"],
+          Url:  form.value["Url"],
           Icon:  form.value["Icon"],
           Group: form.value["Group"],
           Color: form.value["Color"],

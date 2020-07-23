@@ -1,113 +1,121 @@
-<script ref="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
 <section>
-  <div class="">
-    <div class="row">
-          <div class="col-md-12">
-              <div class="card">
-                  <div class="card-header">
-                      <div class="row justify-content-between">
-                          <div class="col-xs-12 col-sm-6">
-                              <h4>Quản Lí Menu</h4>
-                          </div>
-                          <div class="col-xs-12 col-sm-6 text-right">
-                              <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder"
-                                  (click)="this.refresh()">
-                                  <i class="fa fa-retweet"></i>
-                                  Refresh
-                              </button>
-                              <button type="button" class="btn mr-1 text-light font-weight-bolder" style="background-color: #2719b2;"
-                              data-toggle="modal" (click)="this.showAdd()">
-                              <i class="fa fa-plus" aria-hidden="true"> </i>
-                              Thêm
-                          </button>
+    <div class="">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row justify-content-between">
+                            <div class="col-xs-12 col-sm-6">
+                                <h4>Quản Lí Menu</h4>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 text-right">
+                                <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder"
+                                    (click)="this.refresh()">
+                                    <i class="fa fa-retweet"></i>
+                                    Refresh
+                                </button>
+                                <button type="button" class="btn mr-1 text-light font-weight-bolder"
+                                    style="background-color: #2719b2;" data-toggle="modal" (click)="this.showAdd()">
+                                    <i class="fa fa-plus" aria-hidden="true"> </i>
+                                    Thêm
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                          <div class="input-group mt-3 row justify-content-end">
-                            <div class="input-group-prepend mr-2">
-                                <select [(ngModel)]="slc_search" class="custom-select">
-                                    <option [ngValue]="1" [selected]="true">Tên</option>
-                                    <option [ngValue]="4">Hoạt Động</option>
-                                </select>
-                            </div>
-                            <div class="input-group-prepend">
-                                <input type="text" class="form-control" id="mySearchText" style="padding-left:5px;padding-right: 5px;"
-                                    placeholder="Search..." [(ngModel)]="inp_search">
-                                <button id="mySearchButton" class="btn btn-light order" (click)="filter()"><i
-                                        class="fa fa-search" aria-hidden="true"></i></button>
-                            </div>
-                          </div>
+                    <div class="input-group mt-3 row justify-content-end">
+                        <div class="input-group-prepend mr-2">
+                            <select [(ngModel)]="slc_search" class="custom-select">
+                                <option [ngValue]="1" [selected]="true">Tên</option>
+                                <option [ngValue]="10">Hoạt Động</option>
+                            </select>
+                        </div>
+                        <div class="input-group-prepend">
+                            <input type="text" class="form-control mr-2" id="mySearchText"
+                                style="padding-left:5px;padding-right: 5px;" placeholder="Search..."
+                                [(ngModel)]="inp_search">
+                            <button id="mySearchButton" class="btn btn-outline-secondary" (click)="filter()" ><i
+                                    class="fa fa-search" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
 
 
-                  <div class="card-body" style="overflow-x: scroll;">
-                      <!--  START- LIST-->
-                      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table-bordered hover text-center"
-                      id="dttb">
-                      <thead style="background-color:#007bff;color: white;">
-                          <tr>
-                              <th>STT</th>
-                              <th>Tên</th>
-                              <th>Url</th>
-                              <th>Nhóm Quyền</th>
-                              <th>Icon</th>
-                              <th>Background</th>
-                              <th>Người tạo</th>
-                              <th>Ngày tạo</th>
-                              <th>Người sửa</th>
-                              <th>Ngày sửa</th>
-                              <th>Hoạt Động</th>
-                              <th>Hành Động</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr *ngFor="let menu of this.list;let i=index">
-                              <td>{{i+1}}</td>
-                             <td style="width: 200px;">
-                                  {{menu.Name}}
-                              </td>
-                              <td>
-                                {{menu.Url}}
-                            </td>
-                            <td>
-                              {{getName(menu.Group)}}
-                          </td>
-                          <td>
-                          <i class="fa {{menu.Icon}} fa-2x"></i>  
-                        </td>
-                          <td>
-                            <span style="width: 35px;height: 35px;display: inline-block;border-radius: 100%;" [ngStyle]="{'background-color': menu.Color}"></span>
-                        </td>
-                        <td>
-                            {{getObj_Name(objCus,menu.Employee_Create,'Email')}}
-                        </td>
-                        <td>
-                            {{getDate(menu.Date_Create)}}
-                        </td>
-                        <td>
-                            {{getObj_Name(objCus,menu.Employee_Edit,'Email')}}
-                        </td>
-                        <td>
-                            {{getDate(menu.Date_Edit)}}
-                        </td>
-                              <td><span *ngIf="menu.Status==1; else SAI;" style="color: green;"><i class="fa fa-check-square-o fa-2x"></i></span>
-                                  <ng-template #SAI> <span style="color: red;"><i class="fa fa-window-close-o fa-2x"></i></span></ng-template>
-                              </td>
-                              <td class="text-center" >
-                                  <button (click)="showedit(menu)" class="btn btn-outline-success">
-                                      <i class="fa fa-edit"></i>
-                                  </button>
+                    <div class="card-body" style="overflow-x: scroll;">
+                        <!--  START- LIST-->
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                            class="table-bordered hover text-center" id="dttb">
+                            <thead style="background-color:#007bff;color: white;">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên</th>
+                                    <th>Bảng</th>
+                                    <th>Url</th>
+                                    <th>Nhóm Quyền</th>
+                                    <th>Icon</th>
+                                    <th>Background</th>
+                                    <th>Người tạo</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Người sửa</th>
+                                    <th>Ngày sửa</th>
+                                    <th>Hoạt Động</th>
+                                    <th>Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let menu of this.list;let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td style="width: 200px;">
+                                        {{menu.Name}}
+                                    </td>
+                                    <td>
+                                        {{menu.Table}}
+                                    </td>
+                                    <td>
+                                        {{menu.Url}}
+                                    </td>
+                                    <td>
+                                        {{getName(menu.Group)}}
+                                    </td>
+                                    <td>
+                                        <i class="fa {{menu.Icon}} fa-2x"></i>
+                                    </td>
+                                    <td>
+                                        <span
+                                            style="width: 35px;height: 35px;display: inline-block;border-radius: 100%;"
+                                            [ngStyle]="{'background-color': menu.Color}"></span>
+                                    </td>
+                                    <td>
+                                        {{getObj_Name(objCus,menu.Employee_Create,'Email')}}
+                                    </td>
+                                    <td>
+                                        {{getDate(menu.Date_Create)}}
+                                    </td>
+                                    <td>
+                                        {{getObj_Name(objCus,menu.Employee_Edit,'Email')}}
+                                    </td>
+                                    <td>
+                                        {{getDate(menu.Date_Edit)}}
+                                    </td>
+                                    <td><span *ngIf="menu.Status==1; else SAI;" style="color: green;"><i
+                                                class="fa fa-check-square-o fa-2x"></i></span>
+                                        <ng-template #SAI> <span style="color: red;"><i
+                                                    class="fa fa-window-close-o fa-2x"></i></span></ng-template>
+                                    </td>
+                                    <td class="text-center">
+                                        <button (click)="showedit(menu)" class="btn btn-outline-success">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
 
-                              </td>
-                          </tr>
-                      </tbody>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
-                     <!--  END- LIST-->
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+                        <!--  END- LIST-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </section>
 <!-- begin modal create -->
@@ -126,69 +134,88 @@
             <div class="modal-body">
                 <!-- START CREATE -->
                 <form #form="ngForm" autocomplete="off" class="pr-3">
-                    <input *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id"  hidden>
+                    <input *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id" hidden>
                     <div class="form-group row">
-                        <label  class="col-sm-3 col-form-label text-dark h3">TÊN</label>
-                        <input name="Name" #Name1="ngModel" [(ngModel)]="service.formData.Name"  minlength="3" maxlength="100"   required class="form-control col-sm-9"
-                        [ngClass]="{ 'is-invalid':Name1.errors && Name1.dirty,'is-valid': !Name1.errors && Name1.dirty}" >
+                        <label class="col-sm-3 col-form-label text-dark h3">TÊN</label>
+                        <input name="Name" #Name1="ngModel" [(ngModel)]="service.formData.Name" minlength="3"
+                            maxlength="100" required class="form-control col-sm-9"
+                            [ngClass]="{ 'is-invalid':Name1.errors && Name1.dirty,'is-valid': !Name1.errors && Name1.dirty}">
                         <span class="text-danger offset-sm-3" *ngIf="Name1.invalid && Name1.dirty">
-                          Tên Menu phải từ 3 đến 100 kí tự
+                            Tên Menu phải từ 3 đến 100 kí tự
                         </span>
-                      </div>
-                      <div class="form-group row">
-                        <label  class="col-sm-3 col-form-label text-dark h3">URL</label>
-                        <input name="Url" #Url1="ngModel" [(ngModel)]="service.formData.Url"  minlength="3" maxlength="100"   required class="form-control col-sm-9"
-                        [ngClass]="{ 'is-invalid':Url1.errors && Url1.dirty,'is-valid': !Url1.errors && Url1.dirty}" >
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-dark h3">BẢNG</label>
+                        <input name="Table" #Table1="ngModel" [(ngModel)]="service.formData.Table" minlength="3"
+                            maxlength="100" required class="form-control col-sm-9"
+                            [ngClass]="{ 'is-invalid':Table1.errors && Table1.dirty,'is-valid': !Table1.errors && Table1.dirty}" (input)="changeUrl()">
+                        <span class="text-danger offset-sm-3" *ngIf="Table1.invalid && Table1.dirty">
+                            Bảng dữ liệu phải từ 3 đến 100 kí tự
+                        </span>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-dark h3">URL</label>
+                        <input name="Url" #Url1="ngModel" [(ngModel)]="service.formData.Url" minlength="3"
+                            maxlength="100" required class="form-control col-sm-9"
+                            [ngClass]="{ 'is-invalid':Url1.errors && Url1.dirty,'is-valid': !Url1.errors && Url1.dirty}">
                         <span class="text-danger offset-sm-3" *ngIf="Url1.invalid && Url1.dirty">
                             Url phải từ 3 đến 100 kí tự
                         </span>
-                      </div>
-                      <div class="form-group row">
-                        <label  class="col-sm-3 col-form-label text-dark h3">NHÓM</label>
-                        <select2 [data]="this.listGroup"  [value]="value_group" id="select2_group" 
-                        [options]="options_group" class="col-sm-9 px-0" *ngIf="loading"  (valueChanged)="changed($event)" ></select2>
-                        <input name="Group" #Group1="ngModel" [(ngModel)]="service.formData.Group" required hidden >  
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-dark h3">NHÓM</label>
+                        <select2 [data]="this.listGroup" [value]="value_group" id="select2_group"
+                            [options]="options_group" class="col-sm-9 px-0" *ngIf="loading"
+                            (valueChanged)="changed($event)"></select2>
+                        <input name="Group" #Group1="ngModel" [(ngModel)]="service.formData.Group" required hidden>
                         <span class="text-danger offset-sm-3" *ngIf="Group1.errors">
-                            Nhóm quyền không được để trống 
+                            Nhóm quyền không được để trống
                         </span>
                     </div>
                     <div class="form-group row">
-                        <label  class="col-sm-3 col-form-label text-dark h3">ICON</label>
-                        <div class="input-group col-sm-9 px-0">    
-                  
-                            <input id="iconpicker_txt" type="text" class="form-control" [(ngModel)]="service.formData.Icon"  name="Icon" readonly>                                
+                        <label class="col-sm-3 col-form-label text-dark h3">ICON</label>
+                        <div class="input-group col-sm-9 px-0">
+
+                            <input id="iconpicker_txt" type="text" class="form-control"
+                                [(ngModel)]="service.formData.Icon" name="Icon" readonly>
                             <div class="input-group-append">
                                 <button id="iconpicker" class="btn btn-primary" name="icon" role="iconpicker"></button>
-                              </div>  
+                            </div>
                         </div>
-                      </div>
-                      <div class="form-group row">
-                        <label  class="col-sm-3 col-form-label text-dark h3">BACKGROUND</label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label text-dark h3">BACKGROUND</label>
                         <div class="input-group col-sm-9 px-0">
-                            <input name="Color" type="text"  name="Color" [(ngModel)]="service.formData.Color" hidden>                                
+                            <input name="Color" type="text" name="Color" [(ngModel)]="service.formData.Color" hidden>
                             <input #ignoredInput type="text" class="form-control" [value]="service.formData.Color"
-                            [(colorPicker)]="service.formData.Color"
-                            [(cpToggle)]="toggle" readonly>
+                                [(colorPicker)]="service.formData.Color" [(cpToggle)]="toggle" readonly>
                             <div class="input-group-append">
-                                <span class="input-group-text rounded-circle" style="width: 35px;" [ngStyle]="{'background-color': service.formData.Color}" #ignoredButton (click)="toggle=!toggle"></span>
-                              </div>
-                          </div>
-                      </div>
+                                <span class="input-group-text rounded-circle" style="width: 35px;"
+                                    [ngStyle]="{'background-color': service.formData.Color}" #ignoredButton
+                                    (click)="toggle=!toggle"></span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group row" *ngIf="this.type==2;else status">
-                      <label  class="col-sm-3 col-form-label text-dark h3">HOẠT ĐỘNG</label>
-                      <select name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" required class="form-control col-sm-9">
-                        <option  [ngValue]="0" >Bị Cấm</option>
-                        <option  [ngValue]="1">Hoạt Động</option>
-                      </select>
-                     
+                        <label class="col-sm-3 col-form-label text-dark h3">HOẠT ĐỘNG</label>
+                        <select name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" required
+                            class="form-control col-sm-9">
+                            <option [ngValue]="0">Bị Cấm</option>
+                            <option [ngValue]="1">Hoạt Động</option>
+                        </select>
+
                     </div>
-                    <ng-template #status><input name="Status" [(ngModel)]="service.formData.Status" hidden></ng-template>
+                    <ng-template #status><input name="Status" [(ngModel)]="service.formData.Status" hidden>
+                    </ng-template>
                     <div class="form-group row pull-left ml-5">
-                      <button type="button"  data-dismiss="modal" (click)="resetForm()"  class="btn btn-danger btn-block font-weight-bolder">RESET</button>
+                        <button type="button" data-dismiss="modal" (click)="resetForm()"
+                            class="btn btn-danger btn-block font-weight-bolder">RESET</button>
                     </div>
-                      <div class="form-group row pull-right mr-5">
-                        <button type="button" (click)="this.onSubmit(form)"  [disabled]="form.invalid" data-dismiss="modal" class="btn btn-info btn-block text-light font-weight-bolder">SUBMIT</button>
-                      </div>
+                    <div class="form-group row pull-right mr-5">
+                        <button type="button" (click)="this.onSubmit(form)" [disabled]="form.invalid"
+                            data-dismiss="modal"
+                            class="btn btn-info btn-block text-light font-weight-bolder">SUBMIT</button>
+                    </div>
                 </form>
                 <!-- END -CREATE-->
             </div>

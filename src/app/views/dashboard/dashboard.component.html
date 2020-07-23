@@ -25,29 +25,70 @@
   <div class="row" id="db_menu">
   </div>
   <!--/.row-->
-  <div class="card">
+  <div class="row">
+  <div class="col-12 col-sm-6">
+  <div class="card" style="height: 500px;">
+    <div class="card-header" style="background-color:#fff;height: 3.7rem;">
+        <h4 class="card-title my-0">Thống Kê Tài Khoản</h4>
+    </div>
     <div class="card-body">
-        <div class="d-flex justify-content-between">
-              <h4 class="card-title mb-0">Xếp Hạng</h4>
-
-                <select class="custom-select w-auto" id="slc_db" (change)="change()">
-                </select>
+      <div class="chart-wrapper">
+        <canvas baseChart class="chart"
+        [(data)]="doughnutChartData"
+        [labels]="doughnutChartLabels"
+        [colors]="doughnutChartColors"
+        [chartType]="doughnutChartType"></canvas>
+      </div>
+      </div>
+  </div>
+  <div class="card" style="height: 500px;">
+    <div class="card-header" style="background-color:#fff;height: 3.7rem;">
+        <h4 class="card-title my-0">Thống Kê Lượt Thi / Tuần</h4>
+    </div>
+    <div class="card-body">
+      <div class="chart-wrapper">
+        <canvas baseChart class="chart"
+        [datasets]="lineChartData"
+        [labels]="lineChartLabels"
+        [options]="lineChartOptions"
+        [colors]="lineChartColours"
+        [chartType]="'line'"></canvas>
+      </div>
+      </div>
+  </div>
+</div>
+<div class="col-12 col-sm-6">
+  <div class="card" style="background-color:#fff;height: 1020px;">
+    <div class="card-header" style="height: 3.7rem;background-color:#fff;">
+      <div class="d-flex justify-content-between" >
+        <h4 class="card-title">Xếp Hạng</h4>
+          <select class="custom-select w-auto" id="slc_db" (change)="change()">
+          </select>
+      </div>
+    </div>
+    <div class="card-body">
+          <div class="row justify-content-center mt-2">
+              <i class="fa fa-trophy fa-5x" style="color: #f3b208;"></i>
           </div>
           <div class="row justify-content-center mt-2">
-              <i class="fa fa-trophy fa-5x" style="color: orange;"></i>
-          </div>
-          <div class="row justify-content-center mt-2">
-              <table class="table table-bordered table-hover w-50 text-center" id="tb_db">
-                  <tr class="bg-primary">
+              <table class="table table-bordered table-hover w-50 text-center" >
+                <thead style="background-color:#007bff;color: white;">
+                  <tr >
                       <th >STT</th>
                       <th>Tài Khoản</th>
                       <th>Điểm</th>
-                  </tr>
+                    </tr>
+                  </thead>
+                  <tbody id="tb_db">
+
+                  </tbody>
               </table>
             </div>
       <!--/.row-->
       </div>
 
   </div>
+  </div>
+</div>
   <!--/.card-->
 </div>

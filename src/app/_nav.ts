@@ -18,6 +18,7 @@ export interface NavData {
   name?: string;
   url?: string;
   icon?: string;
+  table?:string;
   badge?: NavBadge;
   title?: boolean;
   color?: string;
@@ -37,7 +38,7 @@ export let navItems: NavData[] = [
     icon: 'icon-speedometer',
     badge: {
       variant: 'info',
-      text: 'NEW'
+      text: 'Mới'
     }
   },
     // {

@@ -32,26 +32,18 @@ export class DefaultLayoutComponent implements OnInit,OnDestroy {
    user = await JSON.parse(localStorage.getItem('currentUser'));
     var temp=<Object>user;
     this.service.getList().then((res) => {
-      navItems.pop();
       for (let key in res) {
-        if ((';'+res[key].Group+';').includes(';'+temp["Group"]+';'))
-       navItems.unshift(
+        if ((';'+res[key].Group+';').includes(';'+temp["Group"]+';') && res[key].Status==1)
+       navItems.push(
          {
           name: res[key].Name,
           url: res[key].Url,
+          table: res[key].Table,
           icon: 'fa '+res[key].Icon,
           color: res[key].Color
          }
        )
       }
-      navItems.unshift({
-        name: 'Dashboard',
-        url: '/dashboard',
-        icon: 'icon-speedometer',
-        badge: {
-          variant: 'info',
-          text: 'NEW'
-        }});
       this.Nav_loading=true;  
     }).catch(()=>
     {
