@@ -5,45 +5,50 @@
           <div class="card">
             <div class="card-header">
               <div class="row justify-content-between">
-                <div class="col-xs-12 col-sm-6">
+                <div class="col-12 col-sm-6">
                   <h4>Quản Lí Tài Khoản Người Chơi</h4>
                 </div>
-                <div class="col-xs-12 col-sm-6 text-right">
-                    <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder" (click)="this.refresh()">
-                        <i class="fa fa-retweet"></i>
-                        Refresh
-                      </button>
-                  <button type="button" class="btn btn-info mr-1 text-light font-weight-bolder" data-toggle="modal" (click)="this.showAdd()">
-                    <i class="fa fa-plus" aria-hidden="true"> </i>
-                    Thêm
+                <div class="col-12 col-sm-6 text-right">
+                  <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder"
+                      (click)="this.refresh()">
+                      <i class="fa fa-retweet"></i>
+                      Refresh
                   </button>
-                </div>
+                  <button type="button" class="btn mr-1 text-light font-weight-bolder"
+                      style="background-color: #2719b2;" data-toggle="modal" (click)="this.showAdd()">
+                      <i class="fa fa-plus" aria-hidden="true"> </i>
+                      Thêm
+                  </button>
+              </div>
               </div>
             </div>
             <div class="input-group mt-3 row justify-content-end">
                 <div class="input-group-prepend mr-2">
                     <select [(ngModel)]="slc_search" class="custom-select">
-                        <option  [ngValue]="2" [selected]="true" >Tài Khoản</option>
-                        <option  [ngValue]="3">Họ Tên</option>
-                        <option  [ngValue]="4">Email</option>
-                        <option  [ngValue]="5">Điện Thoại</option>
-                        <option  [ngValue]="6">Địa Chỉ</option>
-                        <option  [ngValue]="7">Ngày Sinh</option>
-                        <option  [ngValue]="9">Hoạt Động</option>
+                        <option  [ngValue]="1" [selected]="true" >Tài Khoản</option>
+                        <option  [ngValue]="2">Họ Tên</option>
+                        <option  [ngValue]="3">Email</option>
+                        <option  [ngValue]="4">Điện Thoại</option>
+                        <option  [ngValue]="5">Địa Chỉ</option>
+                        <option  [ngValue]="6">Ngày Sinh</option>
+                        <option  [ngValue]="11">Hoạt Động</option>
                       </select>
                 </div>
                 <div class="input-group-prepend">
-              <input type="text" id="mySearchText" style="padding-left:5px;padding-right: 5px;" placeholder="Search..." [(ngModel)]="inp_search">
-              <button id="mySearchButton" class="btn btn-light order" (click)="filter()"><i class="fa fa-search" aria-hidden="true"></i></button>
+                  <input type="text" class="form-control mr-2" id="mySearchText"
+                      style="padding-left:5px;padding-right: 5px;" placeholder="Search..."
+                      [(ngModel)]="inp_search">
+                  <button id="mySearchButton" class="btn btn-outline-secondary" (click)="filter()" ><i
+                          class="fa fa-search" aria-hidden="true"></i></button>
               </div>
               </div>
-            <div class="card-body" style="overflow-x: scroll;">
+            <div class="card-body">
                  <!--  START- LIST-->
-              <table  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" id="dttb">
-                <thead class="bg-primary">
+                 <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                 class="table-bordered hover text-center " id="dttb" style=" white-space: nowrap;">
+                 <thead style="background-color:#007bff;color: white;">
                   <tr>
                     <th>STT</th>
-                    <th>ID</th>
                     <th>Tài Khoản</th>
                     <th>Họ Tên</th>
                     <th>Email</th>
@@ -51,14 +56,17 @@
                     <th>Địa Chỉ</th>
                     <th>Ngày Sinh</th>
                     <th>Hình Ảnh</th>
+                    <th>Người tạo</th>
+                    <th>Ngày tạo</th>
+                    <th>Người sửa</th>
+                    <th>Ngày sửa</th>
                     <th>Hoạt Động</th>
                     <th>Hành Động</th>
                   </tr>
                 </thead>
                 <tbody >
                     <tr *ngFor="let cus of this.list;let i=index">
-                        <td>{{i+1}}</td>
-                        <th scope="row">{{cus.Id}}</th>
+                      <th scope="row">{{i+1}}</th>
                         <td >
                             {{cus.Username}}
                         </td>
@@ -72,15 +80,14 @@
                             {{cus.Phone}}
                         </td>
                         <td>
-                            <button type="button" class="btn btn-outline-secondary" ngbPopover="{{cus.Address}}" triggers="mouseenter:mouseleave" popoverTitle="Địa chỉ">
-                                <i class="fa fa-eye"></i>
+                            <button type="button" class="btn btn-outline-secondary"  style="color: black;" ngbPopover="{{cus.Address}}" triggers="mouseenter:mouseleave" popoverTitle="Địa chỉ">
+                              {{resizeText(cus.Address)}}
                                 </button>
                         </td>
                         <td>
                             {{cus.Birthday  | date:'dd-MM-yyyy'}}
                         </td>
-            
-                        <td class="row justify-content-center w-100">
+                        <td>
                           <div *ngIf="cus.Image!=null">
                             <img [src]="cus.Image"  width="40px" height="40px"/>
                             </div>
@@ -89,14 +96,27 @@
                                 <img src="http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png" width="40px" height="40px" />
                                 </div>
                         </td>
-                        <td><span *ngIf="cus.Status==1; else SAI;" style="color: green;">Hoạt động</span>
-                          <ng-template #SAI> <span style="color: red;">Bị Cấm</span></ng-template>
-                        </td>
+                        <td>
+                          {{getObj_Name(objCus,cus.Employee_Create,'Email')}}
+                      </td>
+                      <td>
+                          {{getDate(cus.Date_Create)}}
+                      </td>
+                      <td>
+                          {{getObj_Name(objCus,cus.Employee_Edit,'Email')}}
+                      </td>
+                      <td>
+                          {{getDate(cus.Date_Edit)}}
+                      </td>
+                        <td><span *ngIf="cus.Status==1; else SAI;" class="text-success"><i
+                          class="fa fa-check-square-o fa-2x"></i></span>
+                          <ng-template #SAI> <span  class="text-danger"><i
+                                      class="fa fa-window-close-o fa-2x"></i></span></ng-template>
+                      </td>
                         <td class="text-center">
-                              <button (click)="showedit(cus)" class="bg-success" style="border:0">
-                              <i class="fa fa-edit"></i>
-                              </button>
-                              
+                          <button (click)="showedit(cus)" class="btn btn-outline-success">
+                            <i class="fa fa-edit"></i>
+                        </button>
                           </td>
                       </tr>
                 </tbody>
@@ -123,40 +143,44 @@
         </div>
         <div class="modal-body">
               <!-- START CREATE -->
-              <form #form="ngForm" autocomplete="off">
+              <form #form="ngForm" autocomplete="off" class="pr-3">
                   <input *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id"  hidden>
-                  <div class="row justify-content-center mb-2 w-100">
+                  <div class="row justify-content-center mb-2 w-100 ml-3">
                   <img [src]="service.formData.Image" class="col" style="max-height:300px;max-width:300px;"/>
                
                   </div>
                   <div class="form-group row">
           
                       <label class="col-sm-3 col-form-label text-dark h3">ẢNH</label>
-                      <input #myInput type="file" (change)="onFileChanged($event)" />
+                      <div class="custom-file col-sm-9">
+                        <input #myInput type="file" (change)="onFileChanged($event)" id="inputGroupFile01"/>
+                        <label class="custom-file-label" for="inputGroupFile01">Chọn Ảnh</label>
+                      </div>
+
                       <input name="Image" #Image1="ngModel" [(ngModel)]="service.formData.Image" hidden>
                   </div>
 
                     <input name="Password" #Password1="ngModel" [(ngModel)]="service.formData.Password"  hidden>
                   <div class="form-group row">
-                    <label  class="col-sm-3 col-form-label text-dark h3">USERNAME</label>
+                    <label  class="col-sm-3 col-form-label text-dark h3">USERNAME <label class="text-danger">*</label></label>
                     <input name="Username" #Username1="ngModel" [(ngModel)]="service.formData.Username" minlength="3" maxlength="50"  required class="form-control col-sm-9"
-                    [ngClass]="{ 'is-invalid':(Username1.errors && Username1.touched),'is-valid': !Username1.errors && Username1.touched}" [disabled]="this.type==2">
+                    [ngClass]="{ 'is-invalid':(Username1.errors && Username1.dirty),'is-valid': !Username1.errors && Username1.dirty}" [disabled]="this.type==2">
                     <span class="text-danger offset-sm-3" *ngIf="Username1.invalid && Username1.dirty">
                         Tài Khoản phải từ 3 đến 50 kí tự
                     </span>
                   </div>
                   <div class="form-group row">
-                    <label  class="col-sm-3 col-form-label text-dark h3">HỌ TÊN</label>
-                    <input name="Fullname" #Fullname1="ngModel" [(ngModel)]="service.formData.Fullname"  minlength="3" maxlength="50"   required class="form-control col-sm-9"
-                    [ngClass]="{ 'is-invalid':(Fullname1.errors && Fullname1.touched),'is-valid': !Fullname1.errors && Fullname1.touched}">
+                    <label  class="col-sm-3 col-form-label text-dark h3">HỌ TÊN <label class="text-danger">*</label></label>
+                    <input name="Fullname" #Fullname1="ngModel" [(ngModel)]="service.formData.Fullname"  minlength="3" maxlength="50"    class="form-control col-sm-9"
+                    [ngClass]="{ 'is-invalid':(Fullname1.errors && Fullname1.dirty),'is-valid': !Fullname1.errors && Fullname1.dirty}">
                     <span class="text-danger offset-sm-3" *ngIf="Fullname1.invalid && Fullname1.dirty">
                         Họ Tên phải từ 3 đến 50 kí tự
                     </span>
                   </div>
                   <div class="form-group row">
-                  <label class="col-sm-3 col-form-label text-dark h3">EMAIL</label>
-                  <input name="Email" #Email1="ngModel" [(ngModel)]="service.formData.Email" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"  maxlength="100" required class="form-control col-sm-9" 
-                  [ngClass]="{ 'is-invalid':(Email1.errors && Email1.touched),'is-valid': !Email1.errors && Email1.touched}"
+                  <label class="col-sm-3 col-form-label text-dark h3">EMAIL <label class="text-danger">*</label></label>
+                  <input name="Email" #Email1="ngModel" [(ngModel)]="service.formData.Email" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"  maxlength="100"  class="form-control col-sm-9" 
+                  [ngClass]="{ 'is-invalid':(Email1.errors && Email1.dirty),'is-valid': !Email1.errors && Email1.dirty}"
                   >
                   <span class="text-danger offset-sm-3" *ngIf="Email1.invalid && Email1.dirty">
                     Phải có dạng email e.g a@gmail.com và dài nhiều nhất 100 kí tự
@@ -165,7 +189,7 @@
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">SĐT</label>
                     <input name="Phone" #Phone1="ngModel" [(ngModel)]="service.formData.Phone"  pattern="(09|03)+([0-9]{8})\b"  class="form-control col-sm-9"
-                    [ngClass]="{ 'is-invalid':(Phone1.errors && Phone1.touched),'is-valid': !Phone1.errors && Phone1.touched}">
+                    [ngClass]="{ 'is-invalid':(Phone1.errors && Phone1.dirty),'is-valid': !Phone1.errors && Phone1.dirty}">
                     <span class="text-danger offset-sm-3" *ngIf="Phone1.invalid && Phone1.dirty">
                       SDT chỉ bao gồm số và có 10 số và bắt đầu là 09 hoặc 03
                     </span>
@@ -173,7 +197,7 @@
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">ĐỊA CHỈ</label>
                     <textarea rows="2" name="Address" #Address1="ngModel" [(ngModel)]="service.formData.Address"  minlength="3" maxlength="200"  class="form-control col-sm-9"
-                      [ngClass]="{ 'is-invalid':(Address1.errors && Address1.touched),'is-valid': !Address1.errors && Address1.touched}">
+                      [ngClass]="{ 'is-invalid':(Address1.errors && Address1.dirty),'is-valid': !Address1.errors && Address1.dirty}">
 
                     </textarea>
                     <span class="text-danger offset-sm-3" *ngIf="Address1.invalid && Address1.dirty">
@@ -184,7 +208,8 @@
                     <label  class="col-sm-3 col-form-label text-dark h3">NGÀY SINH</label>
                     <input type="date"  
                     [ngModel]="service.formData.Birthday | date:'yyyy-MM-dd'"  
-                    (ngModelChange)="service.formData.Birthday = $event"    
+
+                    (ngModelChange)="service.formData.Birthday"    
                     name="Birthday" 
                     class="form-control col-sm-9 form-control col-sm-9-rounded"
               >
@@ -195,15 +220,14 @@
 
                   <div class="form-group row" *ngIf="this.type==2;else status">
                     <label  class="col-sm-3 col-form-label text-dark h3">HOẠT ĐỘNG</label>
-                    <select name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" required class="form-control col-sm-9">
-                      <option  [ngValue]="0" >Bị Cấm</option>
-                      <option  [ngValue]="1">Hoạt Động</option>
-                    </select>
-                   
+                    <label class="switch switch-pill switch-outline-success-alt">
+                      <input type="checkbox" class="switch-input form-control col-sm-9" name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" (change)="changeStatus()" [checked]="service.formData.Status==1"  >
+                      <span class="switch-slider"></span>
+                    </label>                   
                   </div>
                   <ng-template #status><input name="Status" [(ngModel)]="service.formData.Status" hidden></ng-template>
                   <div class="form-group row pull-left ml-5">
-                    <button type="button"  data-dismiss="modal" (click)="this.service.resetForm(this.type)"  class="btn btn-danger btn-block font-weight-bolder">RESET</button>
+                    <button type="button"  data-dismiss="modal" (click)="resetForm()"  class="btn btn-danger btn-block font-weight-bolder">RESET</button>
                   </div>
                     <div class="form-group row pull-right mr-5">
                       <button type="button" (click)="this.onSubmit(form)"  [disabled]="form.invalid || this.compareDate(service.formData.Birthday)" data-dismiss="modal" class="btn btn-info btn-block text-light font-weight-bolder">SUBMIT</button>

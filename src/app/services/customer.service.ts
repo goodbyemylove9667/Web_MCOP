@@ -4,6 +4,7 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { NgForm } from '@angular/forms';
 import { ApiService } from './api.service';
 import { reject, async } from 'q';
+import { user } from '../containers/default-layout/default-layout.component';
 export interface Customer {
 
   Id: string,
@@ -15,6 +16,10 @@ export interface Customer {
   Address: string,
   Birthday: Date,
   Image: string,
+  Employee_Create:string,
+  Date_Create:Date,
+  Employee_Edit:string,
+  Date_Edit:Date,
   Status: number
 }
 @Injectable({
@@ -40,7 +45,11 @@ export class CustomerService {
         Phone: '',
         Address: '',
         Birthday: new Date(),
-        Image: 'http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png',
+        Image: 'https://firebasestorage.googleapis.com/v0/b/adminiq-e827c.appspot.com/o/user-png-icon-male-user-icon-512.png?alt=media&token=883823b5-18fd-4d82-9a80-812c95839225',
+        Employee_Create:'',
+        Date_Create:new Date(),
+        Employee_Edit:'',
+        Date_Edit:new Date(),
         Status: 1
       };
     }
@@ -50,21 +59,15 @@ export class CustomerService {
   }
   getList() {
     return new Promise<Object>((resolve) => {
-      this.firebase.database.ref('Customer').orderByKey().once("value", (value) =>
+      this.firebase.database.ref('Customer').orderByChild("Date_Create").once("value", (value) =>
         resolve(value.toJSON()), (error) => reject(error))
     });
   }
-  getCkList()
-  {
-    return new Promise<Object>((resolve) => {
-      this.firebase.database.ref('Customer').orderByChild("Status").equalTo(1).once("value",(value)=>
-      resolve(value.toJSON()),(error)=>reject(error))
-    });
-  }
+ 
   showModal(obj: Customer) {
     if (obj != null) {
       this.formData = Object.assign({}, obj);
-      localStorage.setItem("customer_data",JSON.stringify( this.formData));
+      this.data={...this.formData};
 
     } else {
       this.resetForm(1);
@@ -72,11 +75,24 @@ export class CustomerService {
   }
 
   async insert(form: NgForm) {
-   await this.firebase.database.ref('Customer').orderByChild("Username").equalTo(form.value["Username"]).once("value", (value) => {
+
+   await this.firebase.database.ref('Customer').orderByChild("Username").equalTo(form.value["Username"]).limitToFirst(1).once("value", (value) => {
       if (value.exists()) {
         this.msg = "Tài Khoản Đã Tồn Tại";
       }
       else {
+        var date=new Date();
+        var y=date.getFullYear();
+        var m=date.getMonth()+1;
+        var d=date.getDate();
+        var hour=date.getHours();
+        var min=date.getMinutes();
+        var sec=date.getSeconds();
+        var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
+        form.value["Employee_Create"]=user["Id"];
+        form.value["Employee_Edit"]=user["Id"];
+        form.value["Date_Create"]=dt;
+         form.value["Date_Edit"]=dt;
         this.firebase.database.ref('Customer').push(
           form.value
         ).then(() => {
@@ -89,6 +105,15 @@ export class CustomerService {
 }
   async update(form: NgForm) {
     if (form.value["Id"] != null)
+    {
+      var date=new Date();
+      var y=date.getFullYear();
+      var m=date.getMonth()+1;
+      var d=date.getDate();
+      var hour=date.getHours();
+      var min=date.getMinutes();
+      var sec=date.getSeconds();
+      var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
       this.firebase.database.ref('Customer/' + form.value["Id"]).update(
         {
           Fullname: form.value["Fullname"],
@@ -97,6 +122,8 @@ export class CustomerService {
           Address: form.value["Address"],
           Birthday: form.value["Birthday"],
           Image: form.value["Image"],
+          Employee_Edit: user["Id"],     
+          Date_Edit: dt,
           Status: form.value["Status"],
         }
       ).then(() => {
@@ -106,6 +133,6 @@ export class CustomerService {
         catch((error) => {
           this.msg = "Không thể sửa";
         });
-
+      }
   }
 }

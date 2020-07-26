@@ -42,7 +42,7 @@ export class EmployeeService {
       Phone : '' ,
       Address : '',
       Birthday : new Date() ,
-      Image: 'http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png',
+      Image: 'https://firebasestorage.googleapis.com/v0/b/adminiq-e827c.appspot.com/o/user-png-icon-male-user-icon-512.png?alt=media&token=883823b5-18fd-4d82-9a80-812c95839225',
       Position : 1 ,
       Status : 1
     };

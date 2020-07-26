@@ -3,7 +3,6 @@ import { Result, ResultsService } from '../../services/results.service';
 import { Topic, TopicsService } from '../../services/topics.service';
 import { CustomerService } from '../../services/customer.service';
 import { ContestsService } from '../../services/contests.service';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { navItems } from '../../_nav';
 import { MenusService } from '../../services/menus.service';
 import { EmployeeService } from '../../services/employee.service';
@@ -15,16 +14,15 @@ import * as Chart from 'chart.js';
   templateUrl: 'dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
-  @BlockUI() blockUI: NgBlockUI;
   constructor(private cusservice: CustomerService,
     private topservice: TopicsService,private conservice: ContestsService,private menuservice: MenusService,private empservice: EmployeeService,private resservice:ResultsService) {
-    this.blockUI.start('Loading...'); 
    }
   cus_sl:number=0;
   top_sl:number=0;
   con_sl:number=0;
   emp_sl:number=0;
   admin_sl:number=0;
+  res_sl:number=0;
   listRes: Array<Result> = [];
   listTop: Array<Topic> = [];
   award : Array<Object> =[];
@@ -45,18 +43,10 @@ export class DashboardComponent implements OnInit {
   public lineChartData: Array<any> = [
     {data: [0,0,0,0,0,0,0]}
   ];
-  public lineChartLabels: Array<any> = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+  public lineChartLabels: Array<any> = ['CN','T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
   public lineChartOptions: any = {
     legend: {
     	display: false
-    },
-    layout: {
-      padding: {
-        left: 0,
-        right: 0,
-        top: 15,
-        bottom: 0
-      }
     },
     tooltips: {
       position: 'nearest',
@@ -154,15 +144,15 @@ export class DashboardComponent implements OnInit {
       x.appendChild(option);
     }
   }); 
-  await   this.empservice.getList().then((value)=>
+  await this.empservice.getList().then((value)=>
   {
     for (let key in value) {
-        if (value[key].Group=='Group1')
+        if (value[key].Group=='0')
         {
             this.admin_sl++;
         }
         else
-        if (value[key].Group=='Group2')
+        if (value[key].Group=='1')
         {
           this.emp_sl++;
         }
@@ -172,16 +162,8 @@ export class DashboardComponent implements OnInit {
   });
   await  this.resservice.getorderList().then((value)=>
   {
-    var now_week=0;
-    var dt = new Date();
-    var thisDay = dt.getDate(); 
-    var newDate = dt;
-    newDate.setDate(1); 
-    var digit = newDate.getDay(); 
-    var Q = (thisDay + digit) / 7;    
-    var R = (thisDay + digit) % 7;
-    if (R !== 0) now_week= Math.ceil(Q);
-    else now_week= Q;
+    this.res_sl=Object.getOwnPropertyNames(value).length; 
+    var arr={data: [0,0,0,0,0,0,0],fill:false};
     value.forEach((data)=>
     {
         this.listRes.unshift({
@@ -192,11 +174,15 @@ export class DashboardComponent implements OnInit {
           TimeLeft_Res :  data.toJSON().TimeLeft_Res,
           Date_Res:  data.toJSON().Date_Res 
         });
-        var date= new Date(data["Date_Res"]);
-          this.lineChartData[0]["data"][date.getDay()]++;
-        
+        let date= new Date(data.toJSON().Date_Res);
+        if (this.getWeekNumber(new Date())==this.getWeekNumber(date))
+        {      
+          arr["data"][date.getDay()]++;
+        }
     });
-    console.log(this.lineChartData);
+    this.lineChartData.length=0;
+    this.lineChartData.push(arr);
+    this.lineChartColours=[...this.lineChartColours];
 var count=0;
 var table = <HTMLTableElement>document.getElementById("tb_db");
   for (var res of this.listRes)
@@ -280,8 +266,23 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
       </div>
     </a>`
     }
+    else
+    if (element.table=='Result')
+    {
+      db_menu.innerHTML+=`<a `+str+` class="col-12 col-sm-3 text-decoration-none" href="`+element.url+`">
+      <div `+str+` class="card text-white" style="background-color:`+element.color+`;height:120px;">
+        <div `+str+` class="card-body py-4">
+          <div `+str+` class="btn-group float-right">
+            <i `+str+` class="fa `+element.icon+` fa-3x"></i>
+          </div>
+          <div `+str+` class="text-value">`+element.name+`</div>
+          <div `+str+` style="opacity:0.8;">`+ this.listRes.length+`</div>
+        </div>
+      </div>
+    </a>`
+    }
    else
-   if (element.table!=null &&element.table!='')
+   if (element.table!=null && element.table!='')
    {
      var sl=0;
      var stt=true;
@@ -303,7 +304,6 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
     </a>`
    }
   });
-  this.blockUI.stop(); 
  }
  change()
  {

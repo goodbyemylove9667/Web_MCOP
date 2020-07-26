@@ -5,10 +5,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { GroupsService, Group } from '../../services/groups.service';
 import { Select2OptionData } from 'ng2-select2';
-import { user } from '../../containers';
 import { EmployeeService } from '../../services/employee.service';
 declare var $:any;
 @Component({
@@ -17,16 +14,17 @@ declare var $:any;
   styleUrls: ['./menus.component.scss']
 })
 export class MenusComponent implements OnInit {
-  @BlockUI() blockUI: NgBlockUI;
   @ViewChild('myModal', { static: false }) public myModal: ModalDirective;
-  @ViewChild('form', { static: false }) public form: NgForm;
+  @ViewChild('form', { static: false }) private form: NgForm;
   @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
   dtTrigger: Subject<any> = new Subject();
-  constructor(private service:MenusService,private groupservice:GroupsService, private empservice:EmployeeService,private toastr: ToastrService) {
-    this.blockUI.start('Loading...'); 
+  constructor(private service:MenusService,private empservice:EmployeeService,private toastr: ToastrService) {
   }
   list: Array<Menu> = [];
-  listGroup: Array<Select2OptionData> = [];
+  listGroup: Array<Select2OptionData> = [
+    { id:'0',text:'Quản trị'},
+     { id:'1',text:'Nhân viên'}
+  ];
   objCus:any={};
   data: Menu;
   options_group: Select2Options;
@@ -50,25 +48,6 @@ export class MenusComponent implements OnInit {
       allowClear:true
     }
     this.loading=false;
-   await this.groupservice.getList().then((res) => {
-      for (let key in res) {
-        if (res[key].Status==1)
-        this.listGroup.unshift
-          ({
-            id: key,
-            text: res[key].Name,
-          }
-          )
-      }
-      this.loading=true;
-    }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu Nhóm Quyền', 'Thông Báo!', { timeOut: 1000 });
-    });
-    await this.empservice.getCkList().then((res) => {
-      this.objCus=res;
-    }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
-    });
     await this.service.getList().then((res) => {
       for (let key in res) {
         this.list.unshift
@@ -92,20 +71,10 @@ export class MenusComponent implements OnInit {
     }, error => {
       this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 1000 });
     });
-    this.blockUI.stop();
-    $.fn['dataTable'].ext.search.push((settings, data, dataIndex,rowData) => {
-      const inp = this.accentsTidy(data[this.slc_search]);
-      const inp_search = this.accentsTidy(this.inp_search);
-      if (this.slc_search==10)
-      {
-          if (rowData[10].includes("true") && inp_search=="1") return true;
-          if (rowData[10].includes("false") && inp_search=="0") return true;
-          return false;
-      }
-      if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
-        return true;
-      }
-      return false;
+    await this.empservice.getCkList().then((res) => {
+      this.objCus=res;
+    }, error => {
+      this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
     });
   }
    ngOnInit(): void {  
@@ -115,6 +84,8 @@ export class MenusComponent implements OnInit {
       responsive: true,
       scrollCollapse: true,
       dom: 'lrtip',
+      autoWidth:false,
+      scrollX:true,
       language:
       {
         emptyTable: '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>',
@@ -132,9 +103,21 @@ export class MenusComponent implements OnInit {
         }
       }
     };
-    $.fn.dataTable.ext.classes.sLengthSelect = 'custom-select w-auto d-inline-block';
-    $.fn.dataTable.ext.classes.sPageButtonActive = 'btn btn-outline-secondary';
     this.initTable();
+    $.fn['dataTable'].ext.search.push((settings, data, dataIndex,rowData) => {
+      const inp = this.accentsTidy(data[this.slc_search]);
+      const inp_search = this.accentsTidy(this.inp_search);
+      if (this.slc_search==10)
+      {
+          if (rowData[this.slc_search].includes("true") && inp_search=="1") return true;
+          if (rowData[this.slc_search].includes("false") && inp_search=="0") return true;
+          return false;
+      }
+      if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
+        return true;
+      }
+      return false;
+    });
     $(function() {
           $('#iconpicker').iconpicker({
             align: 'center', 

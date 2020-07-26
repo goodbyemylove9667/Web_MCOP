@@ -39,6 +39,10 @@ export class QuestionsComponent implements OnInit {
             Id: key,
             Name_Top: res[key].Name_Top,
             Image: res[key].Image,
+            Employee_Create:res[key].Employee_Create,
+            Date_Create:res[key].Date_Create,
+            Employee_Edit:res[key].Employee_Edit,
+            Date_Edit:res[key].Date_Edit,
             Status: res[key].Status
           }
           )
@@ -135,28 +139,6 @@ export class QuestionsComponent implements OnInit {
   refresh() {
     this.list = [];
     this.rerender();
-    this.listTop = [];
-    this.topservice.getList().then((res) => {
-      for (let key in res) {
-        this.listTop.push
-          ({
-            Id: key,
-            Name_Top: res[key].Name_Top,
-            Image: res[key].Image,
-            Status: res[key].Status
-          }
-          )
-      }
-      this.objTop = res;
-    }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu Chủ Đề', 'Thông Báo!', { timeOut: 1000 });
-    });
-    this.listEmp = [];
-    this.empservice.getList().then((res) => {
-      this.objEmp = res;
-    }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
-    });
     this.service.getList().then((res) => {
       for (let key in res) {
         this.list.push

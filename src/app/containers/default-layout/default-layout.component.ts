@@ -29,9 +29,11 @@ export class DefaultLayoutComponent implements OnInit,OnDestroy {
   }
   async ngOnInit()
   {
+    this.blockUI.start('Loading...'); 
    user = await JSON.parse(localStorage.getItem('currentUser'));
     var temp=<Object>user;
-    this.service.getList().then((res) => {
+    this.navItems.length=1;
+  await  this.service.getList().then((res) => {
       for (let key in res) {
         if ((';'+res[key].Group+';').includes(';'+temp["Group"]+';') && res[key].Status==1)
        navItems.push(
@@ -52,6 +54,9 @@ export class DefaultLayoutComponent implements OnInit,OnDestroy {
   var count=Object.keys(temp).length;
   this.len=0;
   this.len=10-count;
+  $.fn.dataTable.ext.classes.sLengthSelect = 'custom-select w-auto d-inline-block';
+  $.fn.dataTable.ext.classes.sPageButtonActive = 'btn btn-outline-secondary';
+  this.blockUI.stop();
   }
   logout()
   {

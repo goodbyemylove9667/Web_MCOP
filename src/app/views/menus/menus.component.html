@@ -6,10 +6,10 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row justify-content-between">
-                            <div class="col-xs-12 col-sm-6">
+                            <div class="col-12 col-sm-6">
                                 <h4>Quản Lí Menu</h4>
                             </div>
-                            <div class="col-xs-12 col-sm-6 text-right">
+                            <div class="col-12 col-sm-6 text-right">
                                 <button type="button" class="btn btn-danger mr-1 text-light font-weight-bolder"
                                     (click)="this.refresh()">
                                     <i class="fa fa-retweet"></i>
@@ -40,10 +40,10 @@
                     </div>
 
 
-                    <div class="card-body" style="overflow-x: scroll;">
+                    <div class="card-body">
                         <!--  START- LIST-->
-                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
-                            class="table-bordered hover text-center" id="dttb">
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" 
+                            class="table-bordered hover text-center" id="dttb" style=" white-space: nowrap;">
                             <thead style="background-color:#007bff;color: white;">
                                 <tr>
                                     <th>STT</th>
@@ -63,8 +63,8 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let menu of this.list;let i=index">
-                                    <td>{{i+1}}</td>
-                                    <td style="width: 200px;">
+                                    <th scope="row">{{i+1}}</th>
+                                    <td>
                                         {{menu.Name}}
                                     </td>
                                     <td>
@@ -96,9 +96,9 @@
                                     <td>
                                         {{getDate(menu.Date_Edit)}}
                                     </td>
-                                    <td><span *ngIf="menu.Status==1; else SAI;" style="color: green;"><i
-                                                class="fa fa-check-square-o fa-2x"></i></span>
-                                        <ng-template #SAI> <span style="color: red;"><i
+                                    <td><span *ngIf="menu.Status==1; else SAI;" class="text-success"><i
+                                        class="fa fa-check-square-o fa-2x"></i></span>
+                                        <ng-template #SAI> <span  class="text-danger"><i
                                                     class="fa fa-window-close-o fa-2x"></i></span></ng-template>
                                     </td>
                                     <td class="text-center">
@@ -136,7 +136,7 @@
                 <form #form="ngForm" autocomplete="off" class="pr-3">
                     <input *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id" hidden>
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label text-dark h3">TÊN</label>
+                        <label class="col-sm-3 col-form-label text-dark h3">TÊN <label class="text-danger">*</label></label>
                         <input name="Name" #Name1="ngModel" [(ngModel)]="service.formData.Name" minlength="3"
                             maxlength="100" required class="form-control col-sm-9"
                             [ngClass]="{ 'is-invalid':Name1.errors && Name1.dirty,'is-valid': !Name1.errors && Name1.dirty}">
@@ -145,7 +145,7 @@
                         </span>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label text-dark h3">BẢNG</label>
+                        <label class="col-sm-3 col-form-label text-dark h3">BẢNG <label class="text-danger">*</label></label>
                         <input name="Table" #Table1="ngModel" [(ngModel)]="service.formData.Table" minlength="3"
                             maxlength="100" required class="form-control col-sm-9"
                             [ngClass]="{ 'is-invalid':Table1.errors && Table1.dirty,'is-valid': !Table1.errors && Table1.dirty}" (input)="changeUrl()">
@@ -154,7 +154,7 @@
                         </span>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label text-dark h3">URL</label>
+                        <label class="col-sm-3 col-form-label text-dark h3">URL <label class="text-danger">*</label></label>
                         <input name="Url" #Url1="ngModel" [(ngModel)]="service.formData.Url" minlength="3"
                             maxlength="100" required class="form-control col-sm-9"
                             [ngClass]="{ 'is-invalid':Url1.errors && Url1.dirty,'is-valid': !Url1.errors && Url1.dirty}">
@@ -163,7 +163,7 @@
                         </span>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label text-dark h3">NHÓM</label>
+                        <label class="col-sm-3 col-form-label text-dark h3">NHÓM <label class="text-danger">*</label></label>
                         <select2 [data]="this.listGroup" [value]="value_group" id="select2_group"
                             [options]="options_group" class="col-sm-9 px-0" *ngIf="loading"
                             (valueChanged)="changed($event)"></select2>

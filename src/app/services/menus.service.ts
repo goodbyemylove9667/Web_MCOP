@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase} from '@angular/fire/database';
 import { NgForm } from '@angular/forms';
 import { reject } from 'q';
-import { DefaultLayoutComponent, user } from '../containers';
+import { user } from '../containers/default-layout/default-layout.component';
 export interface Menu
 {
     Id: string,
@@ -91,23 +91,23 @@ export class MenusService {
 
  async insert(form :NgForm)
  {
-  var date=new Date();
-  var y=date.getFullYear();
-  var m=date.getMonth()+1;
-  var d=date.getDate();
-  var hour=date.getHours();
-  var min=date.getMinutes();
-  var sec=date.getSeconds();
-  var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
-  form.value["Employee_Create"]=user["Id"];
-  form.value["Employee_Edit"]=user["Id"];
-  form.value["Date_Create"]=dt;
-   form.value["Date_Edit"]=dt;
   await this.firebase.database.ref('Menu').orderByChild("Name").equalTo(form.value["Name"]).once("value", (value) => {
     if (value.exists()) {
       this.msg = "Menu Đã Tồn Tại";
     }
     else {
+      var date=new Date();
+      var y=date.getFullYear();
+      var m=date.getMonth()+1;
+      var d=date.getDate();
+      var hour=date.getHours();
+      var min=date.getMinutes();
+      var sec=date.getSeconds();
+      var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
+      form.value["Employee_Create"]=user["Id"];
+      form.value["Employee_Edit"]=user["Id"];
+      form.value["Date_Create"]=dt;
+       form.value["Date_Edit"]=dt;
       this.firebase.database.ref('Menu').push(
         form.value
       ).then(() => {

@@ -35,6 +35,10 @@ export class IncludesComponent implements OnInit {
               Id: key,
               Name_Top: res[key].Name_Top,
               Image: res[key].Image,
+              Employee_Create:res[key].Employee_Create,
+              Date_Create:res[key].Date_Create,
+              Employee_Edit:res[key].Employee_Edit,
+              Date_Edit:res[key].Date_Edit,
               Status: res[key].Status
             }
             )
@@ -104,6 +108,10 @@ export class IncludesComponent implements OnInit {
               Id: key,
               Name_Top: res[key].Name_Top,
               Image: res[key].Image,
+              Employee_Create:res[key].Employee_Create,
+              Date_Create:res[key].Date_Create,
+              Employee_Edit:res[key].Employee_Edit,
+              Date_Edit:res[key].Date_Edit,
               Status: res[key].Status
             }
             )
