@@ -140,8 +140,6 @@ async update(form :NgForm)
           Color: form.value["Color"],
           Employee_Edit: user["Id"],     
           Date_Edit: dt,
-          Employee_Create: user["Id"],     
-          Date_Create: dt,
           Status : form.value["Status"],
       }
       ).then(()=>

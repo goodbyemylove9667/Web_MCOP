@@ -74,14 +74,17 @@ export class IncludesComponent implements OnInit {
                 ({
                   Id: key,
                   Id_Top:  res[key].Id_Top,
-                  Id_Author:  res[key].Id_Author,
                   Content_Ques:  res[key].Content_Ques,
                   Answer1:  res[key].Answer1,
                   Answer2:  res[key].Answer2,
                   Answer3:  res[key].Answer3,
                   Answer4:  res[key].Answer4,
                   Answer:  res[key].Answer,
-                  Create_Date : res[key].Create_Date,
+                  Level:  res[key].Level,
+                  Employee_Create:res[key].Employee_Create,
+                  Date_Create:res[key].Date_Create,
+                  Employee_Edit:res[key].Employee_Edit,
+                  Date_Edit:res[key].Date_Edit,
                   Status:  res[key].Status
                 }
                 )
@@ -152,14 +155,17 @@ export class IncludesComponent implements OnInit {
                 ({
                   Id: key,
                   Id_Top:  res[key].Id_Top,
-                  Id_Author:  res[key].Id_Author,
                   Content_Ques:  res[key].Content_Ques,
                   Answer1:  res[key].Answer1,
                   Answer2:  res[key].Answer2,
                   Answer3:  res[key].Answer3,
                   Answer4:  res[key].Answer4,
                   Answer:  res[key].Answer,
-                  Create_Date : res[key].Create_Date,
+                  Level:  res[key].Level,
+                  Employee_Create:res[key].Employee_Create,
+                  Date_Create:res[key].Date_Create,
+                  Employee_Edit:res[key].Employee_Edit,
+                  Date_Edit:res[key].Date_Edit,
                   Status:  res[key].Status
                 }
                 )

@@ -2,8 +2,10 @@ import { Injectable, ViewChild } from '@angular/core';
 import { AngularFireDatabase} from '@angular/fire/database';
 import { AngularFireAuth } from  "@angular/fire/auth";
 import { NgForm } from '@angular/forms';
-import { ApiService } from './api.service';
 import { reject } from 'q';
+import { user } from '../containers/default-layout/default-layout.component';
+import { AuthService } from '../auth/auth.service';
+import { HttpClient, HttpHeaders,HttpParams} from '@angular/common/http';
 export interface Employee
 {
 
@@ -33,7 +35,7 @@ export class EmployeeService {
   ls: {};
   msg: any;
   loading: boolean;
-  constructor(private firebase : AngularFireDatabase,private af:AngularFireAuth,private api:ApiService) { }
+  constructor(private firebase : AngularFireDatabase,private af:AngularFireAuth,private authserveice: AuthService,private http:HttpClient) { }
  async resetForm(type) {
     if (type==1)
     {
@@ -57,7 +59,7 @@ export class EmployeeService {
   }
   else
   {
-    this.formData=await JSON.parse(localStorage.getItem("employee_data"));
+    this.formData=this.data;
   }
   }
   getList() {
@@ -77,81 +79,67 @@ export class EmployeeService {
   showModal(obj: Employee) {
     if (obj != null) {
       this.formData = Object.assign({}, obj);
-      localStorage.setItem("employee_data",JSON.stringify( this.formData));
+    this.data={...this.formData};
 
     } else {
       this.resetForm(1);
     }
   }
-
- async insert(form :NgForm)
+async insert(form :NgForm)
  {
-  const  email  =  await JSON.parse(localStorage.getItem('email'));
-  const  password  =  await JSON.parse(localStorage.getItem('password'));
-   await  this.af.auth.createUserWithEmailAndPassword(form.value["Email"],form.value["Password"]).then(()=>
-  { this.af.auth.sendPasswordResetEmail(form.value["Email"]);
-   this.firebase.database.ref('Employee').push(
-    form.value
+  const token  = await this.authserveice.getToken();
+  var params={
+    "email":form.value["Email"],
+    "password":form.value["Password"],
+    "returnSecureToken":false
+  }
+  const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json'
+        })
+      };
+this.http.post("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDFtaA4Z_9xNwPqTf_0iETw7bTlWJktiY0",
+    params,httpOptions
   )
-  this.af.auth.signInWithEmailAndPassword(email,password);
-  this.msg="";
-   }).catch((error)=>
+  .subscribe(data => 
+  {
+    var date=new Date();
+    var y=date.getFullYear();
+    var m=date.getMonth()+1;
+    var d=date.getDate();
+    var hour=date.getHours();
+    var min=date.getMinutes();
+    var sec=date.getSeconds();
+    var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
+    form.value["Employee_Create"]=user["Id"];
+    form.value["Employee_Edit"]=user["Id"];
+    form.value["Date_Create"]=dt;
+     form.value["Date_Edit"]=dt;
+    this.firebase.database.ref('Employee').push(
+      form.value
+    );
+    this.msg="";
+    this.af.auth.sendPasswordResetEmail(form.value["Email"]).then().catch();
+  },
+   error => 
    {
-    if (error.toString().includes("The email address is already in use by another account."))
-    this.msg = "Địa chỉ email đã được sử dụng bởi tài khoản khác."
-  else
-    if (error.toString().includes("The custom token format is incorrect. Please check the documentation."))
-      this.msg = "Định dạng mã thông báo tùy chỉnh không chính xác. Vui lòng kiểm tra tài liệu."
-    else
-      if (error.toString().includes("The custom token corresponds to a different audience."))
-        this.msg = "Mã thông báo tùy chỉnh tương ứng với một đối tượng khác."
-      else
-        if (error.toString().includes("The supplied auth credential is malformed or has expired."))
-          this.msg = "Thông tin xác thực được cung cấp không đúng định dạng hoặc đã hết hạn."
-        else
-          if (error.toString().includes("The email address is badly formatted."))
-            this.msg = "Địa chỉ email được định dạng sai."
-          else
-            if (error.toString().includes("The password is invalid or the user does not have a password."))
-              this.msg = "Mật khẩu không hợp lệ."
-            else
-              if (error.toString().includes("The supplied credentials do not correspond to the previously signed in user."))
-                this.msg = "Thông tin đăng nhập được cung cấp không tương ứng với người dùng đã đăng nhập trước đó."
-              else
-                if (error.toString().includes("This operation is sensitive and requires recent authentication. Log in again before retrying this request."))
-                  this.msg = "Thao tác này rất nhạy cảm và yêu cầu xác thực gần đây. Đăng nhập lại trước khi thử lại yêu cầu này."
-                else
-                  if (error.toString().includes("An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address."))
-                    this.msg = "Một tài khoản đã tồn tại với cùng một địa chỉ email nhưng thông tin đăng nhập khác nhau. Đăng nhập bằng nhà cung cấp được liên kết với địa chỉ email này."
-                  else
-                    if (error.toString().includes("This credential is already associated with a different user account."))
-                      this.msg = "Thông tin đăng nhập này đã được liên kết với một tài khoản người dùng khác."
-                    else
-                      if (error.toString().includes("The user account has been disabled by an administrator."))
-                        this.msg = "Tài khoản người dùng đã bị vô hiệu hóa bởi quản trị viên."
-                      else
-                        if (error.toString().includes("The user's credential is no longer valid. The user must sign in again."))
-                          this.msg = "Thông tin đăng nhập của người dùng không còn hợp lệ. Người dùng phải đăng nhập lại."
-                        else
-                          if (error.toString().includes("There is no user record corresponding to this identifier. The user may have been deleted."))
-                            this.msg = "Tài khoản người dùng không chính xác hoặc có thể đã bị xóa."
-                          else
-                            if (error.toString().includes("The user's credential is no longer valid. The user must sign in again."))
-                              this.msg = "Thông tin đăng nhập của người dùng không còn hợp lệ. Người dùng phải đăng nhập lại."
-                            else
-                              if (error.toString().includes("This operation is not allowed. You must enable this service in the console."))
-                                this.msg = "Thao tác này không được phép. Bạn phải kích hoạt dịch vụ này trong bảng điều khiển."
-                              else
-                                if (error.toString().includes("There is no user record corresponding to this identifier"))
-                                  this.msg = "Tài khoản không tồn tại hoặc đã xóa."
-                                else
-                                  this.msg = "Không thể thêm";
-   });
+         this.msg = "Không thể thêm";}
+  );
+
 
 }
 async update(form :NgForm)
 {
   if (form.value["Id"]!=null)
+{
+  var date=new Date();
+  var y=date.getFullYear();
+  var m=date.getMonth()+1;
+  var d=date.getDate();
+  var hour=date.getHours();
+  var min=date.getMinutes();
+  var sec=date.getSeconds();
+  var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
   this.firebase.database.ref('Employee/'+form.value["Id"]).update(
     {
       Firstname : form.value["Firstname"],
@@ -161,6 +149,8 @@ async update(form :NgForm)
       Birthday : form.value["Birthday"],
       Image : form.value["Image"],
       Group : form.value["Group"],
+      Employee_Edit: user["Id"],     
+      Date_Edit: dt,
       Status : form.value["Status"],
    }
   ).then(()=>
@@ -172,6 +162,7 @@ async update(form :NgForm)
   {
     this.msg = "Không thể sửa";
   });
+}
 
 }
 }

@@ -26,7 +26,7 @@ export class ResultsComponent implements OnInit {
   data: Result;
   dtOptions: any = {};
   image: any;
-  slc_search: number = 3;
+  slc_search: number = 2;
   inp_search: '';
   delkey: '';
   objCus: any;
@@ -151,6 +151,7 @@ export class ResultsComponent implements OnInit {
     r = r.replace(new RegExp(/ñ/g), "n");
     r = r.replace(new RegExp(/[oôòồóốõỗỏổọộ]/g), "o");
     r = r.replace(new RegExp(/œ/g), "oe");
+    r = r.replace(new RegExp(/[ưứừựữử]/g), "u");
     r = r.replace(new RegExp(/[uúùụũủ]/g), "u");
     r = r.replace(new RegExp(/[yýỳỹỷỵ]/g), "y");
     return r;

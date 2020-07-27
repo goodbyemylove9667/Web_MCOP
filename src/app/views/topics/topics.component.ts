@@ -55,6 +55,7 @@ export class TopicsComponent implements OnInit {
             }
             )
         }
+        this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
         this.rerender();
       }, error => {
         this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
@@ -91,16 +92,14 @@ export class TopicsComponent implements OnInit {
     $.fn['dataTable'].ext.search.push((settings, data, dataIndex,rowData) => {
       const inp = this.accentsTidy(data[this.slc_search]);
       const inp_search = this.accentsTidy(this.inp_search);
-      if (this.slc_search==7)
-      {
-          if (rowData[this.slc_search].includes("true") && inp_search=="1") return true;
-          if (rowData[this.slc_search].includes("false") && inp_search=="0") return true;
-          return false;
-      }
       if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
         return true;
       }
-      return false;
+      if (this.slc_search==7)
+      {
+          if (rowData[this.slc_search].includes("true") && inp_search.trim()=="1") return true;
+          if (rowData[this.slc_search].includes("false") && inp_search.trim()=="0") return true;
+      }
     });
   }
   accentsTidy (s){
@@ -165,7 +164,7 @@ getObj_Name(obj,key,attr)
             }
             )
         }
-  
+        this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
         this.rerender();
       }, error => {
         this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
@@ -256,7 +255,6 @@ getObj_Name(obj,key,attr)
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          console.log(form);
           this.toastr.success('Cập Nhật Thành Công Chủ Đề '+form.value["Name_Top"],'Thành Công!',{timeOut: 1000});
           this.myModal.hide();
           }

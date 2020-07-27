@@ -81,9 +81,12 @@
                             {{emp.Phone}}
                         </td>
                         <td>
-                            <button type="button" class="btn btn-outline-secondary" ngbPopover="{{emp.Address}}" triggers="mouseenter:mouseleave" popoverTitle="Địa chỉ">
-                                <i class="fa fa-eye"></i>
-                                </button>
+                          <div *ngIf="emp.Address.length<=30">
+                            {{emp.Address}}
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary"  style="color: black;" ngbPopover="{{emp.Address}}" triggers="mouseenter:mouseleave" popoverTitle="Địa Chỉ" *ngIf="emp.Address.length>30">
+                          {{resizeText(cus.Address)}}
+                        </button>
                         </td>
                         <td>
                             {{emp.Birthday  | date:'dd-MM-yyyy'}}
@@ -99,8 +102,8 @@
                                 </div>
                         </td>
                         <td>
-                          <span *ngIf="emp.Position==0"> Quản trị</span>
-                          <span *ngIf="emp.Position==1"> Nhân viên</span>
+                          <span *ngIf="emp.Group==0"> Quản trị</span>
+                          <span *ngIf="emp.Group==1"> Nhân viên</span>
                         </td>
                         <td>
                           {{getObj_Name(objCus,emp.Employee_Create,'Email')}}
@@ -150,20 +153,23 @@
         </div>
         <div class="modal-body">
               <!-- START CREATE -->
-              <form #form="ngForm" autocomplete="off">
+              <form #form="ngForm" autocomplete="off" class="pr-3">
                   <input *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id"  hidden>
-                  <div class="row justify-content-center mb-2 w-100">
+                  <div class="row justify-content-center mb-2  ml-3 w-100">
                   <img [src]="service.formData.Image" class="col" style="max-height:300px;max-width:300px;"/>
                
                   </div>
                   <div class="form-group row">
           
                       <label class="col-sm-3 col-form-label text-dark h3">ẢNH</label>
-                      <input #myInput type="file" (change)="onFileChanged($event)" />
+                      <div class="custom-file col-sm-9">
+                        <input #myInput type="file" (change)="onFileChanged($event)" id="inputGroupFile01"/>
+                        <label class="custom-file-label" for="inputGroupFile01">Chọn Ảnh</label>
+                      </div>
                       <input name="Image" #Image1="ngModel" [(ngModel)]="service.formData.Image" hidden>
                   </div>
                     <div class="form-group row">
-                    <label class="col-sm-3 col-form-label text-dark h3">EMAIL</label>
+                    <label class="col-sm-3 col-form-label text-dark h3">EMAIL <label class="text-danger">*</label></label>
                     <input name="Email" #Email1="ngModel" [(ngModel)]="service.formData.Email" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"  maxlength="100" required class="form-control col-sm-9" 
                     [ngClass]="{ 'is-invalid':(Email1.errors && Email1.dirty),'is-valid': !Email1.errors && Email1.dirty}" [readonly]="this.type==2"
                     >
@@ -173,33 +179,33 @@
                   </div>
                     <input name="Password" #Password1="ngModel" [(ngModel)]="service.formData.Password"  hidden>
                   <div class="form-group row">
-                    <label  class="col-sm-3 col-form-label text-dark h3">HỌ</label>
-                    <input name="Lastname" #Lastname1="ngModel" [(ngModel)]="service.formData.Lastname" minlength="3" maxlength="50"  required class="form-control col-sm-9"
+                    <label  class="col-sm-3 col-form-label text-dark h3">HỌ <label class="text-danger">*</label></label>
+                    <input name="Lastname" #Lastname1="ngModel" [(ngModel)]="service.formData.Lastname" minlength="2" maxlength="50"  required class="form-control col-sm-9"
                     [ngClass]="{ 'is-invalid':(Lastname1.errors && Lastname1.dirty),'is-valid': !Lastname1.errors && Lastname1.dirty}">
                     <span class="text-danger offset-sm-3" *ngIf="Lastname1.invalid && Lastname1.dirty">
-                      Họ phải từ 3 đến 50 kí tự
+                      Họ phải từ 2 đến 50 kí tự
                     </span>
                     
                   </div>
                   <div class="form-group row">
-                    <label  class="col-sm-3 col-form-label text-dark h3">TÊN</label>
-                    <input name="Firstname" #Firstname1="ngModel" [(ngModel)]="service.formData.Firstname"  minlength="3" maxlength="50"   required class="form-control col-sm-9"
+                    <label  class="col-sm-3 col-form-label text-dark h3">TÊN <label class="text-danger">*</label></label>
+                    <input name="Firstname" #Firstname1="ngModel" [(ngModel)]="service.formData.Firstname"  minlength="2" maxlength="50"   required class="form-control col-sm-9"
                     [ngClass]="{ 'is-invalid':(Firstname1.errors && Firstname1.dirty),'is-valid': !Firstname1.errors && Firstname1.dirty}">
                     <span class="text-danger offset-sm-3" *ngIf="Firstname1.invalid && Firstname1.dirty">
-                        Tên phải từ 3 đến 50 kí tự
+                        Tên phải từ 2 đến 50 kí tự
                     </span>
                   </div>
                   <div class="form-group row">
-                    <label  class="col-sm-3 col-form-label text-dark h3">SĐT</label>
-                    <input name="Phone" #Phone1="ngModel" [(ngModel)]="service.formData.Phone"  pattern="(09|03)+([0-9]{8})\b" required class="form-control col-sm-9"
+                    <label  class="col-sm-3 col-form-label text-dark h3">SĐT <label class="text-danger">*</label></label>
+                    <input name="Phone" #Phone1="ngModel" [(ngModel)]="service.formData.Phone"  pattern="(09|03|05|06|07|08)+([0-9]{8})\b" required class="form-control col-sm-9"
                     [ngClass]="{ 'is-invalid':(Phone1.errors && Phone1.dirty),'is-valid': !Phone1.errors && Phone1.dirty}">
                     <span class="text-danger offset-sm-3" *ngIf="Phone1.invalid && Phone1.dirty">
-                      SDT chỉ bao gồm số và có 10 số và bắt đầu là 09 hoặc 03
+                      SDT chỉ bao gồm số và có 10 số và bắt đầu là 03,05,06,07,08 hoặc 09
                     </span>
                   </div>
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">ĐỊA CHỈ</label>
-                    <textarea rows="2" name="Address" #Address1="ngModel" [(ngModel)]="service.formData.Address"  minlength="3" maxlength="200" required class="form-control col-sm-9"
+                    <textarea rows="2" name="Address" #Address1="ngModel" [(ngModel)]="service.formData.Address"  minlength="3" maxlength="200"  class="form-control col-sm-9"
                       [ngClass]="{ 'is-invalid':(Address1.errors && Address1.dirty),'is-valid': !Address1.errors && Address1.dirty}">
 
                     </textarea>
@@ -210,19 +216,20 @@
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">NGÀY SINH</label>
                     <input type="date"  
+                    #Birthday1="ngModel"
                     [ngModel]="service.formData.Birthday | date:'yyyy-MM-dd'"  
-                    (ngModelChange)="service.formData.Birthday = $event"    
+                    (ngModelChange)="service.formData.Birthday=$event"    
                     name="Birthday" 
                     class="form-control col-sm-9 form-control col-sm-9-rounded"
-                
-              >
-              <span class="text-danger offset-sm-3" *ngIf="this.compareDate(service.formData.Birthday)">
-                Ngày sinh phải trước ngày hiện tại
-              </span>
+                    [ngClass]="{ 'is-invalid':( Birthday1.dirty && this.compareDate(service.formData.Birthday)),'is-valid': Birthday1.dirty && !this.compareDate(service.formData.Birthday)}"
+                     >
+                  <span class="text-danger offset-sm-3" *ngIf=" Birthday1.dirty && this.compareDate(service.formData.Birthday)">
+                    Ngày sinh phải trước ngày hiện tại
+                  </span>
                   </div>
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">NHÓM</label>
-                    <select name="Group" #Position1="ngModel" [(ngModel)]="service.formData.Group" required class="form-control col-sm-9">
+                    <select name="Group" #Group1="ngModel" [(ngModel)]="service.formData.Group" required class="form-control col-sm-9">
                       <option  [ngValue]="0" >Quản trị</option>
                       <option  [ngValue]="1">Nhân viên</option>
                     </select>

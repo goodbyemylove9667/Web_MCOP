@@ -107,21 +107,22 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
       return false;
     });
   }
-  accentsTidy (s){
-    var r=s+"";
-    r=r.toLowerCase();
-    r = r.replace(new RegExp(/[aăâàằầáắấãẵẫảẳẩạặậ]/g),"a");
-    r = r.replace(new RegExp(/æ/g),"ae");
-    r = r.replace(new RegExp(/ç/g),"c");
-    r = r.replace(new RegExp(/[eêèềéếẽễẻểẹệ]/g),"e");
-    r = r.replace(new RegExp(/[iíìịĩỉ]/g),"i");
-    r = r.replace(new RegExp(/ñ/g),"n");                
-    r = r.replace(new RegExp(/[oôòồóốõỗỏổọộ]/g),"o");
-    r = r.replace(new RegExp(/œ/g),"oe");
-    r = r.replace(new RegExp(/[uúùụũủ]/g),"u");
-    r = r.replace(new RegExp(/[yýỳỹỷỵ]/g),"y");
+  accentsTidy(s) {
+    var r = s + "";
+    r = r.toLowerCase();
+    r = r.replace(new RegExp(/[aăâàằầáắấãẵẫảẳẩạặậ]/g), "a");
+    r = r.replace(new RegExp(/æ/g), "ae");
+    r = r.replace(new RegExp(/ç/g), "c");
+    r = r.replace(new RegExp(/[eêèềéếẽễẻểẹệ]/g), "e");
+    r = r.replace(new RegExp(/[iíìịĩỉ]/g), "i");
+    r = r.replace(new RegExp(/ñ/g), "n");
+    r = r.replace(new RegExp(/[oôòồóốõỗỏổọộ]/g), "o");
+    r = r.replace(new RegExp(/œ/g), "oe");
+    r = r.replace(new RegExp(/[ưứừựữử]/g), "u");
+    r = r.replace(new RegExp(/[uúùụũủ]/g), "u");
+    r = r.replace(new RegExp(/[yýỳỹỷỵ]/g), "y");
     return r;
-};
+  };
 compareDate(date)
 {
  var date_now= new Date();
@@ -255,12 +256,12 @@ getObj_Name(obj,key,attr)
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Thêm Thành Công Câu Hỏi','Thành Công!',{timeOut: 1000});
+          this.toastr.success('Thêm Thành Công Tài Khoản '+form.value["Email"],'Thành Công!',{timeOut: 2000});
           this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Thêm Thất Bại Câu Hỏi','Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Thêm Thất Bại Tài Khoản '+form.value["Email"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 2000});
           }
         }
       )
@@ -271,13 +272,13 @@ getObj_Name(obj,key,attr)
         { 
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
-          this.refresh();
-          this.toastr.success('Cập Nhật Thành Công Câu Hỏi','Thành Công!',{timeOut: 1000});
-          this.myModal.hide();
+            this.refresh();
+            this.toastr.success('Cập Nhật Thành Công Tài Khoản '+form.value["Email"],'Thành Công!',{timeOut: 2000});
+            this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Cập Nhật Thất Bại Câu Hỏi','Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Cập Nhật Thất Bại Tài Khoản '+form.value["Email"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 2000});
           }
         }
       )

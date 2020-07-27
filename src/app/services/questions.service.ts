@@ -2,18 +2,22 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { NgForm } from '@angular/forms';
 import { reject, async } from 'q';
+import { user } from '../containers/default-layout/default-layout.component';
 export interface Question {
 
   Id: string,
   Id_Top: string,
-  Id_Author: string,
   Content_Ques: string,
   Answer1: string,
   Answer2: string,
   Answer3: string,
   Answer4: string,
   Answer: number,
-  Create_Date :Date,
+  Level: number,
+  Employee_Create:string,
+  Date_Create:Date,
+  Employee_Edit:string,
+  Date_Edit:Date,
   Status: number
 }
 @Injectable({
@@ -29,25 +33,26 @@ export class QuestionsService {
   loading: boolean;
   constructor(private firebase: AngularFireDatabase) { }
  async resetForm(type) {
-    var data=JSON.parse(localStorage.getItem('keyUser'));
-    console.log(data);
     if (type == 1) {
       this.formData = {
         Id: '',
         Id_Top: '',
-        Id_Author: data,
         Content_Ques: '',
         Answer1: '',
         Answer2: '',
         Answer3: '',
         Answer4: '',
         Answer: 1,
-        Create_Date :new Date(),
+        Level:1,
+        Employee_Create:'',
+        Date_Create:new Date(),
+        Employee_Edit:'',
+        Date_Edit:new Date(),
         Status: 1
       };
     }
     else {
-      this.formData=await JSON.parse(localStorage.getItem("question_data"));
+      this.formData=this.data;
     }
   }
   getList() {
@@ -66,7 +71,7 @@ export class QuestionsService {
   showModal(obj: Question) {
     if (obj != null) {
       this.formData = Object.assign({}, obj);
-      localStorage.setItem("question_data",JSON.stringify( this.formData));
+     this.data={...this.formData};
 
     } else {
       this.resetForm(1);
@@ -74,6 +79,18 @@ export class QuestionsService {
   }
 
   async insert(form: NgForm) {
+    var date=new Date();
+    var y=date.getFullYear();
+    var m=date.getMonth()+1;
+    var d=date.getDate();
+    var hour=date.getHours();
+    var min=date.getMinutes();
+    var sec=date.getSeconds();
+    var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
+    form.value["Employee_Create"]=user["Id"];
+    form.value["Employee_Edit"]=user["Id"];
+    form.value["Date_Create"]=dt;
+     form.value["Date_Edit"]=dt;
     this.firebase.database.ref('Question').push(
       form.value
     ).then(() => {
@@ -84,17 +101,27 @@ export class QuestionsService {
   }
   async update(form: NgForm) {
     if (form.value["Id"] != null)
+    {
+      var date=new Date();
+      var y=date.getFullYear();
+      var m=date.getMonth()+1;
+      var d=date.getDate();
+      var hour=date.getHours();
+      var min=date.getMinutes();
+      var sec=date.getSeconds();
+      var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
       this.firebase.database.ref('Question/' + form.value["Id"]).update(
         {
           Id_Top: form.value["Id_Top"],
-          Id_Author: form.value["Id_Author"],
           Content_Ques: form.value["Content_Ques"],
           Answer1: form.value["Answer1"],
           Answer2: form.value["Answer2"],
           Answer3: form.value["Answer3"],
           Answer4: form.value["Answer4"],
           Answer: form.value["Answer"],
-          Create_Date :form.value["Create_Date"],
+          Level:form.value["Level"],
+          Employee_Edit: user["Id"],     
+          Date_Edit: dt,
           Status: form.value["Status"]
         }
       ).then(() => {
@@ -104,6 +131,6 @@ export class QuestionsService {
         catch((error) => {
           this.msg = "Không thể sửa";
         });
-
+      }
   }
 }
