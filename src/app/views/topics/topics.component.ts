@@ -6,6 +6,8 @@ import { Subject, from } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { EmployeeService } from '../../services/employee.service';
+import { Router } from '@angular/router';
+import { navItems } from '../../_nav';
 @Component({
   selector: 'app-topics',
   templateUrl: './topics.component.html',
@@ -17,21 +19,30 @@ export class TopicsComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })dtElement: DataTableDirective;
   @ViewChild('myInput', { static: false }) myInputVariable: ElementRef;
   dtTrigger: Subject<any> = new Subject();
-  constructor(private service: TopicsService,private empservice:EmployeeService,private toastr: ToastrService) {
-
+  constructor(private service: TopicsService,private empservice:EmployeeService,private toastr: ToastrService, public router: Router) {
+    var index=navItems.findIndex(x=>x.table=='Topic');
+    if (index==-1)
+    {
+      this.router.navigate(['']);
+    }
   }
   list: Array<Topic> = [];
   data: Topic;
   dtOptions: DataTables.Settings = {};
   image: any;
   objCus:any;
-  slc_search : number = 2;
+  slc_search : number = 1;
   inp_search: '';
   type: number = 1;
   async initTable() {
+    await this.empservice.getCkList().then((res) => {
+      this.objCus=res;
+    }, error => {
+      this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
+    });
    await this.service.getList().then((res) => {
       for (let key in res) {
-          this.list.unshift
+          this.list.push
             ({
               Id: key,
               Name_Top: res[key].Name_Top,
@@ -47,11 +58,6 @@ export class TopicsComponent implements OnInit {
         this.rerender();
       }, error => {
         this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
-      });
-      await this.empservice.getCkList().then((res) => {
-        this.objCus=res;
-      }, error => {
-        this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
       });
   }
   ngOnInit(): void {
@@ -146,7 +152,7 @@ getObj_Name(obj,key,attr)
     this.rerender();
     this.service.getList().then((res) => {
       for (let key in res) {
-          this.list.unshift
+          this.list.push
             ({
               Id: key,
               Name_Top : res[key].Name_Top,
@@ -181,14 +187,6 @@ getObj_Name(obj,key,attr)
       this.inp_search="";
     });
   }
-  showAdd() {
-    this.type = 1;
-    this.service.msg = "";
-    this.myInputVariable.nativeElement.value = "";
-    this.form.form.markAsPristine();
-    this.service.showModal(null);
-    this.myModal.show();
-  }
   imageShow: any = '';
   onFileChanged(event) {
     var reader = new FileReader();
@@ -197,6 +195,14 @@ getObj_Name(obj,key,attr)
       this.imageShow = (<FileReader>event.target).result;
       this.service.formData.Image = this.imageShow;
     }
+  }
+  showAdd() {
+    this.type = 1;
+    this.service.msg = "";
+    this.myInputVariable.nativeElement.value = "";
+    this.form.form.markAsPristine();
+    this.service.showModal(null);
+    this.myModal.show();
   }
   showedit(data: Topic) {
     this.type = 2;
@@ -250,12 +256,13 @@ getObj_Name(obj,key,attr)
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Cập Nhật Thành Công Chủ Đề'+form.value["Name_Top"],'Thành Công!',{timeOut: 1000});
+          console.log(form);
+          this.toastr.success('Cập Nhật Thành Công Chủ Đề '+form.value["Name_Top"],'Thành Công!',{timeOut: 1000});
           this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Cập Nhật Thất Bại Chủ Đề'+form.value["Name_Top"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Cập Nhật Thất Bại Chủ Đề '+form.value["Name_Top"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
           }
         }
       )

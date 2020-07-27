@@ -5,6 +5,9 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject, from } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { navItems } from '../../_nav';
+import { Router } from '@angular/router';
+import { EmployeeService } from '../../services/employee.service';
 @Component({
   selector: 'app-customers',
   templateUrl: './customers.component.html',
@@ -16,20 +19,30 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DataTableDirective, { static: false })dtElement: DataTableDirective;
   @ViewChild('myInput', { static: false }) myInputVariable: ElementRef;
   dtTrigger: Subject<any> = new Subject();
-  constructor(private service: CustomerService,private toastr: ToastrService) {
+  constructor(private service: CustomerService,private toastr: ToastrService,private empservice:EmployeeService, public router: Router) {
+    var index=navItems.findIndex(x=>x.table=='Customer');
+    if (index==-1)
+    {
+      this.router.navigate(['']);
+    }
   }
   list: Array<Customer> = [];
   data: Customer;
   dtOptions: DataTables.Settings = {};
   image: any;
   objCus:any;
-  slc_search : number = 2;
+  slc_search : number = 1;
   inp_search: '';
   type: number = 1;
   async initTable() {
+    await this.empservice.getCkList().then((res) => {
+      this.objCus=res;
+    }, error => {
+      this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
+    });
    await this.service.getList().then((res) => {
       for (let key in res) {
-          this.list.unshift
+          this.list.push
             ({
               Id: key,
               Username :res[key].Username, 
@@ -48,25 +61,11 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
             }
             )
         }
+        this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
         this.rerender();
-        this.objCus=res;
       }, error => {
         this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
       });
-    $.fn['dataTable'].ext.search.push((settings, data, dataIndex,rowData) => {
-      const inp = this.accentsTidy(data[this.slc_search]);
-      const inp_search = this.accentsTidy(this.inp_search);
-      if (this.slc_search==11)
-      {
-          if (rowData[this.slc_search].includes("true") && inp_search=="1") return true;
-          if (rowData[this.slc_search].includes("false") && inp_search=="0") return true;
-          return false;
-      }
-      if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
-        return true;
-      }
-      return false;
-    });
   }
   ngOnInit(): void {
     this.service.resetForm(1);
@@ -95,11 +94,16 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
       }
     };
     this.initTable();
-    $.fn['dataTable'].ext.search.push((settings, data, dataIndex) => {
-      const inp = this.accentsTidy(data[this.slc_search]); 
-      const inp_search= this.accentsTidy(this.inp_search);
-      if (inp.includes(inp_search) || inp_search=="undefined" ||  inp_search.trim()=="")
+    $.fn['dataTable'].ext.search.push((settings, data, dataIndex,rowData) => {
+      const inp = this.accentsTidy(data[this.slc_search]);
+      const inp_search = this.accentsTidy(this.inp_search);
+      if (this.slc_search==11)
       {
+          if (rowData[this.slc_search].includes("true") && inp_search=="1") return true;
+          if (rowData[this.slc_search].includes("false") && inp_search=="0") return true;
+          return false;
+      }
+      if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
         return true;
       }
       return false;
@@ -161,7 +165,7 @@ getObj_Name(obj,key,attr)
     this.rerender();
     this.service.getList().then((res) => {
       for (let key in res) {
-          this.list.unshift
+          this.list.push
             ({
               Id: key,
               Username :res[key].Username, 
@@ -180,6 +184,7 @@ getObj_Name(obj,key,attr)
             }
             )
         }
+        this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
         this.rerender();
         this.objCus=res;
       }, error => {
@@ -191,7 +196,7 @@ getObj_Name(obj,key,attr)
   }
   resizeText(s:string)
   {
-      if (s.length>50) return s.substr(0,47)+"..."; else return s;
+      if (s.length>30) return s.substr(0,27)+"..."; else return s;
   }
   rerender(): void {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
@@ -263,7 +268,7 @@ getObj_Name(obj,key,attr)
           }
           else
           {
-            this.toastr.error( 'Thêm Thất Bại Tài Khoản'+form.value["Username"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Thêm Thất Bại Tài Khoản '+form.value["Username"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
           }
         }
       )
@@ -274,13 +279,13 @@ getObj_Name(obj,key,attr)
         { 
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
-          this.refresh();
-          this.toastr.success('Cập Nhật Thành Công Tài Khoản'+form.value["Username"],'Thành Công!',{timeOut: 1000});
-          this.myModal.hide();
+            this.refresh();
+            this.toastr.success('Cập Nhật Thành Công Tài Khoản '+form.value["Username"],'Thành Công!',{timeOut: 1000});
+            this.myModal.hide();
           }
           else
           {
-            this.toastr.error( 'Cập Nhật Thất Bại Tài Khoản'+form.value["Username"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Cập Nhật Thất Bại Tài Khoản '+form.value["Username"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
           }
         }
       )

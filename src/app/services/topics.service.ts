@@ -43,12 +43,12 @@ export class TopicsService {
   }
   else
   {
-    this.formData=await JSON.parse(localStorage.getItem("topic_data"));
+    this.formData=this.data;
   }
   }
     getList() {
       return new Promise<Object>((resolve) => {
-        this.firebase.database.ref('Topic').orderByChild("Date_Create").once("value",(value)=>
+        this.firebase.database.ref('Topic').once("value",(value)=>
         resolve(value.toJSON()),(error)=>reject(error))
       });
     }

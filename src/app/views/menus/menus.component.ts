@@ -7,6 +7,8 @@ import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Select2OptionData } from 'ng2-select2';
 import { EmployeeService } from '../../services/employee.service';
+import { navItems } from '../../_nav';
+import { Router } from '@angular/router';
 declare var $:any;
 @Component({
   selector: 'app-questions',
@@ -18,7 +20,12 @@ export class MenusComponent implements OnInit {
   @ViewChild('form', { static: false }) private form: NgForm;
   @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
   dtTrigger: Subject<any> = new Subject();
-  constructor(private service:MenusService,private empservice:EmployeeService,private toastr: ToastrService) {
+  constructor(private service:MenusService,private empservice:EmployeeService,private toastr: ToastrService, public router: Router) {
+    var index=navItems.findIndex(x=>x.table=='Menu');
+    if (index==-1)
+    {
+      this.router.navigate(['']);
+    }
   }
   list: Array<Menu> = [];
   listGroup: Array<Select2OptionData> = [
@@ -32,7 +39,6 @@ export class MenusComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   slc_search: number = 1;
   inp_search: '';
-  loading:boolean=false;
   type: number = 1;
   async initTable() {
     this.options_group={
@@ -47,10 +53,14 @@ export class MenusComponent implements OnInit {
       multiple:true,
       allowClear:true
     }
-    this.loading=false;
+    await this.empservice.getCkList().then((res) => {
+      this.objCus=res;
+    }, error => {
+      this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
+    });
     await this.service.getList().then((res) => {
       for (let key in res) {
-        this.list.unshift
+        this.list.push
           ({
             Id: key,
             Name: res[key].Name,
@@ -67,14 +77,10 @@ export class MenusComponent implements OnInit {
           }
           )
       }
+      this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
       this.rerender();
     }, error => {
       this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 1000 });
-    });
-    await this.empservice.getCkList().then((res) => {
-      this.objCus=res;
-    }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
     });
   }
    ngOnInit(): void {  
@@ -174,7 +180,7 @@ export class MenusComponent implements OnInit {
     this.rerender();
      this.service.getList().then((res) => {
       for (let key in res) {
-        this.list.unshift
+        this.list.push
           ({
             Id: key,
             Name: res[key].Name,
@@ -191,6 +197,7 @@ export class MenusComponent implements OnInit {
           }
           )
       }
+      this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
       this.rerender();
     }, error => {
       this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 1000 });
@@ -218,6 +225,10 @@ export class MenusComponent implements OnInit {
   changeUrl()
   {
     this.service.formData.Url='/'+this.service.formData.Table[0].toLocaleLowerCase()+this.service.formData.Table.substr(1);
+  }
+  changeStatus()
+  {
+    if (this.service.formData.Status) this.service.formData.Status=1;else this.service.formData.Status=0;
   }
   getName(group) {
     var gr=group.split(";");
@@ -338,11 +349,11 @@ export class MenusComponent implements OnInit {
         () => {
           if (this.service.msg.length == 0 || this.service.msg.length == "") {
             this.refresh();
-            this.toastr.success('Cập Nhật Thành Công Menu' + form.value["Name"], 'Thành Công!', { timeOut: 1000 });
+            this.toastr.success('Cập Nhật Thành Công Menu ' + form.value["Name"], 'Thành Công!', { timeOut: 1000 });
             this.myModal.hide();
           }
           else {
-            this.toastr.error('Cập Nhật Thất Bại Menu' + form.value["Name"] + ".Lỗi: " + this.service.msg, 'Thất Bại!', { timeOut: 1000 });
+            this.toastr.error('Cập Nhật Thất Bại Menu ' + form.value["Name"] + ".Lỗi: " + this.service.msg, 'Thất Bại!', { timeOut: 1000 });
           }
         }
       )

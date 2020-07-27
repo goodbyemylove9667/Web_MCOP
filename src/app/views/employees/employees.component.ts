@@ -6,63 +6,74 @@ import { Subject, from } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { navItems } from '../../_nav';
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
   styleUrls: ['./employees.component.scss']
 })
 export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
+  @ViewChild('form', { static: false }) private form: NgForm;
   @ViewChild('myModal', { static: false }) public myModal: ModalDirective;
   @ViewChild(DataTableDirective, { static: false })dtElement: DataTableDirective;
   @ViewChild('myInput', { static: false }) myInputVariable: ElementRef;
   dtTrigger: Subject<any> = new Subject();
   constructor(private service: EmployeeService,private toastr: ToastrService, public router: Router) {
-
+  var index=navItems.findIndex(x=>x.table=='Employee');
+    if (index==-1)
+    {
+      this.router.navigate(['']);
+    }
   }
   list: Array<Employee> = [];
   data: Employee;
   dtOptions: DataTables.Settings = {};
+  objCus:any;
   image: any;
-  slc_search : number = 2;
+  slc_search : number = 1;
   inp_search: '';
   type: number = 1;
   user: any;
+  async initTable()
+  {
+   await this.service.getList().then((res) => {
+      for (let key in res) {
+          this.list.push
+            ({
+              Id: key,
+              Email: res[key].Email,
+              Password: res[key].Password,
+              Firstname: res[key].Firstname,
+              Lastname: res[key].Lastname,
+              Phone: res[key].Phone,
+              Address: res[key].Address,
+              Birthday: res[key].Birthday,
+              Image: res[key].Image,
+              Group: res[key].Group,  
+              Employee_Create:res[key].Employee_Create,
+             Date_Create:res[key].Date_Create,
+             Employee_Edit:res[key].Employee_Edit,
+             Date_Edit:res[key].Date_Edit,
+              Status: res[key].Status
+            }
+            )
+        }
+        this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
+        this.rerender();
+        this.objCus=res;
+      }, error => {
+        this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
+      });
+  }
   ngOnInit(): void {
-    var user=JSON.parse(localStorage.getItem('currentUser'));
-    if (user["Position"]!=0)
-    {
-      this.router.navigate(['']);
-    }
-    this.service.getCkList().then((res) => {
-    for (let key in res) {
-        this.list.push
-          ({
-            Id: key,
-            Email: res[key].Email,
-            Password: res[key].Password,
-            Firstname: res[key].Firstname,
-            Lastname: res[key].Lastname,
-            Phone: res[key].Phone,
-            Address: res[key].Address,
-            Birthday: res[key].Birthday,
-            Image: res[key].Image,
-            Position: res[key].Position,
-            Status: res[key].Status
-          }
-          )
-      }
-
-      this.rerender();
-    }, error => {
-      this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
-    });
-
+    this.service.resetForm(1);
     this.dtOptions = {
       pagingType: 'full_numbers',
       responsive: true,
       scrollCollapse: true,
-      autoWidth: true,
-      dom : 'lrtip',
+      dom: 'lrtip',
+      autoWidth:false,
+      scrollX:true,
       language:
       {
         emptyTable: '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>',
@@ -80,16 +91,21 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
         }
       }
     };
-    $.fn['dataTable'].ext.search.push((settings, data, dataIndex) => {
-      const inp = this.accentsTidy(data[this.slc_search]); 
-      const inp_search= this.accentsTidy(this.inp_search);
-      if (inp.includes(inp_search) || inp_search=="undefined" ||  inp_search.trim()=="")
+    this.initTable();
+    $.fn['dataTable'].ext.search.push((settings, data, dataIndex,rowData) => {
+      const inp = this.accentsTidy(data[this.slc_search]);
+      const inp_search = this.accentsTidy(this.inp_search);
+      if (this.slc_search==7)
       {
+          if (rowData[this.slc_search].includes("true") && inp_search=="1") return true;
+          if (rowData[this.slc_search].includes("false") && inp_search=="0") return true;
+          return false;
+      }
+      if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
         return true;
       }
       return false;
     });
-    this.service.resetForm(1);
   }
   accentsTidy (s){
     var r=s+"";
@@ -113,6 +129,31 @@ compareDate(date)
     if (date0>=date_now) return true
     else return false;
 }
+getDate(date_str) {
+  if (date_str!=null && date_str!='')
+  {
+    var date=new Date(date_str);
+    var y=date.getFullYear();
+    var m=date.getMonth()+1;
+    var d=date.getDate();
+    var hour=date.getHours();
+    var min=date.getMinutes();
+    var sec=date.getSeconds();
+    var dt=(d>9?d:('0'+d))+'/'+(m>9?m:('0'+m))+'/'+y+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
+    return dt;
+  }
+  else return '';
+}
+getObj_Name(obj,key,attr)
+{
+  var x='';
+  try
+  {
+    x=obj[key][attr];
+  }
+  catch{};
+  return x;
+}
   ngAfterViewInit(): void {
 
     this.dtTrigger.next();
@@ -120,7 +161,7 @@ compareDate(date)
   refresh() {
     this.list = [];
     this.rerender();
-    this.service.getCkList().then((res) => {
+    this.service.getList().then((res) => {
       for (let key in res) {
           this.list.push
             ({
@@ -133,13 +174,18 @@ compareDate(date)
               Address: res[key].Address,
               Birthday: res[key].Birthday,
               Image: res[key].Image,
-              Position: res[key].Position,
+              Group: res[key].Group,  
+               Employee_Create:res[key].Employee_Create,
+              Date_Create:res[key].Date_Create,
+              Employee_Edit:res[key].Employee_Edit,
+              Date_Edit:res[key].Date_Edit,
               Status: res[key].Status
             }
             )
         }
-  
+        this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
         this.rerender();
+        this.objCus=res;
       }, error => {
         this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
       });
@@ -161,13 +207,6 @@ compareDate(date)
     });
 
   }
-  showAdd() {
-    this.type = 1;
-    this.service.msg = "";
-    this.myInputVariable.nativeElement.value = "";
-    this.service.showModal(null);
-    this.myModal.show();
-  }
   imageShow: any = '';
   onFileChanged(event) {
     var reader = new FileReader();
@@ -177,12 +216,35 @@ compareDate(date)
       this.service.formData.Image = this.imageShow;
     }
   }
+  showAdd() {
+    this.type = 1;
+    this.service.msg = "";
+    this.myInputVariable.nativeElement.value = "";
+    this.form.form.markAsPristine();
+    this.service.showModal(null);
+    this.myModal.show();
+  }
   showedit(data: Employee) {
     this.type = 2;
     this.service.msg = "";
     this.myInputVariable.nativeElement.value = "";
+    this.form.form.markAsPristine();
     this.service.showModal(data);
     this.myModal.show();
+  }
+  resetForm()
+  {
+    if (this.type==1)
+    {
+        this.service.msg = "";
+      this.form.form.markAsPristine();
+      this.service.showModal(null);    }
+    else
+    {
+        this.service.msg = "";
+        this.form.form.markAsPristine();
+        this.service.showModal(this.service.data);
+    }
   }
   onSubmit(form: NgForm) {
     if (this.type == 1) {

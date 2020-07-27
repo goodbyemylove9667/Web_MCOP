@@ -27,6 +27,21 @@
   <!--/.row-->
   <div class="row">
   <div class="col-12 col-sm-6">
+    <div class="card" style="height: 500px;">
+      <div class="card-header" style="background-color:#fff;height: 3.7rem;">
+          <h4 class="card-title my-0">Thống Kê Lượt Thi Trong Tuần</h4>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrapper">
+          <canvas baseChart class="chart2" 
+          [datasets]="lineChartData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+          [colors]="lineChartColours"
+          [chartType]="'line'"></canvas>
+        </div>
+        </div>
+    </div>
   <div class="card" style="height: 500px;">
     <div class="card-header" style="background-color:#fff;height: 3.7rem;">
         <h4 class="card-title my-0">Thống Kê Tài Khoản</h4>
@@ -38,21 +53,6 @@
         [labels]="doughnutChartLabels"
         [colors]="doughnutChartColors"
         [chartType]="doughnutChartType"></canvas>
-      </div>
-      </div>
-  </div>
-  <div class="card" style="height: 500px;">
-    <div class="card-header" style="background-color:#fff;height: 3.7rem;">
-        <h4 class="card-title my-0">Thống Kê Lượt Thi / Tuần</h4>
-    </div>
-    <div class="card-body">
-      <div class="chart-wrapper">
-        <canvas baseChart class="chart2" 
-        [datasets]="lineChartData"
-        [labels]="lineChartLabels"
-        [options]="lineChartOptions"
-        [colors]="lineChartColours"
-        [chartType]="'line'"></canvas>
       </div>
       </div>
   </div>

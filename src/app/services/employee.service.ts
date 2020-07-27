@@ -16,7 +16,11 @@ export interface Employee
     Address : string,
     Birthday : Date ,
     Image : string,
-    Position : number ,
+    Group : number ,
+    Employee_Create:string,
+    Date_Create:Date,
+    Employee_Edit:string,
+    Date_Edit:Date,
     Status : number 
 }
 @Injectable({
@@ -43,7 +47,11 @@ export class EmployeeService {
       Address : '',
       Birthday : new Date() ,
       Image: 'https://firebasestorage.googleapis.com/v0/b/adminiq-e827c.appspot.com/o/user-png-icon-male-user-icon-512.png?alt=media&token=883823b5-18fd-4d82-9a80-812c95839225',
-      Position : 1 ,
+      Group : 1,
+      Employee_Create:'',
+      Date_Create:new Date(),
+      Employee_Edit:'',
+      Date_Edit:new Date(),
       Status : 1
     };
   }
@@ -54,7 +62,7 @@ export class EmployeeService {
   }
   getList() {
     return new Promise<Object>((resolve) => {
-      this.firebase.database.ref('Employee').orderByChild("Date_Create").once("value",(value)=>
+      this.firebase.database.ref('Employee').once("value",(value)=>
       resolve(value.toJSON()),(error)=>reject(error))
     });
   }
@@ -152,7 +160,7 @@ async update(form :NgForm)
       Address :form.value["Address"],
       Birthday : form.value["Birthday"],
       Image : form.value["Image"],
-      Position : form.value["Position"],
+      Group : form.value["Group"],
       Status : form.value["Status"],
    }
   ).then(()=>

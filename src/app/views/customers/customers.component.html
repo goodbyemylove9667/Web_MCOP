@@ -80,9 +80,12 @@
                             {{cus.Phone}}
                         </td>
                         <td>
-                            <button type="button" class="btn btn-outline-secondary"  style="color: black;" ngbPopover="{{cus.Address}}" triggers="mouseenter:mouseleave" popoverTitle="Địa chỉ">
-                              {{resizeText(cus.Address)}}
-                                </button>
+                          <div *ngIf="cus.Address.length<=30">
+                            {{cus.Address}}
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary"  style="color: black;" ngbPopover="{{cus.Address}}" triggers="mouseenter:mouseleave" popoverTitle="Mô Tả" *ngIf="cus.Address.length>30">
+                          {{resizeText(cus.Address)}}
+                        </button>
                         </td>
                         <td>
                             {{cus.Birthday  | date:'dd-MM-yyyy'}}
@@ -164,7 +167,7 @@
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">USERNAME <label class="text-danger">*</label></label>
                     <input name="Username" #Username1="ngModel" [(ngModel)]="service.formData.Username" minlength="3" maxlength="50"  required class="form-control col-sm-9"
-                    [ngClass]="{ 'is-invalid':(Username1.errors && Username1.dirty),'is-valid': !Username1.errors && Username1.dirty}" [disabled]="this.type==2">
+                    [ngClass]="{ 'is-invalid':(Username1.errors && Username1.dirty),'is-valid': !Username1.errors && Username1.dirty}" [readonly]="this.type==2">
                     <span class="text-danger offset-sm-3" *ngIf="Username1.invalid && Username1.dirty">
                         Tài Khoản phải từ 3 đến 50 kí tự
                     </span>
@@ -207,13 +210,14 @@
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">NGÀY SINH</label>
                     <input type="date"  
+                    #Birthday1="ngModel"
                     [ngModel]="service.formData.Birthday | date:'yyyy-MM-dd'"  
-
-                    (ngModelChange)="service.formData.Birthday"    
+                    (ngModelChange)="service.formData.Birthday=$event"    
                     name="Birthday" 
                     class="form-control col-sm-9 form-control col-sm-9-rounded"
+                    [ngClass]="{ 'is-invalid':( Birthday1.dirty && this.compareDate(service.formData.Birthday)),'is-valid': Birthday1.dirty && !this.compareDate(service.formData.Birthday)}"
               >
-              <span class="text-danger offset-sm-3" *ngIf="this.compareDate(service.formData.Birthday)">
+              <span class="text-danger offset-sm-3" *ngIf=" Birthday1.dirty && this.compareDate(service.formData.Birthday)">
                 Ngày sinh phải trước ngày hiện tại
               </span>
                   </div>

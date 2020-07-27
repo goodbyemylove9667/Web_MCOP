@@ -53,8 +53,13 @@ export class IncludesComponent implements OnInit {
               ({
                 Id: key,
                 Id_Top: res[key].Id_Top,
+                Description: res[key].Description,
                 Max_Point:res[key].Max_Point,
                 Time_Left:res[key].Time_Left,
+                Employee_Create:res[key].Employee_Create,
+                Date_Create:res[key].Date_Create,
+                Employee_Edit:res[key].Employee_Edit,
+                Date_Edit:res[key].Date_Edit,
                 Status: res[key].Status
               }
               )
@@ -126,8 +131,13 @@ export class IncludesComponent implements OnInit {
               ({
                 Id: key,
                 Id_Top: res[key].Id_Top,
+                Description: res[key].Description,
                 Max_Point:res[key].Max_Point,
                 Time_Left:res[key].Time_Left,
+                Employee_Create:res[key].Employee_Create,
+                Date_Create:res[key].Date_Create,
+                Employee_Edit:res[key].Employee_Edit,
+                Date_Edit:res[key].Date_Edit,
                 Status: res[key].Status
               }
               )

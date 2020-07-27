@@ -40,6 +40,7 @@ export class DashboardComponent implements OnInit {
       ]
     }
   ];
+  
   public lineChartData: Array<any> = [
     {data: [0,0,0,0,0,0,0]}
   ];
@@ -105,15 +106,13 @@ export class DashboardComponent implements OnInit {
     }
   ];
    getWeekNumber(thisDate) {
-    var dt = new Date(thisDate);
-    var thisDay = dt.getDate(); 
-    var newDate = dt;
-    newDate.setDate(1); 
-    var digit = newDate.getDay(); 
-    var Q = (thisDay + digit) / 7;    
-    var R = (thisDay + digit) % 7;
-    if (R !== 0) return Math.ceil(Q);
-    else return Q;}
+    var date = new Date(thisDate);
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+    var week1 = new Date(date.getFullYear(), 0, 4);
+    return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
+                          - 3 + (week1.getDay() + 6) % 7) / 7);   
+  }
  async ngOnInit() {
   await  this.cusservice.getList().then((value)=>
   {
@@ -138,8 +137,8 @@ export class DashboardComponent implements OnInit {
       option.value=key;
       if (chck)
       {
-      dfkey=key;
-      chck=0;
+        dfkey=key;
+        chck=0;
       }
       x.appendChild(option);
     }
@@ -166,7 +165,7 @@ export class DashboardComponent implements OnInit {
     var arr={data: [0,0,0,0,0,0,0],fill:false};
     value.forEach((data)=>
     {
-        this.listRes.unshift({
+        this.listRes.push({
           Id: data.key,
           Id_Cus: data.toJSON().Id_Cus,
           Id_Con:  data.toJSON().Id_Con,
@@ -174,8 +173,9 @@ export class DashboardComponent implements OnInit {
           TimeLeft_Res :  data.toJSON().TimeLeft_Res,
           Date_Res:  data.toJSON().Date_Res 
         });
-        let date= new Date(data.toJSON().Date_Res);
-        if (this.getWeekNumber(new Date())==this.getWeekNumber(date))
+        var date= new Date(data.toJSON().Date_Res);
+        var now=new Date();
+        if (this.getWeekNumber(now)==this.getWeekNumber(date) && now.getFullYear()==date.getFullYear())
         {      
           arr["data"][date.getDay()]++;
         }
@@ -185,9 +185,10 @@ export class DashboardComponent implements OnInit {
     this.lineChartColours=[...this.lineChartColours];
 var count=0;
 var table = <HTMLTableElement>document.getElementById("tb_db");
+this.listRes.sort((a, b)=> Number ( b.Point-a.Point || (b.Point==a.Point && a.TimeLeft_Res>b.TimeLeft_Res)));
   for (var res of this.listRes)
   {
-    if (this.OjbCon[res.Id_Con].Id_Top==dfkey)
+    if (this.OjbCon[res.Id_Con].Id_Top==dfkey && this.OjbCus.hasOwnProperty(res.Id_Cus))
     {
         count++;
         var row = table.insertRow();
@@ -313,18 +314,18 @@ var table = <HTMLTableElement>document.getElementById("tb_db");
 table.innerHTML="";
   for (var res of this.listRes)
   {
-    if (this.OjbCon[res.Id_Con].Id_Top==x)
+    if (this.OjbCon[res.Id_Con].Id_Top==x && this.OjbCus.hasOwnProperty(res.Id_Cus))
     {
-        count++;
-        var row = table.insertRow(0);
-        row.className="font-weight-bolder";
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3   = row.insertCell(2);
-        cell3.className="text-danger";
-        cell1.innerHTML = count.toString();
-        cell2.innerHTML = this.OjbCus[res.Id_Cus].Username.toString();
-        cell3.innerHTML =  res.Point.toString()+"đ";
+      count++;
+      var row = table.insertRow();
+      row.className="font-weight-bolder";
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3   = row.insertCell(2);
+      cell3.className="text-danger";
+      cell1.innerHTML = count.toString();
+      cell2.innerHTML = this.OjbCus[res.Id_Cus].Username.toString();
+      cell3.innerHTML =  res.Point.toString()+"đ";
     }
     if (count==10) break;
   }

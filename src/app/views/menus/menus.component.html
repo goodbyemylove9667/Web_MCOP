@@ -42,9 +42,9 @@
 
                     <div class="card-body">
                         <!--  START- LIST-->
-                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" 
-                            class="table-bordered hover text-center" id="dttb" style=" white-space: nowrap;">
-                            <thead style="background-color:#007bff;color: white;">
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                 class="table-bordered hover text-center " id="dttb" style=" white-space: nowrap;">
+                 <thead style="background-color:#007bff;color: white;">
                                 <tr>
                                     <th>STT</th>
                                     <th>Tên</th>
@@ -139,6 +139,7 @@
                         <label class="col-sm-3 col-form-label text-dark h3">TÊN <label class="text-danger">*</label></label>
                         <input name="Name" #Name1="ngModel" [(ngModel)]="service.formData.Name" minlength="3"
                             maxlength="100" required class="form-control col-sm-9"
+                            [readonly]="this.type==2"
                             [ngClass]="{ 'is-invalid':Name1.errors && Name1.dirty,'is-valid': !Name1.errors && Name1.dirty}">
                         <span class="text-danger offset-sm-3" *ngIf="Name1.invalid && Name1.dirty">
                             Tên Menu phải từ 3 đến 100 kí tự
@@ -165,7 +166,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label text-dark h3">NHÓM <label class="text-danger">*</label></label>
                         <select2 [data]="this.listGroup" [value]="value_group" id="select2_group"
-                            [options]="options_group" class="col-sm-9 px-0" *ngIf="loading"
+                            [options]="options_group" class="col-sm-9 px-0" 
                             (valueChanged)="changed($event)"></select2>
                         <input name="Group" #Group1="ngModel" [(ngModel)]="service.formData.Group" required hidden>
                         <span class="text-danger offset-sm-3" *ngIf="Group1.errors">
@@ -198,11 +199,10 @@
                     </div>
                     <div class="form-group row" *ngIf="this.type==2;else status">
                         <label class="col-sm-3 col-form-label text-dark h3">HOẠT ĐỘNG</label>
-                        <select name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" required
-                            class="form-control col-sm-9">
-                            <option [ngValue]="0">Bị Cấm</option>
-                            <option [ngValue]="1">Hoạt Động</option>
-                        </select>
+                        <label class="switch switch-pill switch-outline-success-alt">
+                            <input type="checkbox" class="switch-input form-control col-sm-9" name="Status" #Status1="ngModel" [(ngModel)]="service.formData.Status" (change)="changeStatus()" [checked]="service.formData.Status==1"  >
+                            <span class="switch-slider"></span>
+                          </label>  
 
                     </div>
                     <ng-template #status><input name="Status" [(ngModel)]="service.formData.Status" hidden>

@@ -54,7 +54,7 @@ export class MenusService {
   }
     getList() {
       return new Promise<Object>((resolve) => {
-        this.firebase.database.ref('Menu').orderByChild("Date_Create").once("value",snapshot=>
+        this.firebase.database.ref('Menu').once("value",snapshot=>
         resolve(snapshot.toJSON()),(error)=>reject(error))
       });
     }
@@ -140,6 +140,8 @@ async update(form :NgForm)
           Color: form.value["Color"],
           Employee_Edit: user["Id"],     
           Date_Edit: dt,
+          Employee_Create: user["Id"],     
+          Date_Create: dt,
           Status : form.value["Status"],
       }
       ).then(()=>

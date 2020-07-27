@@ -54,21 +54,26 @@ export class CustomerService {
       };
     }
     else {
-      this.formData=await JSON.parse(localStorage.getItem("customer_data"));
+      this.formData=this.data;
     }
   }
   getList() {
     return new Promise<Object>((resolve) => {
-      this.firebase.database.ref('Customer').orderByChild("Date_Create").once("value", (value) =>
+      this.firebase.database.ref('Customer').once("value", (value) =>
         resolve(value.toJSON()), (error) => reject(error))
     });
   }
- 
+  getCkList()
+  {
+    return new Promise<Object>((resolve) => {
+      this.firebase.database.ref('Customer').orderByChild("Status").equalTo(1).once("value",(value)=>
+      resolve(value.toJSON()),(error)=>reject(error))
+    });
+  }
   showModal(obj: Customer) {
     if (obj != null) {
       this.formData = Object.assign({}, obj);
       this.data={...this.formData};
-
     } else {
       this.resetForm(1);
     }
