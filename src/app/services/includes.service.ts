@@ -8,6 +8,7 @@ export interface Include
     Id: string,
     Id_Con: string,
     Id_Ques: string,
+    Order: number
 }
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,8 @@ export class IncludesService {
     this.formData = {
       Id: '',
       Id_Con: '',
-      Id_Ques: ''
+      Id_Ques: '',
+      Order: 0
     };
   }
     getList() {

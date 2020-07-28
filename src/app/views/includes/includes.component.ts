@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IncludesService, Include } from '../../services/includes.service';
 import { TopicsService, Topic } from '../../services/topics.service';
-import { EmployeeService } from '../../services/employee.service';
 import { QuestionsService, Question } from '../../services/questions.service';
 import { ContestsService, Contest } from '../../services/contests.service';
 import { ToastrService } from 'ngx-toastr';
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { NgForm } from '@angular/forms';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-includes',
@@ -12,12 +14,16 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./includes.component.scss']
 })
 export class IncludesComponent implements OnInit {
-
+  @ViewChild('randomModal', { static: false }) public randomModal: ModalDirective;
+  @ViewChild('form', { static: false }) private form: NgForm;
   constructor(private service: IncludesService,private topservice: TopicsService,private conservice:ContestsService,private quesservice: QuestionsService,private toastr: ToastrService) { }
   Id_Top: '';
   Id_Con: '';
   Id_Ques: '';
   temp: '';
+  De_Sl:number=0;
+  Tb_Sl:number=0;
+  Kho_Sl:number=0;
   list: Array<Include> = [];
   listTop: Array<Topic> = [];
   objTop: any;
@@ -30,6 +36,7 @@ export class IncludesComponent implements OnInit {
   ngOnInit() {
     this.topservice.getCkList().then((res) => {
       for (let key in res) {
+        if (key!="-MDBLQgsR3ZDZTyrrf8_")
           this.listTop.push
             ({
               Id: key,
@@ -49,6 +56,7 @@ export class IncludesComponent implements OnInit {
       });
       this.conservice.getCkList().then((res) => {
         for (let key in res) {
+          if (key!="-MDBLQgsR3ZDZTyrrf8_")
             this.listCon.push
               ({
                 Id: key,
@@ -192,15 +200,15 @@ export class IncludesComponent implements OnInit {
             ({
               Id: key,
               Id_Con:  res[key].Id_Con,
-              Id_Ques:  res[key].Id_Ques
+              Id_Ques:  res[key].Id_Ques,
+              Order: res[key].Order
             }
             );
-            this.objInc[res[key].Id_Ques]=key;
+            this.objInc[res[key].Id_Ques]=key; 
         }
       }, error => {
         this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
       });
-      console.log(this.objInc);
   }
   changeCon(s)
   {
@@ -208,56 +216,176 @@ export class IncludesComponent implements OnInit {
     return s.substring(0,29)+"..."
     else return s;
   }
-  checkall()
-  {
-    var checkboxes = document.querySelectorAll('input[type="checkbox"]') ;
-    for (var i = 1; i < checkboxes.length; i++) {
-     var ck: HTMLInputElement ;
-         ck=<HTMLInputElement>checkboxes[i];
-         ck.checked=!this.chk;
-         this.submitall(ck.value);
-    }
-    this.chk=!this.chk;
-  }
-  submitall(Id_Ques)
-  {
-    if ( this.objInc.hasOwnProperty(Id_Ques) &&  this.chk)
-    {
-      this.service.delete( this.objInc[Id_Ques]);
-      delete this.objInc[Id_Ques];
-      console.log(this.objInc);
-    }
-    else
-    if (this.chk==false && !this.objInc.hasOwnProperty(Id_Ques))
-    { 
-      this.service.insert(this.Id_Con,Id_Ques).then((value)=>
-      {
-        this.objInc[Id_Ques]=value;
-      });
-      console.log(this.objInc);
-    }
-  }
   submit(Id_Ques)
   {
-    console.log(this.objInc);
       if ( this.objInc.hasOwnProperty(Id_Ques))
       {
         this.service.delete( this.objInc[Id_Ques]);
         delete this.objInc[Id_Ques];
-        console.log(this.objInc);
-      }
-      else
-      {
-        this.service.insert(this.Id_Con,Id_Ques).then((value)=>
-        {
-          this.objInc[Id_Ques]=value;
-        });
-        console.log(this.objInc);
       }
   }
   showques(id)
 {
   this.Id_Ques=id;
-  console.log(this.Id_Ques);
+}
+showrandom() {
+  this.De_Sl=0;
+  this.Tb_Sl=0;
+  this.Kho_Sl=0;
+  this.form.form.markAsPristine();
+  this.randomModal.show();
+}
+ shuffle(array) {
+  var tmp, current, top = array.length;
+  if(top) while(--top) {
+    current = Math.floor(Math.random() * (top + 1));
+    tmp = array[current];
+    array[current] = array[top];
+    array[top] = tmp;
+  }
+  return array;
+}
+random()
+{
+  var arr1=[];
+  var arr2=[];
+  var arr3=[];
+  var De_Arr=[];
+  var Tb_Arr=[];
+  var Kho_Arr=[];
+  this.listQues.forEach((element)=>
+  {
+    if (element.Id_Top==this.Id_Top)
+    { 
+      if (this.objInc.hasOwnProperty(element.Id))
+      {
+        if (element.Level==1) De_Arr.push(element); 
+        if (element.Level==2) Tb_Arr.push(element); 
+        if (element.Level==3) Kho_Arr.push(element); 
+      }
+      else
+      {
+        if (element.Level==1) arr1.push(element); 
+        if (element.Level==2) arr2.push(element); 
+        if (element.Level==3) arr3.push(element); 
+      }
+    }
+  });
+  arr1=this.shuffle(arr1);
+  arr2=this.shuffle(arr2);
+  arr3=this.shuffle(arr3);
+  let index1=-1;
+  let index2=-1;
+  let index3=-1;
+  for (let i=0;i<arr1.length;i++)
+  {
+    if (De_Arr.length<this.De_Sl)
+    {
+      De_Arr.push(
+        {
+          Id:'',
+          Id_Ques: arr1[i].Id,
+          Order :0
+        }
+      )
+    }
+    else 
+    {
+      index1=i;
+      break;
+    }
+  }
+  for (let i=0;i<arr2.length;i++)
+  {
+    if (Tb_Arr.length<this.Tb_Sl)
+    {
+      Tb_Arr.push(
+        {
+          Id:'',
+          Id_Ques: arr2[i].Id,
+          Order :0
+        }
+      )
+    }
+    else {
+      index2=i;  
+      break;
+    }
+  };
+  for (let i=0;i<arr3.length;i++)
+  {
+    if (Kho_Arr.length<this.Kho_Sl)
+    {
+      Kho_Arr.push(
+        {
+          Id:'',
+          Id_Ques: arr3[i].Id,
+          Order :0
+        }
+      )
+    }
+    else
+    {
+      index3=i;
+      break;
+    }
+  };
+  var total=De_Arr.length+Tb_Arr.length+Kho_Arr.length;
+  var full=this.De_Sl+this.Tb_Sl+this.Kho_Sl;
+  if (total<full && index1!=-1)
+  {
+    for (var i=index1;i<arr1.length;i++)
+    {
+      if (total<full)
+      {
+      De_Arr.push(
+        {
+          Id:'',
+          Id_Ques: arr1[i].Id,
+          Order :0
+        }
+      );
+      total++;
+      }
+      else return;
+    }
+  }
+  if (total<full && index2!=-1)
+  {
+    for (var i=index2;i<arr2.length;i++)
+    {
+      if (total<full)
+      {
+      Tb_Arr.push(
+        {
+          Id:'',
+          Id_Ques: arr2[i].Id,
+          Order :0
+        }
+      );
+      total++;
+      }
+      else return;
+    }
+  }
+  if (total<full && index3!=-1)
+  {
+    for (var i=index3;i<arr3.length;i++)
+    {
+      if (total<full)
+      {
+      Kho_Arr.push(
+        {
+          Id:'',
+          Id_Ques: arr3[i].Id,
+          Order :0
+        }
+      );
+      total++;
+      }
+      else return;
+    }
+  }
+  
 }
 }

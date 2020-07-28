@@ -14,6 +14,12 @@
                                     <i class="fa fa-retweet"></i>
                                     Refresh
                                 </button>
+                                <button type="button" class="btn mr-1 text-light font-weight-bolder"
+                                style="background-color:#007bff;"
+                                (click)="this.showrandom()" *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp">
+                                <i class="fa fa-random"></i>
+                                     Random
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -33,7 +39,7 @@
                             </select>
                             <div class="row justify-content-center mt-2" *ngIf="this.Id_Top!=this.temp">
                                 <table class="table table-bordered table-hover  text-center" id="tb_db">
-                                    <tr class="bg-primary">
+                                    <tr style="background-color:#007bff;color: white;">
                                         <th>Tên</th>
                                         <th>Ảnh</th>
                                     </tr>
@@ -75,11 +81,20 @@
                             <div class="row justify-content-center mt-2"
                                 *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp">
                                 <table class="table table-bordered table-hover  text-center" id="tb_db">
-                                    <tr class="bg-primary">
+                                    <tr style="background-color:#007bff;color: white;">
+                                        <th>Mô Tả</th>
                                         <th>Điểm Tối Đa</th>
                                         <th>Thời Gian Tối Đa</th>
                                     </tr>
                                     <tr>
+                                        <td style="height: 75px;">
+                                            <div *ngIf="this.objCon && this.objCon.hasOwnProperty(this.Id_Con)">
+                                                {{this.objCon[this.Id_Con].Description}}
+                                            </div>
+                                            <div *ngIf="this.objCon && !this.objCon.hasOwnProperty(this.Id_Con)">
+                                                Không Xác Định
+                                            </div>
+                                        </td>
                                         <td style="height: 75px;">
                                             <div *ngIf="this.objCon && this.objCon.hasOwnProperty(this.Id_Con)">
                                                 {{this.objCon[this.Id_Con].Max_Point}}
@@ -104,9 +119,6 @@
                         <div class="col-12 col-sm-3  overflow-auto" style="max-height:500px">
                                 <p class="w-100 font-weight-bold text-center">DANH SÁCH CÂU HỎI</p>
                             <div  *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp">
-                                    <div id="lb_quest" *ngIf=" this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="d-inline-block px-2 py-2 w-100"> 
-                                            <input type="checkbox"  (change)="checkall()" [checked]="this.chk"  class="d-inline" style="height: 15px;width: 15px;" > 
-                                    </div>
                                 <ng-container *ngFor="let ques of this.listQues;">
                                      <div id="lb_quest" *ngIf="ques.Id_Top==this.Id_Top && this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="d-inline-block px-2 py-2 w-100" (click)="showques(ques.Id)"> 
                               
@@ -114,7 +126,7 @@
                                     <label class="d-inline" >{{this.changeCon(ques.Content_Ques)}}</label>
                                         </div>
                                 </ng-container>
-                                </div>
+                            </div>
             
                         </div>
                         <div class="col-12 col-sm-3" >
@@ -127,30 +139,38 @@
                                  <p class="d-inline">{{this.objQues[this.Id_Ques].Content_Ques}} ?
                                  </p>
                                  </div>
+                                 <div class=" w-100 text-left d-inline-block px-1 mb-2">
+                                    <p class=" text-danger font-weight-bold d-inline" >
+                                        Độ Khó: 
+                                    </p>
+                                    <p class="d-inline">
+                                        {{this.objQues[this.Id_Ques].Level==1?'Dễ':this.objQues[this.Id_Ques].Level==2?'Trung Bình':this.objQues[this.Id_Ques].Level==3?'Khó':'Không Xác Định'}}
+                                    </p>
+                                    </div>
                                  <ul class="w-100 list-group">
                                      <li class="list-group-item d-inline-block"  *ngIf="this.objQues[this.Id_Ques].Answer!=1">
                                         <p class="d-inline font-weight-bold text-primary">1. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer1}}</p>
                                      </li>
-                                     <li class="list-group-item active" *ngIf="this.objQues[this.Id_Ques].Answer==1">
-                                            <p class="d-inline font-weight-bold text-dark">1. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer1}}</p>
+                                     <li class="list-group-item" *ngIf="this.objQues[this.Id_Ques].Answer==1" style="background-color:#007bff;color: white;">
+                                            <p class="d-inline font-weight-bold text-light">1. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer1}}</p>
                                          </li>
                                      <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer!=2">
                                             <p class="d-inline font-weight-bold text-primary">2. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer2}}</p>
                                         </li>
-                                        <li class="list-group-item active"  *ngIf="this.objQues[this.Id_Ques].Answer==2">
-                                                <p class="d-inline font-weight-bold text-dark">2. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer2}}</p>
+                                        <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer==2" style="background-color:#007bff;color: white;">
+                                                <p class="d-inline font-weight-bold text-light">2. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer2}}</p>
                                             </li>
                                         <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer!=3">
                                                 <p class="d-inline font-weight-bold text-primary">3. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer3}}</p>
                                             </li>
-                                            <li class="list-group-item active"  *ngIf="this.objQues[this.Id_Ques].Answer==3">
-                                                    <p class="d-inline font-weight-bold text-dark">3. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer3}}</p>
+                                            <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer==3" style="background-color:#007bff;color: white;">
+                                                    <p class="d-inline font-weight-bold text-light">3. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer3}}</p>
                                                 </li>
                                             <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer!=4">
                                                     <p class="d-inline font-weight-bold text-primary">4. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer4}}</p>
                                                 </li>
-                                                <li class="list-group-item active"  *ngIf="this.objQues[this.Id_Ques].Answer==4">
-                                                        <p class="d-inline font-weight-bold text-dark">4. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer4}}</p>
+                                                <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer==4" style="background-color:#007bff;color: white;">
+                                                        <p class="d-inline font-weight-bold text-light">4. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer4}}</p>
                                                     </li>
                                  </ul>
                             </div>
@@ -162,3 +182,48 @@
         </div>
     </div>
 </section>
+
+     <!-- START RANDOM -->
+<div bsModal #randomModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title w-100 text-center">Ngẫu Nhiên Số Câu Hỏi (100>x>=0)</h4>
+          <button type="button" class="close" (click)="randomModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+            <form #form="ngForm" autocomplete="off" class="pr-3">
+                <div class="row">
+                    <div class="col-12 col-sm-4">
+                        <p class="text-center font-weight-bold">DỄ</p>
+                        <input type="number" name="De_Sl" #De_Sl1="ngModel" pattern="^[0-9]{1,2}$"
+                        [(ngModel)]="De_Sl" required class="form-control"
+                        [ngClass]="{ 'is-invalid':(De_Sl1.errors && De_Sl1.dirty),'is-valid': !De_Sl1.errors && De_Sl1.dirty}">
+                    </div>
+                    <div class="col-12 col-sm-4">
+                    <p class="text-center font-weight-bold">TRUNG BÌNH</p>
+                    <input type="number" name="Tb_Sl" #Tb_Sl1="ngModel" pattern="^[0-9]{1,2}$"
+                    [(ngModel)]="Tb_Sl" required class="form-control"
+                    [ngClass]="{ 'is-invalid':(Tb_Sl1.errors && Tb_Sl1.dirty),'is-valid': !Tb_Sl1.errors && Tb_Sl1.dirty}">
+                    </div>
+                    <div class="col-12 col-sm-4">
+                    <p class="text-center font-weight-bold">KHÓ</p>
+                    <input type="number" name="Kho_Sl" #Kho_Sl1="ngModel" pattern="^[0-9]{1,2}$"
+                    [(ngModel)]="Kho_Sl" required class="form-control"
+                    [ngClass]="{ 'is-invalid':(Kho_Sl1.errors && Kho_Sl1.dirty),'is-valid': !Kho_Sl1.errors && Kho_Sl1.dirty}">
+                    </div>
+                </div>
+                </form>
+
+        </div>
+        <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="random()">Đồng Ý</button>
+                <button type="button" class="btn btn-secondary" (click)="randomModal.hide()">Không</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- END -RANDOM-->
