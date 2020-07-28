@@ -42,24 +42,27 @@ export class IncludesService {
         resolve(value.toJSON()),(error)=>reject(error))
       });
     }
-    async insert(Id_Con,Id_Ques)
+    async insert(Id_Con,Id_Ques,Order)
     {
      return await this.firebase.database.ref('Include').push(
         {
           Id_Con: Id_Con,
-          Id_Ques: Id_Ques
+          Id_Ques: Id_Ques,
+          Order: Order
         }
       ).key;
     }
+    async update(key,Order)
+    {
+      await this.firebase.database.ref('Include/'+key).update(
+        {
+            Order:Order
+        }
+      )
+    }
    async delete(key)
     {
-      await this.firebase.database.ref('Include/'+key).remove().then(()=>
-      {
-        this.msg="";
-      }).catch(()=>
-      {
-        this.msg="Không Thể Xóa";
-      })
+      await this.firebase.database.ref('Include/'+key).remove();
     }
     showModal(obj: Include) {
       if (obj != null) {

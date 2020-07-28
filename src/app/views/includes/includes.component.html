@@ -116,9 +116,9 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-3  overflow-auto" style="max-height:500px">
+                        <div class="col-12 col-sm-3">
                                 <p class="w-100 font-weight-bold text-center">DANH SÁCH CÂU HỎI</p>
-                            <div  *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp">
+                            <div  *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="overflow-auto" style="max-height:500px">
                                 <ng-container *ngFor="let ques of this.listQues;">
                                      <div id="lb_quest" *ngIf="ques.Id_Top==this.Id_Top && this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="d-inline-block px-2 py-2 w-100" (click)="showques(ques.Id)"> 
                               
@@ -188,7 +188,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title w-100 text-center">Ngẫu Nhiên Số Câu Hỏi (100>x>=0)</h4>
+          <h4 class="modal-title w-100 text-center">Ngẫu Nhiên Số Câu Hỏi ( 100>x>=0 )</h4>
           <button type="button" class="close" (click)="randomModal.hide()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

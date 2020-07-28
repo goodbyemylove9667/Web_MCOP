@@ -6,7 +6,7 @@ import { ContestsService, Contest } from '../../services/contests.service';
 import { ToastrService } from 'ngx-toastr';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { NgForm } from '@angular/forms';
-import { element } from 'protractor';
+import { NgBlockUI, BlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-includes',
@@ -14,6 +14,7 @@ import { element } from 'protractor';
   styleUrls: ['./includes.component.scss']
 })
 export class IncludesComponent implements OnInit {
+  @BlockUI() blockUI: NgBlockUI;
   @ViewChild('randomModal', { static: false }) public randomModal: ModalDirective;
   @ViewChild('form', { static: false }) private form: NgForm;
   constructor(private service: IncludesService,private topservice: TopicsService,private conservice:ContestsService,private quesservice: QuestionsService,private toastr: ToastrService) { }
@@ -32,6 +33,7 @@ export class IncludesComponent implements OnInit {
   listQues: Array<Question> = [];
   objQues: any;
   objInc: any={};
+  Action_Arr :Array<any>=[];
   chk: boolean=false;
   ngOnInit() {
     this.topservice.getCkList().then((res) => {
@@ -116,7 +118,6 @@ export class IncludesComponent implements OnInit {
     this.listQues= [];
     this.objQues= {};
     this.objInc={};
-    this.chk=false;
     this.topservice.getCkList().then((res) => {
       for (let key in res) {
           this.listTop.push
@@ -218,11 +219,28 @@ export class IncludesComponent implements OnInit {
   }
   submit(Id_Ques)
   {
-      if ( this.objInc.hasOwnProperty(Id_Ques))
+    var index=this.Action_Arr.findIndex(x=>x.Id_Ques==Id_Ques);
+    if (index==-1)
+    {
+      if (this.objInc.hasOwnProperty(Id_Ques))
       {
-        this.service.delete( this.objInc[Id_Ques]);
-        delete this.objInc[Id_Ques];
+        this.Action_Arr.push({
+           Id:this.objInc[Id_Ques],
+           Id_Ques:Id_Ques,
+           Order :0,
+           random:false
+        })
       }
+      else
+      {
+        this.Action_Arr.push({
+          Id:this.objInc[Id_Ques],
+          Id_Ques:Id_Ques,
+          Order :0,
+          random:false
+       })
+      }
+    }
   }
   showques(id)
 {
@@ -259,9 +277,8 @@ random()
     { 
       if (this.objInc.hasOwnProperty(element.Id))
       {
-        if (element.Level==1) De_Arr.push(element); 
-        if (element.Level==2) Tb_Arr.push(element); 
-        if (element.Level==3) Kho_Arr.push(element); 
+        this.service.delete(this.objInc[element.Id]);
+        delete this.objInc[element.Id];
       }
       else
       {
@@ -334,7 +351,7 @@ random()
   var full=this.De_Sl+this.Tb_Sl+this.Kho_Sl;
   if (total<full && index1!=-1)
   {
-    for (var i=index1;i<arr1.length;i++)
+    for (let i=index1;i<arr1.length;i++)
     {
       if (total<full)
       {
@@ -352,7 +369,7 @@ random()
   }
   if (total<full && index2!=-1)
   {
-    for (var i=index2;i<arr2.length;i++)
+    for (let i=index2;i<arr2.length;i++)
     {
       if (total<full)
       {
@@ -370,7 +387,7 @@ random()
   }
   if (total<full && index3!=-1)
   {
-    for (var i=index3;i<arr3.length;i++)
+    for (let i=index3;i<arr3.length;i++)
     {
       if (total<full)
       {
@@ -386,6 +403,48 @@ random()
       else return;
     }
   }
-  
+  for (let i=0;i<De_Arr.length+Tb_Arr.length+Kho_Arr.length;i++)
+  {
+    if (i<De_Arr.length)
+    {
+        if (De_Arr[i].Id=='')
+        {
+          var key= this.service.insert(this.Id_Con,De_Arr[i].Id_Ques,i);
+          this.objInc[De_Arr[i].Id_Ques]=key;
+        }
+        else
+        {
+          this.service.update(De_Arr[i].Id,i);
+        }
+    }
+    else
+    if (i<De_Arr.length+Tb_Arr.length)
+    {
+      var index=i-De_Arr.length;
+      if (Tb_Arr[index].Id=='')
+      {
+        var key= this.service.insert(this.Id_Con,Tb_Arr[index].Id_Ques,i);
+        this.objInc[Tb_Arr[index].Id_Ques]=key;
+      }
+      else
+      {
+        this.service.update(Tb_Arr[index].Id,i);
+      }
+    }
+    else
+    {
+        var index=i-De_Arr.length-Tb_Arr.length;
+        if (Kho_Arr[index].Id=='')
+        {
+          var key= this.service.insert(this.Id_Con,Kho_Arr[index].Id_Ques,i);
+          this.objInc[Kho_Arr[index].Id_Ques]=key;
+        }
+        else
+        {
+          this.service.update(Kho_Arr[index].Id,i);
+        }
+    }
+  }
+  this.randomModal.hide();
 }
 }
