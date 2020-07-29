@@ -14,15 +14,18 @@
                             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status" *ngIf="this.loading">
                                     <span class="sr-only">Loading...</span>
                             </div>
-                            <form #form="ngForm" autocomplete="off" class="col-sm-6 col-12" *ngIf="this.loading==false">
-                                    <div class="row justify-content-center mb-2 w-100">
-                                    <img [src]="this.user.Image" class="col" style="max-height:300px;max-width:300px;"/>
-                                 
+                            <form #form="ngForm" autocomplete="off" class="col-sm-4 col-12" *ngIf="this.loading==false">
+                                    <div class="row justify-content-center mb-2 w-100 ml-3">
+                                    <img [src]="this.user.Image" class="col" style="max-height:300px;max-width:300px;"/> 
                                     </div>
                                     <div class="form-group row">
                             
                                         <label class="col-sm-3 col-form-label text-dark h3">ẢNH</label>
-                                        <input #myInput type="file" (change)="onFileChanged($event)" />
+                                        <div class="custom-file col-sm-9">
+                                          <input #myInput type="file" (change)="onFileChanged($event)" id="inputGroupFile01"/>
+                                          <label class="custom-file-label" for="inputGroupFile01">Chọn Ảnh</label>
+                                        </div>
+                                  
                                         <input name="Image" #Image1="ngModel" [(ngModel)]="this.user.Image" hidden>
                                     </div>
                                       <div class="form-group row">
@@ -37,19 +40,19 @@
                                       <input name="Password" #Password1="ngModel" [(ngModel)]="this.user.Password"  hidden>
                                     <div class="form-group row">
                                       <label  class="col-sm-3 col-form-label text-dark h3">HỌ <label class="text-danger">*</label></label>
-                                      <input name="Lastname" #Lastname1="ngModel" [(ngModel)]="this.user.Lastname" minlength="3" maxlength="50"  required class="form-control col-sm-9"
+                                      <input name="Lastname" #Lastname1="ngModel" [(ngModel)]="this.user.Lastname" minlength="2" maxlength="50"  required class="form-control col-sm-9"
                                       [ngClass]="{ 'is-invalid':(Lastname1.errors && Lastname1.dirty),'is-valid': !Lastname1.errors && Lastname1.dirty}">
                                       <span class="text-danger offset-sm-3" *ngIf="Lastname1.invalid && Lastname1.dirty">
-                                        Họ phải từ 3 đến 50 kí tự
+                                        Họ phải từ 2 đến 50 kí tự
                                       </span>
                                       
                                     </div>
                                     <div class="form-group row">
                                       <label  class="col-sm-3 col-form-label text-dark h3">TÊN <label class="text-danger">*</label></label>
-                                      <input name="Firstname" #Firstname1="ngModel" [(ngModel)]="this.user.Firstname"  minlength="3" maxlength="50"   required class="form-control col-sm-9"
+                                      <input name="Firstname" #Firstname1="ngModel" [(ngModel)]="this.user.Firstname"  minlength="2" maxlength="50"   required class="form-control col-sm-9"
                                       [ngClass]="{ 'is-invalid':(Firstname1.errors && Firstname1.dirty),'is-valid': !Firstname1.errors && Firstname1.dirty}">
                                       <span class="text-danger offset-sm-3" *ngIf="Firstname1.invalid && Firstname1.dirty">
-                                          Tên phải từ 3 đến 50 kí tự
+                                          Tên phải từ 2 đến 50 kí tự
                                       </span>
                                     </div>
                                     <div class="form-group row">
@@ -62,7 +65,7 @@
                                     </div>
                                     <div class="form-group row">
                                       <label  class="col-sm-3 col-form-label text-dark h3">ĐỊA CHỈ</label>
-                                      <textarea rows="2" name="Address" #Address1="ngModel" [(ngModel)]="this.user.Address"  minlength="3" maxlength="200" required class="form-control col-sm-9"
+                                      <textarea rows="2" name="Address" #Address1="ngModel" [(ngModel)]="this.user.Address"  minlength="3" maxlength="200" class="form-control col-sm-9"
                                         [ngClass]="{ 'is-invalid':(Address1.errors && Address1.dirty),'is-valid': !Address1.errors && Address1.dirty}">
                     
                                       </textarea>
@@ -82,12 +85,11 @@
                                   Ngày sinh phải trước ngày hiện tại
                                 </span>
                                     </div>
-                                    <div class="form-group row pull-left ml-5">
-                                      <button type="button"  data-dismiss="modal"  (click)="this.Reset()" class="btn btn-danger btn-block font-weight-bolder">RESET</button>
+                                    <div class=" row justify-content-end">
+                                      <button type="button"  data-dismiss="modal"  (click)="this.Reset()" class="btn btn-danger font-weight-bolder mr-2">RESET</button>
+                                      <button type="button" (click)="this.Update(form)"  [disabled]="form.invalid || this.compareDate(this.user.Birthday)" data-dismiss="modal" class="btn btn-primary text-light font-weight-bolder">THAY ĐỔI</button>
                                     </div>
-                                      <div class="form-group row pull-right mr-5">
-                                        <button type="button" (click)="this.Update(form)"  [disabled]="form.invalid || this.compareDate(this.user.Birthday)" data-dismiss="modal" class="btn btn-info btn-block text-light font-weight-bolder">SUBMIT</button>
-                                      </div>
+                                   
                                   </form>
                         </div>
                 </div>

@@ -33,8 +33,8 @@ export class IncludesComponent implements OnInit {
   listQues: Array<Question> = [];
   objQues: any;
   objInc: any={};
+  objOrder: any={};
   Action_Arr :Array<any>=[];
-  chk: boolean=false;
   ngOnInit() {
     this.topservice.getCkList().then((res) => {
       for (let key in res) {
@@ -54,11 +54,10 @@ export class IncludesComponent implements OnInit {
         }
         this.objTop=res;
       }, error => {
-        this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
+        this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 2000});
       });
       this.conservice.getCkList().then((res) => {
         for (let key in res) {
-          if (key!="-MDBLQgsR3ZDZTyrrf8_")
             this.listCon.push
               ({
                 Id: key,
@@ -76,7 +75,7 @@ export class IncludesComponent implements OnInit {
           }
           this.objCon=res;
         }, error => {
-          this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
+          this.toastr.error( 'Không Tải Được Dữ Liệu Cuộc Thi','Thông Báo!',{timeOut: 2000});
         });
         this.quesservice.getCkList().then((res) => {
           for (let key in res) {
@@ -101,7 +100,7 @@ export class IncludesComponent implements OnInit {
             }
             this.objQues=res;
           }, error => {
-            this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
+            this.toastr.error( 'Không Tải Được Dữ Liệu Bộ Để','Thông Báo!',{timeOut: 2000});
           });
   }
   refresh()
@@ -135,7 +134,7 @@ export class IncludesComponent implements OnInit {
         }
         this.objTop=res;
       }, error => {
-        this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
+        this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 2000});
       });
       this.conservice.getCkList().then((res) => {
         for (let key in res) {
@@ -156,7 +155,7 @@ export class IncludesComponent implements OnInit {
           }
           this.objCon=res;
         }, error => {
-          this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
+          this.toastr.error( 'Không Tải Được Dữ Liệu Cuộc Thi','Thông Báo!',{timeOut: 2000});
         });
         this.quesservice.getCkList().then((res) => {
           for (let key in res) {
@@ -181,21 +180,22 @@ export class IncludesComponent implements OnInit {
             }
             this.objQues=res;
           }, error => {
-            this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
+            this.toastr.error( 'Không Tải Được Dữ Liệu Bộ Đề','Thông Báo!',{timeOut: 2000});
           });
   }
   initTop()
   {
     this.Id_Con=this.temp;
     this.Id_Ques=this.temp;
-    this.chk=false;
   }
-  initCon()
+  async initCon()
   {
     this.Id_Ques=this.temp;
-    this.chk=false;
+    this.list=[];
     this.objInc={};
-    this.service.getConList(this.Id_Con).then((res) => {
+    this.objOrder={};
+    this.Action_Arr=[];
+   await  this.service.getConList(this.Id_Con).then((res) => {
       for (let key in res) {
           this.list.push
             ({
@@ -205,10 +205,18 @@ export class IncludesComponent implements OnInit {
               Order: res[key].Order
             }
             );
-            this.objInc[res[key].Id_Ques]=key; 
+            this.objInc[res[key].Id_Ques]=key;
+            this.objOrder[res[key].Id_Ques]=res[key].Order;
         }
+        this.list.sort((a,b)=>(a.Order>b.Order)?1:(a.Order<b.Order)?-1:0);
+      this.list.forEach((element)=>{
+        this.Action_Arr.push({
+          Id_Ques:element.Id_Ques,
+          free:true
+        });
+      })
       }, error => {
-        this.toastr.error( 'Không Tải Được Dữ Liệu Chủ Đề','Thông Báo!',{timeOut: 1000});
+        this.toastr.error( 'Không Tải Được Dữ Liệu Quan Hệ','Thông Báo!',{timeOut: 2000});
       });
   }
   changeCon(s)
@@ -217,30 +225,88 @@ export class IncludesComponent implements OnInit {
     return s.substring(0,29)+"..."
     else return s;
   }
-  submit(Id_Ques)
+  getCheck(Id)
+  {
+     var index= this.Action_Arr.findIndex(x=> x.Id_Ques==Id && x.free);
+      if (index>-1) return true; else return false;
+  }
+  getListTop()
+  {
+    var arr=[];
+    this.listQues.forEach((element)=>
+    {
+      if (element.Id_Top==this.Id_Top)
+      {
+        arr.push({
+          Id:element.Id,
+          Content_Ques: element.Content_Ques,
+          Order: this.objOrder.hasOwnProperty(element.Id)?(this.objOrder[element.Id]+1):this.objOrder[element.Id]
+        });
+      }
+    });
+    arr.sort((a,b)=>{
+      if (a.Order!=null && b.Order!=null)
+      {
+        return a.Order>b.Order?1:a.Order<b.Order?-1:0;
+      }
+      else
+      {
+          if (a.Order==null && b.Order!=null) return 1;
+          if (a.Order!=null && b.Order==null) return -1;
+          return 0;
+      }
+    });
+    return arr;
+  }
+  select(Id_Ques)
   {
     var index=this.Action_Arr.findIndex(x=>x.Id_Ques==Id_Ques);
     if (index==-1)
     {
+      this.Action_Arr.push({
+        Id_Ques:Id_Ques,
+         free:true
+       }); 
+    }
+    else
+    {
       if (this.objInc.hasOwnProperty(Id_Ques))
       {
-        this.Action_Arr.push({
-           Id:this.objInc[Id_Ques],
-           Id_Ques:Id_Ques,
-           Order :0,
-           random:false
-        })
+        this.Action_Arr[index].free=!this.Action_Arr[index].free;
       }
       else
       {
-        this.Action_Arr.push({
-          Id:this.objInc[Id_Ques],
-          Id_Ques:Id_Ques,
-          Order :0,
-          random:false
-       })
+        this.Action_Arr.splice(index,1);
       }
     }
+  }
+  async submit()
+  {
+    this.blockUI.start('Loading...'); 
+    let index=0;
+    this.Action_Arr.forEach((element)=>
+    {
+        if (element.free)
+        {
+          if (this.objInc.hasOwnProperty(element.Id_Ques))
+          {
+            if (this.objOrder[element.Id_Ques]!=index)
+            this.service.update(this.objInc[element.Id_Ques],index);
+          }
+          else
+          {
+            this.service.insert(this.Id_Con,element.Id_Ques,index);
+          }
+          index++;
+        }
+        else
+        {
+          if (this.objInc.hasOwnProperty(element.Id_Ques))
+          this.service.delete(this.objInc[element.Id_Ques]);
+        }
+    });
+   await this.initCon();
+  this.blockUI.stop();
   }
   showques(id)
 {
@@ -263,8 +329,9 @@ showrandom() {
   }
   return array;
 }
-random()
+ async random()
 {
+  this.blockUI.start('Loading...'); 
   var arr1=[];
   var arr2=[];
   var arr3=[];
@@ -275,16 +342,12 @@ random()
   {
     if (element.Id_Top==this.Id_Top)
     { 
+      if (element.Level==1) arr1.push(element); 
+      if (element.Level==2) arr2.push(element); 
+      if (element.Level==3) arr3.push(element); 
       if (this.objInc.hasOwnProperty(element.Id))
       {
         this.service.delete(this.objInc[element.Id]);
-        delete this.objInc[element.Id];
-      }
-      else
-      {
-        if (element.Level==1) arr1.push(element); 
-        if (element.Level==2) arr2.push(element); 
-        if (element.Level==3) arr3.push(element); 
       }
     }
   });
@@ -364,7 +427,7 @@ random()
       );
       total++;
       }
-      else return;
+      else break;
     }
   }
   if (total<full && index2!=-1)
@@ -382,7 +445,7 @@ random()
       );
       total++;
       }
-      else return;
+      else break;
     }
   }
   if (total<full && index3!=-1)
@@ -400,17 +463,23 @@ random()
       );
       total++;
       }
-      else return;
+      else break;
     }
   }
+await this.sovle(De_Arr,Tb_Arr,Kho_Arr);
+await this.initCon();
+this.blockUI.stop();
+this.randomModal.hide();
+}
+async sovle(De_Arr,Tb_Arr,Kho_Arr)
+{
   for (let i=0;i<De_Arr.length+Tb_Arr.length+Kho_Arr.length;i++)
   {
     if (i<De_Arr.length)
     {
         if (De_Arr[i].Id=='')
         {
-          var key= this.service.insert(this.Id_Con,De_Arr[i].Id_Ques,i);
-          this.objInc[De_Arr[i].Id_Ques]=key;
+          this.service.insert(this.Id_Con,De_Arr[i].Id_Ques,i);
         }
         else
         {
@@ -423,8 +492,7 @@ random()
       var index=i-De_Arr.length;
       if (Tb_Arr[index].Id=='')
       {
-        var key= this.service.insert(this.Id_Con,Tb_Arr[index].Id_Ques,i);
-        this.objInc[Tb_Arr[index].Id_Ques]=key;
+        this.service.insert(this.Id_Con,Tb_Arr[index].Id_Ques,i);
       }
       else
       {
@@ -436,8 +504,7 @@ random()
         var index=i-De_Arr.length-Tb_Arr.length;
         if (Kho_Arr[index].Id=='')
         {
-          var key= this.service.insert(this.Id_Con,Kho_Arr[index].Id_Ques,i);
-          this.objInc[Kho_Arr[index].Id_Ques]=key;
+          this.service.insert(this.Id_Con,Kho_Arr[index].Id_Ques,i);
         }
         else
         {
@@ -445,6 +512,5 @@ random()
         }
     }
   }
-  this.randomModal.hide();
 }
 }

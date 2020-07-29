@@ -26,9 +26,9 @@
                     <div class="input-group mt-3 row justify-content-end">
                         <div class="input-group-prepend mr-2">
                             <select [(ngModel)]="slc_search" class="custom-select">
-                                <option [ngValue]="2" [selected]="true">Người Chơi</option>
-                                <option [ngValue]="4">Điểm</option>
-                                <option [ngValue]="6">Ngày</option>
+                                <option [ngValue]="3" [selected]="true">Người Chơi</option>
+                                <option [ngValue]="5">Điểm</option>
+                                <option [ngValue]="7">Ngày</option>
                             </select>
                         </div>
                         <div class="input-group-prepend">
@@ -47,6 +47,7 @@
                                 <tr>
                                     <th (click)="this.selectAll()"><i class="fa fa-square" *ngIf="this.slcAll"></i><i class="fa fa-check-square" *ngIf="!this.slcAll"></i></th>
                                     <th>STT</th>
+                                    <th>ID</th>
                                     <th>Người Chơi</th>
                                     <th>ID Cuộc Thi</th>
                                     <th>Điểm</th>
@@ -59,6 +60,9 @@
                                 <tr *ngFor="let res of this.list;let i=index">
                                     <td></td>
                                     <th scope="row">{{i+1}}</th>
+                                    <td>
+                                      {{res.Id}}
+                                  </td>
                                     <td *ngIf="this.objCus.hasOwnProperty(res.Id_Cus)">
                                         {{this.objCus[res.Id_Cus].Username}}
                                     </td>

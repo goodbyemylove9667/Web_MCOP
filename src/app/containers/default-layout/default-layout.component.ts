@@ -16,8 +16,7 @@ export class DefaultLayoutComponent implements OnInit,OnDestroy {
   private changes: MutationObserver;
   public element: HTMLElement;
   public Nav_loading:boolean=false;
-  user:any;
-  len : number= 0;
+   user:any;
   constructor (  private authservice : AuthService,private service: MenusService,@Inject(DOCUMENT) _document?: any) {
     this.changes = new MutationObserver((mutations) => {
       this.sidebarMinimized = _document.body.classList.contains('sidebar-minimized');
@@ -53,9 +52,6 @@ export class DefaultLayoutComponent implements OnInit,OnDestroy {
     {
       this.Nav_loading=true;  
     });
-  var count=Object.keys(temp).length;
-  this.len=0;
-  this.len=10-count;
   $.fn.dataTable.ext.classes.sLengthSelect = 'custom-select w-auto d-inline-block';
   $.fn.dataTable.ext.classes.sPageButtonActive = 'btn btn-outline-secondary';
   this.blockUI.stop();

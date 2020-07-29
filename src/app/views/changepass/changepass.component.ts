@@ -61,18 +61,17 @@ export class ChangepassComponent implements OnInit {
           user.updatePassword(this.newpass).then
           (async()=>
           {
-            this.toastr.success( 'Thay Đỏi Mật Khẩu Thành Công','Thành Công!',{timeOut: 1000});
-            await localStorage.setItem('password', JSON.stringify(this.newpass));
+            this.toastr.success( 'Thay Đỏi Mật Khẩu Thành Công','Thành Công!',{timeOut: 2000});
             this.router.navigate(['']);
           }).catch
           (()=>
           {
-            this.toastr.error( 'Thay Đổi Mật Khẩu Thất Bại','Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Thay Đổi Mật Khẩu Thất Bại','Thất Bại!',{timeOut: 2000});
           });
         }
   ).catch(()=>
   {
-      this.toastr.error( 'Mật Khẩu Cũ Không Đúng','Thất Bại!',{timeOut: 1000});
+      this.toastr.error( 'Mật Khẩu Cũ Không Đúng','Thất Bại!',{timeOut: 2000});
   });
   }
 }

@@ -6,13 +6,15 @@ import { Subject, from } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerService } from '../../services/customer.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { async } from '@angular/core/testing';
 @Component({
   selector: 'app-results',
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss']
 })
 export class ResultsComponent implements OnInit {
-
+  @BlockUI() blockUI: NgBlockUI;
   @ViewChild('myModal', { static: false }) public myModal: ModalDirective;
   @ViewChild('delModal', { static: false }) public delModal: ModalDirective;
   @ViewChild('delAllModal', { static: false }) public delAlModal: ModalDirective;
@@ -26,7 +28,7 @@ export class ResultsComponent implements OnInit {
   data: Result;
   dtOptions: any = {};
   image: any;
-  slc_search: number = 2;
+  slc_search: number = 3;
   inp_search: '';
   delkey: '';
   objCus: any;
@@ -50,7 +52,7 @@ export class ResultsComponent implements OnInit {
       }
       this.rerender();
     }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 1000 });
+      this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 2000 });
     });
 
     this.dtOptions = {
@@ -116,6 +118,7 @@ export class ResultsComponent implements OnInit {
   }
  async deleteAll()
   { 
+    this.blockUI.start('Loading...'); 
     var check=true;
     await this.dtElement.dtInstance.then((dtInstance: any) => {
        var data=dtInstance.rows( { selected: true } ).data()
@@ -125,20 +128,29 @@ export class ResultsComponent implements OnInit {
             () => {
               if (!(this.service.msg.length == 0 || this.service.msg.length == "")) {
                 check=false;
-                this.toastr.error('Xóa Thất Bại' + ".Lỗi: " + this.service.msg, 'Thất Bại!', { timeOut: 1000 });
+                this.toastr.error('Xóa Thất Bại' + ".Lỗi: " + this.service.msg, 'Thất Bại!', { timeOut: 2000 });
                 this.delAlModal.hide();
+                this.blockUI.stop();
                 return;
               }
             }
           )
         }
-      });
-      if (check)
+      }).then(()=>
+      {
+        if (check)
+        {
+          this.refresh();
+          this.toastr.success('Xóa Thành Công', 'Thành Công!', { timeOut: 2000 });
+          this.delAlModal.hide();
+          this.blockUI.stop();
+        }
+      }).catch(()=>
       {
         this.refresh();
-        this.toastr.success('Xóa Thành Công', 'Thành Công!', { timeOut: 1000 });
         this.delAlModal.hide();
-      }
+        this.blockUI.stop();
+      });
   }
   accentsTidy(s) {
     var r = s + "";
@@ -179,7 +191,7 @@ export class ResultsComponent implements OnInit {
 
       this.rerender();
     }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 1000 });
+      this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 2000 });
     });
   }
   ngOnDestroy(): void {
@@ -206,19 +218,21 @@ export class ResultsComponent implements OnInit {
     this.delkey = delkey;
     this.delModal.show();
   }
-  delete() {
-    this.service.delete(this.delkey).then(
+ async delete() {
+    this.blockUI.start('Loading...'); 
+    await this.service.delete(this.delkey).then(
       () => {
         if (this.service.msg.length == 0 || this.service.msg.length == "") {
           this.refresh();
-          this.toastr.success('Xóa Thành Công', 'Thành Công!', { timeOut: 1000 });
+          this.toastr.success('Xóa Thành Công', 'Thành Công!', { timeOut: 2000 });
           this.delModal.hide();
         }
         else {
-          this.toastr.error('Xóa Thất Bại' + ".Lỗi: " + this.service.msg, 'Thất Bại!', { timeOut: 1000 });
+          this.toastr.error('Xóa Thất Bại' + ".Lỗi: " + this.service.msg, 'Thất Bại!', { timeOut: 2000 });
           this.delModal.hide();
         }
       }
-    )
+    );
+    this.blockUI.stop();
   }
 }

@@ -16,7 +16,7 @@
       </a>
       <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
         <div class="dropdown-header text-center"><strong *ngIf="this.user">{{this.user.Email}}</strong></div>
-        <a class="dropdown-item" href="/authinfo"><i class="fa fa-user"></i>Thông Tin Tài Khoản <span class="badge badge-info"> {{this.len}}</span></a>
+        <a class="dropdown-item" href="/authinfo"><i class="fa fa-user"></i>Thông Tin Tài Khoản</a>
         <a class="dropdown-item" href="/changepass"><i class="fa fa-lock"></i>Thay Đổi Mật Khẩu</a>
         <div class="divider"></div>
         <button class="dropdown-item" (click)="logout()"><i class="fa fa-sign-out" ></i> Đăng Xuất</button>

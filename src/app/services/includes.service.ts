@@ -44,13 +44,13 @@ export class IncludesService {
     }
     async insert(Id_Con,Id_Ques,Order)
     {
-     return await this.firebase.database.ref('Include').push(
+      await this.firebase.database.ref('Include').push(
         {
           Id_Con: Id_Con,
           Id_Ques: Id_Ques,
           Order: Order
         }
-      ).key;
+      );
     }
     async update(key,Order)
     {

@@ -80,7 +80,7 @@
                             </select>
                             <div class="row justify-content-center mt-2"
                                 *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp">
-                                <table class="table table-bordered table-hover  text-center" id="tb_db">
+                                <table class="table table-bordered table-hover  text-center">
                                     <tr style="background-color:#007bff;color: white;">
                                         <th>Mô Tả</th>
                                         <th>Điểm Tối Đa</th>
@@ -118,16 +118,42 @@
                         </div>
                         <div class="col-12 col-sm-3">
                                 <p class="w-100 font-weight-bold text-center">DANH SÁCH CÂU HỎI</p>
-                            <div  *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="overflow-auto" style="max-height:500px">
-                                <ng-container *ngFor="let ques of this.listQues;">
-                                     <div id="lb_quest" *ngIf="ques.Id_Top==this.Id_Top && this.Id_Top!=this.temp && this.Id_Con!=this.temp" class="d-inline-block px-2 py-2 w-100" (click)="showques(ques.Id)"> 
-                              
-                                    <input type="checkbox" [checked]="this.objInc && this.objInc.hasOwnProperty(ques.Id)" (change)="submit(ques.Id)" [value]="ques.Id" class="d-inline" style="height: 15px;width: 15px;" > 
-                                    <label class="d-inline" >{{this.changeCon(ques.Content_Ques)}}</label>
+                                <div *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp">
+                                    <div class="row justify-content-center my-2">
+                                        <button type="button" class="btn btn-dark mr-1 text-light font-weight-bolder"
+                                            (click)="this.initCon()">
+                                            <i class="fa fa-undo"></i>
+                                            Reset
+                                        </button>
+                                        <button type="button" class="btn btn-success  mr-1 text-light font-weight-bolder"
+                                        (click)="this.submit()" >
+                                        <i class="fa fa-save"></i>
+                                             Lưu Lại
+                                        </button>
                                         </div>
-                                </ng-container>
+                                <div class="tableFixHead">
+                                    <table class="table table-bordered table-hover  text-center custom-table text-nowrap" id="tb_db">
+                                        <thead>
+                                            <tr style="background-color:#007bff;color: white;padding-top: 0.75rem;padding-bottom: 0.75rem;">
+                                                <th>STT</th>
+                                                <th>Nội dung</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody >
+                                        <tr *ngFor="let ques of getListTop()"  (click)="showques(ques.Id)">
+                                            <th scope="row">{{ques.Order}}</th>
+                                            <td >
+                                                {{this.changeCon(ques.Content_Ques)}}
+                                            </td>
+                                            <td >
+                                                <input type="checkbox" [checked]="getCheck(ques.Id)" (click)="select(ques.Id)" class="d-inline" style="height: 15px;width: 15px;" > 
+                                            </td>  
+                                        </tr> 
+                                         </tbody>  
+                                    </table>
                             </div>
-            
+                        </div>
                         </div>
                         <div class="col-12 col-sm-3" >
                             <div class="border" *ngIf="this.Id_Top!=this.temp && this.Id_Con!=this.temp && this.Id_Ques!=this.temp && this.objQues && this.objQues.hasOwnProperty(this.Id_Ques)">
@@ -215,11 +241,12 @@
                     [ngClass]="{ 'is-invalid':(Kho_Sl1.errors && Kho_Sl1.dirty),'is-valid': !Kho_Sl1.errors && Kho_Sl1.dirty}">
                     </div>
                 </div>
+                <div class="w-100 mt-3 text-danger font-weight-bold text-center"> Dữ liệu cũ sẽ bị thay thế </div>
                 </form>
 
         </div>
         <div class="modal-footer">
-                <button type="button" class="btn btn-primary" (click)="random()">Đồng Ý</button>
+                <button type="button" class="btn btn-primary" (click)="random()">Đồng ý</button>
                 <button type="button" class="btn btn-secondary" (click)="randomModal.hide()">Không</button>
         </div>
       </div>

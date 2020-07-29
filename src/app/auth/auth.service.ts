@@ -16,7 +16,6 @@ export class AuthService {
             value.forEach((element) => {
               var user_info=element.toJSON();
               user_info["Id"]=element.key;
-              localStorage.setItem('keyUser', element.key);
               localStorage.setItem('currentUser', JSON.stringify(user_info));
               if (element.toJSON()["Status"] == 0) {
                 this.router.navigate(['/login']);
