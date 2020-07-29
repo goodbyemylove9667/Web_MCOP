@@ -16,6 +16,7 @@ import { environment } from '../environments/environment';
 import { ToastrModule } from 'ngx-toastr';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { Select2Module } from 'ng2-select2';
+import { NgxDatesPickerModule } from 'ngx-dates-picker';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
@@ -98,7 +99,8 @@ import { GroupsComponent } from './views/groups/groups.component';
     BlockUIModule.forRoot(),
     ColorPickerModule,
     Select2Module,
-    IconPickerModule
+    IconPickerModule,
+    NgxDatesPickerModule
   ],
   declarations: [
     AppComponent,

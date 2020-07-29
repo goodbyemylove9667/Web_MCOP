@@ -1,14 +1,13 @@
-import { Component,OnInit } from '@angular/core';
+import { Component,OnInit, ViewChild } from '@angular/core';
 import {AuthService} from '../../auth/auth.service';
 import { NgForm } from '@angular/forms';
-
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: 'login.component.html',
   styleUrls: ['../../../assets/styles/login.css'],
 })
 export  class  LoginComponent  implements  OnInit {
+  @ViewChild('form', { static: false }) private form: NgForm;
   email="";
   password="";
   message="";
@@ -25,6 +24,8 @@ export  class  LoginComponent  implements  OnInit {
   }
   change()
   { 
+    this.password="";
+    this.form.form.markAsPristine();
     if(this.type==1) this.type=2
     else this.type=1;
   }
@@ -42,7 +43,7 @@ export  class  LoginComponent  implements  OnInit {
     {
       this.message=this.service.errorMessage;
       this.type=1;
-    this.service.loading=false;
+       this.service.loading=false;
     }
     );
     }

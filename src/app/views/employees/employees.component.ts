@@ -7,6 +7,8 @@ import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { navItems } from '../../_nav';
+import { DatepickerOptions } from 'ngx-dates-picker';
+declare var $:any;
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
@@ -34,6 +36,16 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
   inp_search: '';
   type: number = 1;
   user: any;
+  options: DatepickerOptions = {
+    selectRange: false,
+    displayFormat: 'DD-MM-YYYY',
+    barTitleFormat: 'MM/YYYY',
+    barTitleIfEmpty: '',
+    placeholder: '', 
+    addClass: 'form-control',
+    fieldId:'birthday',
+    addStyle: {width:'100%'}
+  };
   async initTable()
   {
    await this.service.getList().then((res) => {
@@ -97,8 +109,8 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
       const inp_search = this.accentsTidy(this.inp_search);
       if (this.slc_search==7)
       {
-          if (rowData[this.slc_search].includes("true") && inp_search=="1") return true;
-          if (rowData[this.slc_search].includes("false") && inp_search=="0") return true;
+          if (rowData[this.slc_search].includes("true") && inp_search.trim()=="1") return true;
+          if (rowData[this.slc_search].includes("false") && inp_search.trim()=="0") return true;
           return false;
       }
       if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
@@ -106,6 +118,9 @@ export class EmployeesComponent implements AfterViewInit, OnDestroy, OnInit {
       }
       return false;
     });
+    $(function() {
+      $('.ngx-dates-picker-input').prop('readonly', false);
+  }); 
   }
   accentsTidy(s) {
     var r = s + "";

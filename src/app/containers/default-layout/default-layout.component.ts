@@ -16,7 +16,7 @@ export class DefaultLayoutComponent implements OnInit,OnDestroy {
   private changes: MutationObserver;
   public element: HTMLElement;
   public Nav_loading:boolean=false;
-   user:any;
+  user_info:any;
   constructor (  private authservice : AuthService,private service: MenusService,@Inject(DOCUMENT) _document?: any) {
     this.changes = new MutationObserver((mutations) => {
       this.sidebarMinimized = _document.body.classList.contains('sidebar-minimized');
@@ -32,7 +32,7 @@ export class DefaultLayoutComponent implements OnInit,OnDestroy {
     this.blockUI.start('Loading...'); 
    user = await JSON.parse(localStorage.getItem('currentUser'));
     var temp=<Object>user;
-    this.user=user;
+    this.user_info=user;
     this.navItems.length=1;
   await  this.service.getList().then((res) => {
       for (let key in res) {

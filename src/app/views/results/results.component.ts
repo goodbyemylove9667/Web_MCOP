@@ -3,11 +3,9 @@ import { ResultsService, Result } from '../../services/results.service';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject, from } from 'rxjs';
-import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerService } from '../../services/customer.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { async } from '@angular/core/testing';
 @Component({
   selector: 'app-results',
   templateUrl: './results.component.html',

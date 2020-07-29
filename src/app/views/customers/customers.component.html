@@ -209,15 +209,15 @@
                   </div>
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">NGÀY SINH</label>
-                    <input type="date"  
-                    #Birthday1="ngModel"
-                    [ngModel]="service.formData.Birthday | date:'yyyy-MM-dd'"  
-                    (ngModelChange)="service.formData.Birthday=$event"    
-                    name="Birthday" 
-                    class="form-control col-sm-9 form-control col-sm-9-rounded"
-                    [ngClass]="{ 'is-invalid':( Birthday1.dirty && this.compareDate(service.formData.Birthday)),'is-valid': Birthday1.dirty && !this.compareDate(service.formData.Birthday)}"
-              >
-              <span class="text-danger offset-sm-3" *ngIf=" Birthday1.dirty && this.compareDate(service.formData.Birthday)">
+                    <ngx-dates-picker
+                                [(ngModel)]="service.formData.Birthday" 
+                                [options]="options"
+                                name="Birthday" 
+                              id="datepicker"
+                              class="col-sm-9 px-0" 
+                              position="top-left"
+                                ></ngx-dates-picker>
+              <span class="text-danger offset-sm-3" *ngIf="this.compareDate(service.formData.Birthday)">
                 Ngày sinh phải trước ngày hiện tại
               </span>
                   </div>

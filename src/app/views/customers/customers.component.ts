@@ -5,15 +5,19 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject, from } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { navItems } from '../../_nav';
 import { Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
+import { DatepickerOptions } from 'ngx-dates-picker';
+declare var $:any;
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { navItems } from '../../_nav';
 @Component({
   selector: 'app-customers',
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.scss']
 })
 export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
+  @BlockUI() blockUI: NgBlockUI;
   @ViewChild('myModal', { static: false }) public myModal: ModalDirective;
   @ViewChild('form', { static: false }) private form: NgForm;
   @ViewChild(DataTableDirective, { static: false })dtElement: DataTableDirective;
@@ -34,6 +38,16 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
   slc_search : number = 1;
   inp_search: '';
   type: number = 1;
+  options: DatepickerOptions = {
+    selectRange: false,
+    displayFormat: 'DD-MM-YYYY',
+    barTitleFormat: 'MM/YYYY',
+    barTitleIfEmpty: '',
+    placeholder: '', 
+    addClass: 'form-control',
+    fieldId:'birthday',
+    addStyle: {width:'100%'}
+  };
   async initTable() {
     await this.empservice.getCkList().then((res) => {
       this.objCus=res;
@@ -97,10 +111,10 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
     $.fn['dataTable'].ext.search.push((settings, data, dataIndex,rowData) => {
       const inp = this.accentsTidy(data[this.slc_search]);
       const inp_search = this.accentsTidy(this.inp_search);
-      if (this.slc_search==11)
+      if (this.slc_search==12)
       {
-          if (rowData[this.slc_search].includes("true") && inp_search=="1") return true;
-          if (rowData[this.slc_search].includes("false") && inp_search=="0") return true;
+          if (rowData[this.slc_search].includes('true') && inp_search.trim()=="1") return true;
+          if (rowData[this.slc_search].includes('false') && inp_search.trim()=="0") return true;
           return false;
       }
       if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
@@ -108,6 +122,9 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
       }
       return false;
     });
+    $(function() {
+      $('.ngx-dates-picker-input').prop('readonly', false);
+  }); 
   }
   accentsTidy (s){
     var r=s+"";
@@ -120,6 +137,7 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
     r = r.replace(new RegExp(/ñ/g),"n");                
     r = r.replace(new RegExp(/[oôòồóốõỗỏổọộ]/g),"o");
     r = r.replace(new RegExp(/œ/g),"oe");
+    r = r.replace(new RegExp(/[ưứừựữử]/g), "u");
     r = r.replace(new RegExp(/[uúùụũủ]/g),"u");
     r = r.replace(new RegExp(/[yýỳỹỷỵ]/g),"y");
     return r;
@@ -255,6 +273,7 @@ getObj_Name(obj,key,attr)
     if (this.service.formData.Status) this.service.formData.Status=1;else this.service.formData.Status=0;
   }
   onSubmit(form: NgForm) {
+    this.blockUI.start('Loading...'); 
     if (this.type == 1) {
 
       this.service.insert(form).then(
@@ -265,10 +284,12 @@ getObj_Name(obj,key,attr)
           this.refresh();
           this.toastr.success('Thêm Thành Công Tài Khoản '+form.value["Username"],'Thành Công!',{timeOut: 1000});
           this.myModal.hide();
+          this.blockUI.stop();
           }
           else
           {
             this.toastr.error( 'Thêm Thất Bại Tài Khoản '+form.value["Username"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.blockUI.stop();
           }
         }
       )
@@ -282,14 +303,17 @@ getObj_Name(obj,key,attr)
             this.refresh();
             this.toastr.success('Cập Nhật Thành Công Tài Khoản '+form.value["Username"],'Thành Công!',{timeOut: 1000});
             this.myModal.hide();
+            this.blockUI.stop();
           }
           else
           {
             this.toastr.error( 'Cập Nhật Thất Bại Tài Khoản '+form.value["Username"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.blockUI.stop();
           }
         }
       )
     }
+
   }
 
 }
