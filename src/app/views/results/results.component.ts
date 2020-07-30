@@ -6,6 +6,8 @@ import { Subject, from } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerService } from '../../services/customer.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { navItems } from '../../_nav';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-results',
   templateUrl: './results.component.html',
@@ -19,8 +21,12 @@ export class ResultsComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
   @ViewChild('myInput', { static: false }) myInputVariable: ElementRef;
   dtTrigger: Subject<any> = new Subject();
-  constructor(private service: ResultsService, private toastr: ToastrService,private cusservices:CustomerService) {
-
+  constructor(private service: ResultsService, private toastr: ToastrService,private cusservices:CustomerService,public router: Router) {
+    var index=navItems.findIndex(x=>x.table=='Result');
+    if (index==-1)
+    {
+      this.router.navigate(['']);
+    }
   }
   list: Array<Result> = [];
   data: Result;
@@ -88,8 +94,8 @@ export class ResultsComponent implements OnInit {
       }
     };
     $.fn['dataTable'].ext.search.push((settings, data, dataIndex) => {
-      const inp = this.accentsTidy(data[this.slc_search]);
-      const inp_search = this.accentsTidy(this.inp_search);
+      const inp = this.accentsTidy(data[this.slc_search]).trim();
+      const inp_search = this.accentsTidy(this.inp_search).trim();
       if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
         return true;
       }
@@ -161,8 +167,7 @@ export class ResultsComponent implements OnInit {
     r = r.replace(new RegExp(/ñ/g), "n");
     r = r.replace(new RegExp(/[oôòồóốõỗỏổọộ]/g), "o");
     r = r.replace(new RegExp(/œ/g), "oe");
-    r = r.replace(new RegExp(/[ưứừựữử]/g), "u");
-    r = r.replace(new RegExp(/[uúùụũủ]/g), "u");
+    r = r.replace(new RegExp(/[uúùụũủưứừựữử]/g), "u");
     r = r.replace(new RegExp(/[yýỳỹỷỵ]/g), "y");
     return r;
   };

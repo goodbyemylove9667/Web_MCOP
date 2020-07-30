@@ -8,12 +8,14 @@ import { ToastrService } from 'ngx-toastr';
 import { EmployeeService } from '../../services/employee.service';
 import { Router } from '@angular/router';
 import { navItems } from '../../_nav';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 @Component({
   selector: 'app-topics',
   templateUrl: './topics.component.html',
   styleUrls: ['./topics.component.scss']
 })
 export class TopicsComponent implements OnInit {
+  @BlockUI() blockUI: NgBlockUI;
   @ViewChild('form', { static: false }) private form: NgForm;
   @ViewChild('myModal', { static: false }) public myModal: ModalDirective;
   @ViewChild(DataTableDirective, { static: false })dtElement: DataTableDirective;
@@ -38,7 +40,7 @@ export class TopicsComponent implements OnInit {
     await this.empservice.getCkList().then((res) => {
       this.objCus=res;
     }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
+      this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 2000 });
     });
    await this.service.getList().then((res) => {
       for (let key in res) {
@@ -58,7 +60,7 @@ export class TopicsComponent implements OnInit {
         this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
         this.rerender();
       }, error => {
-        this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
+        this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 2000});
       });
   }
   ngOnInit(): void {
@@ -90,16 +92,17 @@ export class TopicsComponent implements OnInit {
     };
     this.initTable();
     $.fn['dataTable'].ext.search.push((settings, data, dataIndex,rowData) => {
-      const inp = this.accentsTidy(data[this.slc_search]);
-      const inp_search = this.accentsTidy(this.inp_search);
-      if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
+      const inp = this.accentsTidy(data[this.slc_search]).trim();
+      const inp_search = this.accentsTidy(this.inp_search).trim();
+      if (inp.includes(inp_search) || inp_search == "undefined" || inp_search == "") {
         return true;
       }
       if (this.slc_search==7)
       {
-          if (rowData[this.slc_search].includes("true") && inp_search.trim()=="1") return true;
-          if (rowData[this.slc_search].includes("false") && inp_search.trim()=="0") return true;
+          if (rowData[this.slc_search].includes("true") && inp_search=="1") return true;
+          if (rowData[this.slc_search].includes("false") && inp_search=="0") return true;
       }
+      return false;
     });
   }
   accentsTidy (s){
@@ -113,7 +116,7 @@ export class TopicsComponent implements OnInit {
     r = r.replace(new RegExp(/ñ/g),"n");                
     r = r.replace(new RegExp(/[oôòồóốõỗỏổọộ]/g),"o");
     r = r.replace(new RegExp(/œ/g),"oe");
-    r = r.replace(new RegExp(/[uúùụũủ]/g),"u");
+    r = r.replace(new RegExp(/[uúùụũủưứừựữử]/g),"u");
     r = r.replace(new RegExp(/[yýỳỹỷỵ]/g),"y");
     return r;
 };
@@ -167,7 +170,7 @@ getObj_Name(obj,key,attr)
         this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
         this.rerender();
       }, error => {
-        this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 1000});
+        this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 2000});
       });
   }
   ngOnDestroy(): void {
@@ -217,7 +220,8 @@ getObj_Name(obj,key,attr)
     {
         this.service.msg = "";
       this.form.form.markAsPristine();
-      this.service.showModal(null);    }
+      this.service.showModal(null);  
+    }
     else
     {
         this.service.msg = "";
@@ -230,6 +234,7 @@ getObj_Name(obj,key,attr)
     if (this.service.formData.Status) this.service.formData.Status=1;else this.service.formData.Status=0;
   }
   onSubmit(form: NgForm) {
+    this.blockUI.start('Loading...'); 
     if (this.type == 1) {
 
       this.service.insert(form).then(
@@ -238,12 +243,14 @@ getObj_Name(obj,key,attr)
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Thêm Thành Công Chủ Đề '+form.value["Name_Top"],'Thành Công!',{timeOut: 1000});
+          this.toastr.success('Thêm Thành Công Chủ Đề '+form.value["Name_Top"],'Thành Công!',{timeOut: 2000});
           this.myModal.hide();
+          this.blockUI.stop();
           }
           else
           {
-            this.toastr.error( 'Thêm Thất Bại Chủ Đề'+form.value["Name_Top"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Thêm Thất Bại Chủ Đề'+form.value["Name_Top"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 2000});
+            this.blockUI.stop();
           }
         }
       )
@@ -255,12 +262,14 @@ getObj_Name(obj,key,attr)
           if (this.service.msg.length==0 || this.service.msg.length=="")
           {
           this.refresh();
-          this.toastr.success('Cập Nhật Thành Công Chủ Đề '+form.value["Name_Top"],'Thành Công!',{timeOut: 1000});
+          this.toastr.success('Cập Nhật Thành Công Chủ Đề '+form.value["Name_Top"],'Thành Công!',{timeOut: 2000});
           this.myModal.hide();
+          this.blockUI.stop();
           }
           else
           {
-            this.toastr.error( 'Cập Nhật Thất Bại Chủ Đề '+form.value["Name_Top"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 1000});
+            this.toastr.error( 'Cập Nhật Thất Bại Chủ Đề '+form.value["Name_Top"]+ ".Lỗi: "+this.service.msg,'Thất Bại!',{timeOut: 2000});
+            this.blockUI.stop();
           }
         }
       )

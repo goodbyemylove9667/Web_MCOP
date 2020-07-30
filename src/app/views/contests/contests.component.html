@@ -26,7 +26,7 @@
                         <div class="input-group-prepend mr-2">
                             <select [(ngModel)]="slc_search" class="custom-select">
                                 <option [ngValue]="1" [selected]="true">Chủ Đề</option>
-                                <option [ngValue]="9">Hoạt Động</option>
+                                <option [ngValue]="9">Hoạt Động (0/1)</option>
                             </select>
                         </div>
                         <div class="input-group-prepend">
@@ -66,7 +66,9 @@
                                         <div *ngIf="con.Description.length<=30">
                                             {{con.Description}}
                                         </div>
-                                        <button type="button" class="btn btn-outline-secondary"  style="color: black;" ngbPopover="{{con.Description}}" triggers="mouseenter:mouseleave" popoverTitle="Mô Tả" *ngIf="con.Description.length>30">
+                                        <button type="button" class="btn btn-outline-secondary"  style="color: black;" 
+                                        ngbPopover="{{con.Description}}" triggers="mouseenter:mouseleave" popoverTitle="Mô Tả"
+                                        placement="right"  *ngIf="con.Description.length>30">
                                             {{resizeText(con.Description)}}
                                         </button>
                                      </td>
@@ -128,7 +130,7 @@
             </div>
             <div class="modal-body">
                 <!-- START CREATE -->
-                <form #form="ngForm" autocomplete="off">
+                <form #form="ngForm" autocomplete="off" class="pr-3">
                     <input  *ngIf="this.type==2" name="Id" [(ngModel)]="service.formData.Id" hidden >
                         <div class="form-group row" >
                             <label class="col-sm-5 col-form-label text-dark h3">CHỦ ĐỀ <label class="text-danger">*</label></label>
@@ -150,7 +152,8 @@
                         </div>
                         <div class="form-group row">
                             <label  class="col-sm-5 col-form-label text-dark h3">MÔ TẢ</label>
-                            <input name="Description" #Description1="ngModel" [(ngModel)]="service.formData.Description"   class="form-control col-sm-7">
+                            <textarea rows="2" name="Description" #Description1="ngModel" [(ngModel)]="service.formData.Description"   class="form-control col-sm-7">
+                                    </textarea>
                           </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label text-dark h3">ĐIỂM TỐI ĐA <label class="text-danger">*</label></label>

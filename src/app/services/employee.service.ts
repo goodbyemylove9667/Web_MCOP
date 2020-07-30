@@ -87,46 +87,24 @@ export class EmployeeService {
   }
 async insert(form :NgForm)
  {
-  const token  = await this.authserveice.getToken();
-  var params={
-    "email":form.value["Email"],
-    "password":form.value["Password"],
-    "returnSecureToken":false
-  }
-  const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type':  'application/json'
-        })
-      };
-this.http.post("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDFtaA4Z_9xNwPqTf_0iETw7bTlWJktiY0",
-    params,httpOptions
-  )
-  .subscribe(data => 
-  {
-    var date=new Date();
-    var y=date.getFullYear();
-    var m=date.getMonth()+1;
-    var d=date.getDate();
-    var hour=date.getHours();
-    var min=date.getMinutes();
-    var sec=date.getSeconds();
-    var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
-    form.value["Employee_Create"]=user["Id"];
-    form.value["Employee_Edit"]=user["Id"];
-    form.value["Date_Create"]=dt;
-     form.value["Date_Edit"]=dt;
-    this.firebase.database.ref('Employee').push(
-      form.value
-    );
-    this.msg="";
-    this.af.auth.sendPasswordResetEmail(form.value["Email"]).then().catch();
-  },
-   error => 
-   {
-         this.msg = "Không thể thêm";}
+  var date=new Date();
+  var y=date.getFullYear();
+  var m=date.getMonth()+1;
+  var d=date.getDate();
+  var hour=date.getHours();
+  var min=date.getMinutes();
+  var sec=date.getSeconds();
+  var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
+  form.value["Birthday"]=form.value["Birthday"].toString();
+  form.value["Employee_Create"]=user["Id"];
+  form.value["Employee_Edit"]=user["Id"];
+  form.value["Date_Create"]=dt;
+   form.value["Date_Edit"]=dt;
+  this.firebase.database.ref('Employee').push(
+    form.value
   );
-
-
+  this.msg="";
+  this.af.auth.sendPasswordResetEmail(form.value["Email"]).then().catch();
 }
 async update(form :NgForm)
 {

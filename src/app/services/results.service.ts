@@ -42,7 +42,7 @@ export class ResultsService {
     }
     getorderList() {
       return new Promise<any>((resolve) => {
-        this.firebase.database.ref('Result').orderByChild("Point").once("value",(value)=>
+        this.firebase.database.ref('Result').once("value",(value)=>
         resolve(value),(error)=>reject(error))
       });
     }

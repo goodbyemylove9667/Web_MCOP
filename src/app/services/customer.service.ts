@@ -94,6 +94,7 @@ export class CustomerService {
         var min=date.getMinutes();
         var sec=date.getSeconds();
         var dt=y+'/'+(m>9?m:('0'+m))+'/'+(d>9?d:('0'+d))+' '+(hour>9?hour:('0'+hour))+':'+(min>9?min:('0'+min))+':'+(sec>9?sec:('0'+sec));
+        form.value["Birthday"]=form.value["Birthday"].toString();
         form.value["Employee_Create"]=user["Id"];
         form.value["Employee_Edit"]=user["Id"];
         form.value["Date_Create"]=dt;

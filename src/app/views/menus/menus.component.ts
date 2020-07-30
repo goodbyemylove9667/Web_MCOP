@@ -9,6 +9,7 @@ import { Select2OptionData } from 'ng2-select2';
 import { EmployeeService } from '../../services/employee.service';
 import { navItems } from '../../_nav';
 import { Router } from '@angular/router';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 declare var $:any;
 @Component({
   selector: 'app-questions',
@@ -16,16 +17,13 @@ declare var $:any;
   styleUrls: ['./menus.component.scss']
 })
 export class MenusComponent implements OnInit {
+  @BlockUI() blockUI: NgBlockUI;
   @ViewChild('myModal', { static: false }) public myModal: ModalDirective;
   @ViewChild('form', { static: false }) private form: NgForm;
   @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
   dtTrigger: Subject<any> = new Subject();
   constructor(private service:MenusService,private empservice:EmployeeService,private toastr: ToastrService, public router: Router) {
-    var index=navItems.findIndex(x=>x.table=='Menu');
-    if (index==-1)
-    {
-      this.router.navigate(['']);
-    }
+  
   }
   list: Array<Menu> = [];
   listGroup: Array<Select2OptionData> = [
@@ -56,7 +54,7 @@ export class MenusComponent implements OnInit {
     await this.empservice.getCkList().then((res) => {
       this.objCus=res;
     }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 1000 });
+      this.toastr.error('Không Tải Được Dữ Liệu Tài Khoản Nhân Viên', 'Thông Báo!', { timeOut: 2000 });
     });
     await this.service.getList().then((res) => {
       for (let key in res) {
@@ -80,7 +78,7 @@ export class MenusComponent implements OnInit {
       this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
       this.rerender();
     }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 1000 });
+      this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 2000 });
     });
   }
    ngOnInit(): void {  
@@ -111,16 +109,15 @@ export class MenusComponent implements OnInit {
     };
     this.initTable();
     $.fn['dataTable'].ext.search.push((settings, data, dataIndex,rowData) => {
-      const inp = this.accentsTidy(data[this.slc_search]);
-      const inp_search = this.accentsTidy(this.inp_search);
-      if (this.slc_search==10)
+      const inp = this.accentsTidy(data[this.slc_search]).trim();
+      const inp_search = this.accentsTidy(this.inp_search).trim();
+      if (inp.includes(inp_search) || inp_search == "undefined" || inp_search == "") {
+        return true;
+      }
+      if (this.slc_search==11)
       {
           if (rowData[this.slc_search].includes("true") && inp_search=="1") return true;
           if (rowData[this.slc_search].includes("false") && inp_search=="0") return true;
-          return false;
-      }
-      if (inp.includes(inp_search) || inp_search == "undefined" || inp_search.trim() == "") {
-        return true;
       }
       return false;
     });
@@ -157,21 +154,21 @@ export class MenusComponent implements OnInit {
     return s.substring(0,49)+"..."
     else return s;
   }
-  accentsTidy(s) {
-    var r = s + "";
-    r = r.toLowerCase();
-    r = r.replace(new RegExp(/[aăâàằầáắấãẵẫảẳẩạặậ]/g), "a");
-    r = r.replace(new RegExp(/æ/g), "ae");
-    r = r.replace(new RegExp(/ç/g), "c");
-    r = r.replace(new RegExp(/[eêèềéếẽễẻểẹệ]/g), "e");
-    r = r.replace(new RegExp(/[iíìịĩỉ]/g), "i");
-    r = r.replace(new RegExp(/ñ/g), "n");
-    r = r.replace(new RegExp(/[oôòồóốõỗỏổọộ]/g), "o");
-    r = r.replace(new RegExp(/œ/g), "oe");
-    r = r.replace(new RegExp(/[uúùụũủ]/g), "u");
-    r = r.replace(new RegExp(/[yýỳỹỷỵ]/g), "y");
+  accentsTidy (s){
+    var r=s+"";
+    r=r.toLowerCase();
+    r = r.replace(new RegExp(/[aăâàằầáắấãẵẫảẳẩạặậ]/g),"a");
+    r = r.replace(new RegExp(/æ/g),"ae");
+    r = r.replace(new RegExp(/ç/g),"c");
+    r = r.replace(new RegExp(/[eêèềéếẽễẻểẹệ]/g),"e");
+    r = r.replace(new RegExp(/[iíìịĩỉ]/g),"i");
+    r = r.replace(new RegExp(/ñ/g),"n");                
+    r = r.replace(new RegExp(/[oôòồóốõỗỏổọộ]/g),"o");
+    r = r.replace(new RegExp(/œ/g),"oe");
+    r = r.replace(new RegExp(/[uúùụũủưứừựữử]/g),"u");
+    r = r.replace(new RegExp(/[yýỳỹỷỵ]/g),"y");
     return r;
-  };
+};
   ngAfterViewInit(): void {
     this.dtTrigger.next();
   }
@@ -200,7 +197,7 @@ export class MenusComponent implements OnInit {
       this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
       this.rerender();
     }, error => {
-      this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 1000 });
+      this.toastr.error('Không Tải Được Dữ Liệu', 'Thông Báo!', { timeOut: 2000 });
     });
   }
   ngOnDestroy(): void {
@@ -329,17 +326,20 @@ export class MenusComponent implements OnInit {
     }
   }
   onSubmit(form: NgForm) {
+    this.blockUI.start('Loading...'); 
     form.value["Icon"]= $('#iconpicker_txt').val();
     if (this.type == 1) {
       this.service.insert(form).then(
         () => {
           if (this.service.msg.length == 0 || this.service.msg.length == "") {
             this.refresh();
-            this.toastr.success('Thêm Thành Công Menu', 'Thành Công!', { timeOut: 1000 });
+            this.toastr.success('Thêm Thành Công Menu', 'Thành Công!', { timeOut: 2000 });
             this.myModal.hide();
+            this.blockUI.stop();
           }
           else {
-            this.toastr.error('Thêm Thất Bại Menu. Lỗi: ' + this.service.msg, 'Thất Bại!', { timeOut: 1000 });
+            this.toastr.error('Thêm Thất Bại Menu. Lỗi: ' + this.service.msg, 'Thất Bại!', { timeOut: 2000 });
+            this.blockUI.stop();
           }
         }
       )
@@ -349,11 +349,13 @@ export class MenusComponent implements OnInit {
         () => {
           if (this.service.msg.length == 0 || this.service.msg.length == "") {
             this.refresh();
-            this.toastr.success('Cập Nhật Thành Công Menu ' + form.value["Name"], 'Thành Công!', { timeOut: 1000 });
+            this.toastr.success('Cập Nhật Thành Công Menu ' + form.value["Name"], 'Thành Công!', { timeOut: 2000 });
             this.myModal.hide();
+            this.blockUI.stop();
           }
           else {
-            this.toastr.error('Cập Nhật Thất Bại Menu ' + form.value["Name"] + ".Lỗi: " + this.service.msg, 'Thất Bại!', { timeOut: 1000 });
+            this.toastr.error('Cập Nhật Thất Bại Menu ' + form.value["Name"] + ".Lỗi: " + this.service.msg, 'Thất Bại!', { timeOut: 2000 });
+            this.blockUI.stop();
           }
         }
       )

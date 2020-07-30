@@ -67,6 +67,9 @@ export class AuthinfoComponent implements OnInit {
         }
     });
     this.loading=false;
+    $(function() {
+      $('.ngx-dates-picker-input').prop('readonly', false);
+  }); 
   }
   imageShow: any = '';
   onFileChanged(event) {

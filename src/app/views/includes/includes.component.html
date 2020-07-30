@@ -147,7 +147,11 @@
                                                 {{this.changeCon(ques.Content_Ques)}}
                                             </td>
                                             <td >
-                                                <input type="checkbox" [checked]="getCheck(ques.Id)" (click)="select(ques.Id)" class="d-inline" style="height: 15px;width: 15px;" > 
+                                                <button (click)="select(ques.Id)" class="btn btn-outline-success py-0 px-1 my-0" *ngIf="getCheck(ques.Id); else SAI;"><i
+                                                    class="fa fa-check" style="width: 14px;"></i></button>
+                                                    <ng-template #SAI> <button (click)="select(ques.Id)" class="btn btn-outline-danger py-0 px-1 my-0"><i
+                                                                class="fa fa-close" style="width: 14px;"></i></button></ng-template>
+                                            
                                             </td>  
                                         </tr> 
                                          </tbody>  
@@ -177,25 +181,25 @@
                                      <li class="list-group-item d-inline-block"  *ngIf="this.objQues[this.Id_Ques].Answer!=1">
                                         <p class="d-inline font-weight-bold text-primary">1. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer1}}</p>
                                      </li>
-                                     <li class="list-group-item" *ngIf="this.objQues[this.Id_Ques].Answer==1" style="background-color:#007bff;color: white;">
+                                     <li class="list-group-item bg-success" *ngIf="this.objQues[this.Id_Ques].Answer==1" style="color: white;">
                                             <p class="d-inline font-weight-bold text-light">1. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer1}}</p>
                                          </li>
                                      <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer!=2">
                                             <p class="d-inline font-weight-bold text-primary">2. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer2}}</p>
                                         </li>
-                                        <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer==2" style="background-color:#007bff;color: white;">
+                                        <li class="list-group-item bg-success"  *ngIf="this.objQues[this.Id_Ques].Answer==2" style="color: white;">
                                                 <p class="d-inline font-weight-bold text-light">2. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer2}}</p>
                                             </li>
                                         <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer!=3">
                                                 <p class="d-inline font-weight-bold text-primary">3. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer3}}</p>
                                             </li>
-                                            <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer==3" style="background-color:#007bff;color: white;">
+                                            <li class="list-group-item bg-success"  *ngIf="this.objQues[this.Id_Ques].Answer==3" style="color: white;">
                                                     <p class="d-inline font-weight-bold text-light">3. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer3}}</p>
                                                 </li>
                                             <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer!=4">
                                                     <p class="d-inline font-weight-bold text-primary">4. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer4}}</p>
                                                 </li>
-                                                <li class="list-group-item"  *ngIf="this.objQues[this.Id_Ques].Answer==4" style="background-color:#007bff;color: white;">
+                                                <li class="list-group-item bg-success"  *ngIf="this.objQues[this.Id_Ques].Answer==4" style="color: white;">
                                                         <p class="d-inline font-weight-bold text-light">4. </p><p class="d-inline">{{this.objQues[this.Id_Ques].Answer4}}</p>
                                                     </li>
                                  </ul>

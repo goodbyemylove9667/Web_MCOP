@@ -16,7 +16,7 @@
                                     <label class="col-sm-4 col-form-label text-dark h3">MẬT KHẨU HIỆN TẠI 
                                    </label>
                                     <input type="password" name="oldpass" #oldpass1="ngModel" [(ngModel)]="this.oldpass" required minlength="6" maxlength="50" required class="form-control col-sm-8" 
-                                    [ngClass]="{ 'is-invalid':(oldpass1.errors && oldpass1.touched),'is-valid': !oldpass1.errors && oldpass1.touched}" id="oldpassword_chg"
+                                    [ngClass]="{ 'is-invalid':(oldpass1.errors && oldpass1.dirty),'is-valid': !oldpass1.errors && oldpass1.dirty}" id="oldpassword_chg"
                                     >
                                     <span class="text-danger offset-sm-4" *ngIf="oldpass1.invalid && oldpass1.dirty">
                                         Mật Khẩu Hiện Tại Phải Từ 6 Đến 50 Kí Tự
@@ -25,7 +25,7 @@
                                   <div class="form-group row">
                                     <label class="col-sm-4 col-form-label text-dark h3">MẬT KHẨU MỚI</label>
                                   <input type="password" name="newpass" #newpass1="ngModel" [(ngModel)]="this.newpass" required minlength="6" maxlength="50" required class="form-control col-sm-8" 
-                                    [ngClass]="{ 'is-invalid':(newpass1.errors && newpass1.touched),'is-valid': !newpass1.errors && newpass1.touched}" id="newpassword_chg"
+                                    [ngClass]="{ 'is-invalid':(newpass1.errors && newpass1.dirty),'is-valid': !newpass1.errors && newpass1.dirty}" id="newpassword_chg"
                                     >
                                     <span class="text-danger offset-sm-4" *ngIf="newpass1.invalid && newpass1.dirty">
                                       Mật Khẩu Mới Phải Từ 6 Đến 50 Kí Tự
@@ -34,22 +34,18 @@
                                   <div class="form-group row">
                                     <label class="col-sm-4 col-form-label text-dark h3">NHẬP LẠI MẬT KHẨU</label>
                                   <input type="password" name="repass" #repass1="ngModel" [(ngModel)]="this.repass" required minlength="6" maxlength="50" required class="form-control col-sm-8" 
-                                    [ngClass]="{ 'is-invalid':(repass1.errors && repass1.touched),'is-valid': !repass1.errors && repass1.touched}" id="repassword_chg"
+                                    [ngClass]="{ 'is-invalid':(repass1.errors && repass1.dirty),'is-valid': !repass1.errors && repass1.dirty}" id="repassword_chg"
                                     >
                                     <span class="text-danger offset-sm-4" *ngIf="this.repass!=this.newpass && repass1.dirty">
                                         Mật Khẩu Nhập Lại Không Trùng Khớp
                                     </span>
                                   </div>
-                                  <div class="form-group row justify-content-center">
-                                  <span class="input-group-text hidden-pass" *ngIf="!this.showpass"><i class="fa fa-eye" (click)="this.showpss()"></i></span>
-                                  <span class="input-group-text hidden-pass " *ngIf="this.showpass"><i class="fa fa-eye-slash" (click)="this.hidpss()"></i></span>
+                                  <div class="form-group pull-right">
+                                    <button type="button" class="btn btn-outline-secondary text-dark" *ngIf="!this.showpass" (click)="this.showpss()"><i class="fa fa-eye" ></i></button>
+                                    <button type="button" class="btn btn-outline-secondary  text-dark" *ngIf="this.showpass" (click)="this.hidpss()"><i class="fa fa-eye-slash" ></i></button>
+                                    <button type="button"  data-dismiss="modal"  (click)="this.Reset(form)" class="btn btn-danger font-weight-bolder">RESET</button>
+                                    <button type="button" (click)="this.updatepass()"  [disabled]="form.invalid || this.repass!=this.newpass" data-dismiss="modal" class="btn btn-primary text-light font-weight-bolder">THAY ĐỔI</button>
                                   </div>
-                                  <div class="form-group row pull-left ml-5">
-                                    <button type="button"  data-dismiss="modal"  (click)="this.Reset()" class="btn btn-danger btn-block font-weight-bolder">RESET</button>
-                                  </div>
-                                    <div class="form-group row pull-right mr-5">
-                                      <button type="button" (click)="this.updatepass()"  [disabled]="form.invalid || this.repass!=this.newpass" data-dismiss="modal" class="btn btn-primary btn-block text-light font-weight-bolder">THAY ĐỔI</button>
-                                    </div>
                                 </form>
                       </div>
               </div>

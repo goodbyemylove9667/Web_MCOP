@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { NgForm } from '@angular/forms';
 import { NgBlockUI, BlockUI } from 'ng-block-ui';
+import { navItems } from '../../_nav';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-includes',
@@ -17,7 +19,13 @@ export class IncludesComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
   @ViewChild('randomModal', { static: false }) public randomModal: ModalDirective;
   @ViewChild('form', { static: false }) private form: NgForm;
-  constructor(private service: IncludesService,private topservice: TopicsService,private conservice:ContestsService,private quesservice: QuestionsService,private toastr: ToastrService) { }
+  constructor(private service: IncludesService,private topservice: TopicsService,private conservice:ContestsService,private quesservice: QuestionsService,private toastr: ToastrService,public router: Router) { 
+    var index=navItems.findIndex(x=>x.table=='Include');
+    if (index==-1)
+    {
+      this.router.navigate(['']);
+    }
+  }
   Id_Top: '';
   Id_Con: '';
   Id_Ques: '';
@@ -119,6 +127,7 @@ export class IncludesComponent implements OnInit {
     this.objInc={};
     this.topservice.getCkList().then((res) => {
       for (let key in res) {
+        if (key!="-MDBLQgsR3ZDZTyrrf8_")
           this.listTop.push
             ({
               Id: key,

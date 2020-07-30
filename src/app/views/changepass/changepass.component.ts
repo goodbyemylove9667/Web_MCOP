@@ -22,11 +22,12 @@ export class ChangepassComponent implements OnInit {
   ngOnInit() {
 
   }
-  Reset()
+  Reset(form: NgForm)
   {
     this.oldpass="";
     this.newpass="";
     this.repass="";
+    form.form.markAsPristine();
   }
   showpss()
   {

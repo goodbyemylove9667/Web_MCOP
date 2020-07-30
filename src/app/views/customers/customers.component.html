@@ -31,7 +31,7 @@
                         <option  [ngValue]="4">Điện Thoại</option>
                         <option  [ngValue]="5">Địa Chỉ</option>
                         <option  [ngValue]="6">Ngày Sinh</option>
-                        <option  [ngValue]="11">Hoạt Động</option>
+                        <option  [ngValue]="12">Hoạt Động (0/1)</option>
                       </select>
                 </div>
                 <div class="input-group-prepend">
@@ -173,7 +173,7 @@
                     </span>
                   </div>
                   <div class="form-group row">
-                    <label  class="col-sm-3 col-form-label text-dark h3">HỌ TÊN <label class="text-danger">*</label></label>
+                    <label  class="col-sm-3 col-form-label text-dark h3">HỌ TÊN</label>
                     <input name="Fullname" #Fullname1="ngModel" [(ngModel)]="service.formData.Fullname"  minlength="2" maxlength="50"    class="form-control col-sm-9"
                     [ngClass]="{ 'is-invalid':(Fullname1.errors && Fullname1.dirty),'is-valid': !Fullname1.errors && Fullname1.dirty}">
                     <span class="text-danger offset-sm-3" *ngIf="Fullname1.invalid && Fullname1.dirty">
@@ -191,7 +191,7 @@
                 </div>
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">SĐT</label>
-                    <input name="Phone" #Phone1="ngModel" [(ngModel)]="service.formData.Phone"  pattern="(09|03|05|06|07|08)+([0-9]{8})\b" required class="form-control col-sm-9"
+                    <input name="Phone" #Phone1="ngModel" [(ngModel)]="service.formData.Phone"  pattern="(09|03|05|06|07|08)+([0-9]{8})\b"  class="form-control col-sm-9"
                     [ngClass]="{ 'is-invalid':(Phone1.errors && Phone1.dirty),'is-valid': !Phone1.errors && Phone1.dirty}">
                     <span class="text-danger offset-sm-3" *ngIf="Phone1.invalid && Phone1.dirty">
                       SDT chỉ bao gồm số và có 10 số và bắt đầu là 03,05,06,07,08 hoặc 09
@@ -199,7 +199,7 @@
                   </div>
                   <div class="form-group row">
                     <label  class="col-sm-3 col-form-label text-dark h3">ĐỊA CHỈ</label>
-                    <textarea rows="2" name="Address" #Address1="ngModel" [(ngModel)]="service.formData.Address"  minlength="3" maxlength="200"  class="form-control col-sm-9"
+                    <textarea rows="4" name="Address" #Address1="ngModel" [(ngModel)]="service.formData.Address"  minlength="3" maxlength="200"  class="form-control col-sm-9"
                       [ngClass]="{ 'is-invalid':(Address1.errors && Address1.dirty),'is-valid': !Address1.errors && Address1.dirty}">
 
                     </textarea>

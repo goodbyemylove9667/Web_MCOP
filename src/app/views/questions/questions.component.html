@@ -26,7 +26,8 @@
                         <div class="input-group-prepend mr-2">
                             <select [(ngModel)]="slc_search" class="custom-select">
                                 <option [ngValue]="1" [selected]="true">Chủ Đề</option>
-                                <option [ngValue]="12">Hoạt Động</option>
+                                <option [ngValue]="7">Độ Khó (1/2/3)</option>
+                                <option [ngValue]="12">Hoạt Động (0/1)</option>
                             </select>
                         </div>
                         <div class="input-group-prepend">
@@ -71,19 +72,22 @@
                                     <td>
 
                                         <button type="button" class="btn btn-outline-secondary text-dark"
+                                        placement="right" 
                                             ngbPopover="{{ques.Content_Ques}}" triggers="mouseenter:mouseleave"
                                             popoverTitle="Nội Dung">
-                                            {{this.changeCon(ques.Content_Ques)}}
+                                   {{this.changeCon(ques.Content_Ques)}}
                                         </button>
                                     </td>
                                     <td>
                                             <button type="button" class="btn btn-outline-secondary text-light bg-success" *ngIf="ques.Answer==1"
                                             ngbPopover="{{ques.Answer1}}" triggers="mouseenter:mouseleave"
+                                            placement="right" 
                                             popoverTitle="Câu Trả Lời 1">
                                             {{this.changeCon(ques.Answer1)}}
                                         </button>
                                         <button type="button" class="btn btn-outline-secondary text-dark"  *ngIf="ques.Answer!=1"
                                             ngbPopover="{{ques.Answer1}}" triggers="mouseenter:mouseleave"
+                                            placement="right" 
                                             popoverTitle="Câu Trả Lời 1">
                                             {{this.changeCon(ques.Answer1)}}
                                         </button>
@@ -91,11 +95,13 @@
                                     <td>
                                             <button type="button" class="btn btn-outline-secondary text-light bg-success" *ngIf="ques.Answer==2"
                                             ngbPopover="{{ques.Answer2}}" triggers="mouseenter:mouseleave"
+                                            placement="right" 
                                             popoverTitle="Câu Trả Lời 2">
                                             {{this.changeCon(ques.Answer2)}}
                                         </button>
                                         <button type="button" class="btn btn-outline-secondary text-dark"  *ngIf="ques.Answer!=2"
                                             ngbPopover="{{ques.Answer2}}" triggers="mouseenter:mouseleave"
+                                            placement="right" 
                                             popoverTitle="Câu Trả Lời 2">
                                             {{this.changeCon(ques.Answer2)}}
                                         </button>
@@ -103,11 +109,13 @@
                                     <td>
                                             <button type="button" class="btn btn-outline-secondary text-light bg-success" *ngIf="ques.Answer==3"
                                             ngbPopover="{{ques.Answer3}}" triggers="mouseenter:mouseleave"
+                                            placement="right" 
                                             popoverTitle="Câu Trả Lời 3">
                                             {{this.changeCon(ques.Answer3)}}
                                         </button>
                                         <button type="button" class="btn btn-outline-secondary text-dark"  *ngIf="ques.Answer!=3"
                                             ngbPopover="{{ques.Answer3}}" triggers="mouseenter:mouseleave"
+                                            placement="right" 
                                             popoverTitle="Câu Trả Lời 3">
                                             {{this.changeCon(ques.Answer3)}}
                                         </button>
@@ -115,11 +123,13 @@
                                     <td>
                                             <button type="button" class="btn btn-outline-secondary text-light bg-success" *ngIf="ques.Answer==4"
                                             ngbPopover="{{ques.Answer4}}" triggers="mouseenter:mouseleave"
+                                            placement="right" 
                                             popoverTitle="Câu Trả Lời 4">
                                             {{this.changeCon(ques.Answer4)}}
                                         </button>
                                         <button type="button" class="btn btn-outline-secondary text-dark"  *ngIf="ques.Answer!=4"
                                             ngbPopover="{{ques.Answer4}}" triggers="mouseenter:mouseleave"
+                                            placement="right" 
                                             popoverTitle="Câu Trả Lời 4">
                                             {{this.changeCon(ques.Answer4)}}
                                         </button>
