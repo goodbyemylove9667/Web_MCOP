@@ -29,29 +29,35 @@ export class DashboardComponent implements OnInit {
   award : Array<Object> =[];
   OjbCon: any={};
   OjbCus: any={};
-  public doughnutChartLabels: string[] = ['Tài Khoản Người Dùng', 'Tài Khoản Nhân Viên', 'Tài Khoản Admin'];
+  public doughnutChartLabels: string[] = ['ND', 'NV', 'AD'];
   public doughnutChartData: number[] = [];
   public doughnutChartType = 'doughnut';
   public doughnutChartOptions: any = {
-    legend: {
-    	display: false
+    responsive: true,
+    maintainAspectRatio: false,
+    title: {
+      display: true,
+      text: 'Thông kê tất cả tài khoản',
+      position: 'top',
+  },
+  legend: {
+      display: true,
+      position: 'bottom',
+      labels: {
+          boxWidth: 20,
+          fontColor: '#111',
+          padding: 15
+      }
+  },
+ tooltips: {
+  enabled: true,
+      callbacks: {
+        label: function(tooltipItem, data) {
+          var lable=tooltipItem.label=='ND'?'Tài Khoản Người Dùng':
+          tooltipItem.label=='NV'?'Tài Khoản Nhân Viên':'Tài Khoản Admin';
+          return lable+': '+data.datasets[0]["data"][tooltipItem.index];
+        }
     },
-    plugins: {
-      datalabels: {
-          formatter: (value, ctx) => {
-          
-            let sum = 0;
-            let dataArr = ctx.chart.data.datasets[0].data;
-            dataArr.map(data => {
-                sum += data;
-            });
-            let percentage = (value*100 / sum).toFixed(2)+"%";
-            return percentage;
-
-        
-          },
-          color: '#fff',
-               }
   }
   };
   public doughnutChartColors: Color[] = [
@@ -69,6 +75,8 @@ export class DashboardComponent implements OnInit {
   ];
   public lineChartLabels: Array<any> = ['CN','T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
   public lineChartOptions: any = {
+    responsive: true,
+    maintainAspectRatio: false,
     legend: {
     	display: false
     },
@@ -114,7 +122,6 @@ export class DashboardComponent implements OnInit {
           }
       }]
    },
-    responsive: TransitiveCompileNgModuleMetadata,
   };
   public lineChartColours: Array<any> = [
     { // grey
@@ -199,11 +206,12 @@ export class DashboardComponent implements OnInit {
           ctx.font = fontSize + "em sans-serif";
           ctx.textBaseline = "middle";
           var    textX = Math.round((width - ctx.measureText(text).width) / 2),
-              textY = height / 2;
+              textY = height / 2 ;
           ctx.fillText(text, textX, textY);
           ctx.save();
         }
-      }
+      },
+      
   });
   });
   await  this.resservice.getorderList().then((value)=>
@@ -355,9 +363,10 @@ export class DashboardComponent implements OnInit {
  {
   var count=0;
   var table = <HTMLTableElement>document.getElementById(tbName);
+  let list = [];
     for (var res of data)
     {
-      if ((dfkey.length==0 || this.OjbCon[res.Id_Con].Id_Top==dfkey) && this.OjbCus.hasOwnProperty(res.Id_Cus))
+      if ((dfkey.length==0 || this.OjbCon[res.Id_Con].Id_Top==dfkey) && this.OjbCus.hasOwnProperty(res.Id_Cus) && !list.includes(res.Id_Cus))
       {
           count++;
           var row = table.insertRow();
@@ -369,6 +378,7 @@ export class DashboardComponent implements OnInit {
           cell1.innerHTML = count.toString();
           cell2.innerHTML = this.OjbCus[res.Id_Cus].Username.toString();
           cell3.innerHTML =  res.Point.toString()+"đ";
+          list.push(res.Id_Cus);
       }
       if (count==10) break;
     }

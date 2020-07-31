@@ -21,8 +21,8 @@
     color: rgba(255,255,255,.5);
   }
   canvas{
-    margin: 0 auto;
-    }
+  height: 400px !important;
+}
 </style>
 <div class="animated fadeIn">
   <div class="row" id="db_menu">
@@ -61,7 +61,7 @@
           </div>
       </div>
       </div>
-      <div class="card-body" style="position: relative;">
+      <div class="card-body">
         <div class="chart-wrapper">
           <canvas baseChart class="chart1"
           [(data)]="doughnutChartData"
@@ -69,11 +69,6 @@
           [colors]="doughnutChartColors"
           [options]="doughnutChartOptions"
           [chartType]="doughnutChartType"></canvas>
-        </div>
-        <div style="font-size:0.8rem;position: absolute;bottom:10px;right:10px"> 
-             <div>Admin</div> 
-             <div>Nhân Viên</div> 
-             <div>Người Dùng</div> 
         </div>
         </div>
     </div>
@@ -93,7 +88,7 @@
     <div class="card-body">
           <div class="row justify-content-center">
               <table class="table table-bordered table-hover text-center w-75" >
-                <thead style="background-color:#007bff;color: white;">
+                <thead style="background-color:#2a4460;color: white;">
                   <tr >
                       <th >STT</th>
                       <th>Tài Khoản</th>
@@ -114,7 +109,7 @@
   <div class="card" style="background-color:#fff;">
     <div class="card-header" style="background-color:#fff;">
       <div class="form-group row justify-content-between my-0"> 
-        <h4 class="text-dark col align-seft-end mb-0"><div class="d-flex align-items-center h-100">Xếp Hạng</div></h4>
+        <h4 class="text-dark col align-seft-end mb-0"><div class="d-flex align-items-center h-100">Xếp Hạng Đại Thử Thách</div></h4>
         <div class="custom-file col d-none d-sm-block">
            
         </div>
@@ -123,7 +118,7 @@
     <div class="card-body">
           <div class="row justify-content-center">
               <table class="table table-bordered table-hover text-center w-75" >
-                <thead style="background-color:#007bff;color: white;">
+                <thead style="background-color:#2a4460;color: white;">
                   <tr >
                       <th >STT</th>
                       <th>Tài Khoản</th>

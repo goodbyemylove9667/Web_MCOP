@@ -202,7 +202,6 @@ getObj_Name(obj,key,attr)
         }
         this.list.sort((a,b)=>(a.Date_Create>b.Date_Create)?-1:(a.Date_Create<b.Date_Create)?1:0);
         this.rerender();
-        this.objCus=res;
       }, error => {
         this.toastr.error( 'Không Tải Được Dữ Liệu','Thông Báo!',{timeOut: 2000});
       });

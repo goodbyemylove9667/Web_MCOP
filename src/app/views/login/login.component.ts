@@ -10,7 +10,6 @@ export  class  LoginComponent  implements  OnInit {
   @ViewChild('form', { static: false }) private form: NgForm;
   email="";
   password="";
-  message="";
   type=1;
   showpass=false;
   FB: any;
@@ -20,11 +19,11 @@ export  class  LoginComponent  implements  OnInit {
   login()
   {
       this.service.login(this.email,this.password);
-      this.message=this.service.errorMessage;
   }
   change()
   { 
     this.password="";
+    this.service.errorMessage="";
     this.form.form.markAsPristine();
     if(this.type==1) this.type=2
     else this.type=1;
@@ -35,13 +34,11 @@ export  class  LoginComponent  implements  OnInit {
       this.service.sendPasswordResetEmail(this.email).then
       (()=>
       {
-      this.message=this.service.errorMessage;
         this.type=1;
       this.service.loading=false;
     }).catch
     (()=>
     {
-      this.message=this.service.errorMessage;
       this.type=1;
        this.service.loading=false;
     }

@@ -4,8 +4,6 @@ import { AngularFireAuth } from  "@angular/fire/auth";
 import { NgForm } from '@angular/forms';
 import { reject } from 'q';
 import { user } from '../containers/default-layout/default-layout.component';
-import { AuthService } from '../auth/auth.service';
-import { HttpClient, HttpHeaders,HttpParams} from '@angular/common/http';
 export interface Employee
 {
 
@@ -35,7 +33,7 @@ export class EmployeeService {
   ls: {};
   msg: any;
   loading: boolean;
-  constructor(private firebase : AngularFireDatabase,private af:AngularFireAuth,private authserveice: AuthService,private http:HttpClient) { }
+  constructor(private firebase : AngularFireDatabase,private af:AngularFireAuth) { }
  async resetForm(type) {
     if (type==1)
     {

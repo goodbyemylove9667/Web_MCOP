@@ -60,7 +60,7 @@
                   <div class="row justify-content-center">
                     <img *ngIf="this.service.loading" src="../../../assets/img/ajax-loader.gif" width="30px"
                       height="30px" />
-                    <p *ngIf="!this.service.loading" class="text-danger w-100 text-center">{{this.service.errorMessage}}
+                    <p class="text-danger w-100 text-center">{{this.service.errorMessage}}
                     </p>
                     <a (click)="change()" class="text-light mt-2 w-100 text-center" *ngIf="this.type==2">Đăng Nhập
                     </a>
