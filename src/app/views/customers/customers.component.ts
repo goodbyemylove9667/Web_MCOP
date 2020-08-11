@@ -67,6 +67,8 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
               Address: res[key].Address,
               Birthday: res[key].Birthday,
               Image: res[key].Image,
+              Facebook: res[key].Facebook,
+              Google: res[key].Google,
               Employee_Create:res[key].Employee_Create,
               Date_Create:res[key].Date_Create,
               Employee_Edit:res[key].Employee_Edit,
@@ -114,7 +116,7 @@ export class CustomersComponent  implements AfterViewInit, OnDestroy, OnInit {
       if (inp.includes(inp_search) || inp_search == "undefined" || inp_search == "") {
         return true;
       }
-      if (this.slc_search==12)
+      if (this.slc_search==14)
       {
           if (rowData[this.slc_search].includes("true") && inp_search=="1") return true;
           if (rowData[this.slc_search].includes("false") && inp_search=="0") return true;
@@ -192,6 +194,8 @@ getObj_Name(obj,key,attr)
               Address: res[key].Address,
               Birthday: res[key].Birthday,
               Image: res[key].Image,
+              Facebook: res[key].Facebook,
+              Google: res[key].Google,
               Employee_Create:res[key].Employee_Create,
               Date_Create:res[key].Date_Create,
               Employee_Edit:res[key].Employee_Edit,

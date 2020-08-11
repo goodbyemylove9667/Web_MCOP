@@ -31,7 +31,7 @@
                         <option  [ngValue]="4">Điện Thoại</option>
                         <option  [ngValue]="5">Địa Chỉ</option>
                         <option  [ngValue]="6">Ngày Sinh</option>
-                        <option  [ngValue]="12">Hoạt Động (0/1)</option>
+                        <option  [ngValue]="14">Hoạt Động (0/1)</option>
                       </select>
                 </div>
                 <div class="input-group-prepend">
@@ -56,6 +56,8 @@
                     <th>Địa Chỉ</th>
                     <th>Ngày Sinh</th>
                     <th>Hình Ảnh</th>
+                    <th>Facebook</th>
+                    <th>Google</th>
                     <th>Người tạo</th>
                     <th>Ngày tạo</th>
                     <th>Người sửa</th>
@@ -99,6 +101,12 @@
                                 <img src="http://pluspng.com/img-png/user-png-icon-male-user-icon-512.png" width="40px" height="40px" />
                                 </div>
                         </td>
+                        <td>
+                          {{cus.Facebook}}
+                      </td>
+                      <td>
+                        {{cus.Google}}
+                    </td>
                         <td>
                           {{getObj_Name(objCus,cus.Employee_Create,'Email')}}
                       </td>
@@ -221,7 +229,14 @@
                 Ngày sinh phải trước ngày hiện tại
               </span>
                   </div>
-
+                  <div class="form-group row">
+                    <label  class="col-sm-3 col-form-label text-dark h3" >Facebook</label>
+                    <input name="Facebook" [(ngModel)]="service.formData.Facebook" class="form-control col-sm-9" readonly>
+                  </div>
+                  <div class="form-group row">
+                    <label  class="col-sm-3 col-form-label text-dark h3">Google</label>
+                    <input name="Google" [(ngModel)]="service.formData.Google" class="form-control col-sm-9" readonly>
+                  </div>
                   <div class="form-group row" *ngIf="this.type==2;else status">
                     <label  class="col-sm-3 col-form-label text-dark h3">HOẠT ĐỘNG</label>
                     <label class="switch switch-pill switch-outline-success-alt">
