@@ -70,6 +70,7 @@ export class TopicsService {
 
  async insert(form :NgForm)
  {
+  form.value["Name_Top"]=form.value["Name_Top"].trim().toLowerCase();
   await this.firebase.database.ref('Topic').orderByChild("Name_Top").equalTo(form.value["Name_Top"]).once("value", (value) => {
     if (value.exists()) {
       this.msg = "Chủ Đề Đã Tồn Tại";
@@ -101,6 +102,7 @@ async update(form :NgForm)
 {
   if (form.value["Id"]!=null)
   {
+    form.value["Name_Top"]=form.value["Name_Top"].trim().toLowerCase();
     var date=new Date();
     var y=date.getFullYear();
     var m=date.getMonth()+1;

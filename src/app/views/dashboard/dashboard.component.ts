@@ -220,7 +220,7 @@ export class DashboardComponent implements OnInit {
     var arr={data: [0,0,0,0,0,0,0],fill:false};
     value.forEach((data)=>
     {
-      if (data.key!='-MDSV6A4mCgLzdFeyUPf')
+      if (data.toJSON().Id_Con!='-MDSV6A4mCgLzdFeyUPf')
       {
         this.listRes.push({
           Id: data.key,
@@ -255,6 +255,7 @@ export class DashboardComponent implements OnInit {
     this.listRes.sort((a, b)=> Number ( b.Point-a.Point || (b.Point==a.Point && a.TimeLeft_Res>b.TimeLeft_Res)));
     this.listDtt.sort((a, b)=> Number ( b.Point-a.Point || (b.Point==a.Point && a.TimeLeft_Res>b.TimeLeft_Res)));
     this.createTb('tb_db',this.listRes,dfkey);
+    console.log(this.listDtt);
     this.createTb('tb_dtt',this.listDtt,'');
   });
   var db_menu = document.getElementById("db_menu");

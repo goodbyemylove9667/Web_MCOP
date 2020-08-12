@@ -84,7 +84,7 @@ export class CustomerService {
   }
 
   async insert(form: NgForm) {
-
+    form.value["Username"]=form.value["Username"].trim().toLowerCase();
    await this.firebase.database.ref('Customer').orderByChild("Username").equalTo(form.value["Username"]).limitToFirst(1).once("value", (value) => {
       if (value.exists()) {
         this.msg = "Tài Khoản Đã Tồn Tại";

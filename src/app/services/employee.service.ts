@@ -85,6 +85,7 @@ export class EmployeeService {
   }
 async insert(form :NgForm)
  {
+  form.value["Username"]=form.value["Username"].trim().toLowerCase();
   var date=new Date();
   var y=date.getFullYear();
   var m=date.getMonth()+1;

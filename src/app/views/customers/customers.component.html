@@ -229,12 +229,12 @@
                 Ngày sinh phải trước ngày hiện tại
               </span>
                   </div>
-                  <div class="form-group row">
-                    <label  class="col-sm-3 col-form-label text-dark h3" >Facebook</label>
+                  <div class="form-group row" *ngIf="this.type==2">
+                    <label  class="col-sm-3 col-form-label text-dark h3"  >Facebook</label>
                     <input name="Facebook" [(ngModel)]="service.formData.Facebook" class="form-control col-sm-9" readonly>
                   </div>
-                  <div class="form-group row">
-                    <label  class="col-sm-3 col-form-label text-dark h3">Google</label>
+                  <div class="form-group row"  *ngIf="this.type==2">
+                    <label  class="col-sm-3 col-form-label text-dark h3" >Google</label>
                     <input name="Google" [(ngModel)]="service.formData.Google" class="form-control col-sm-9" readonly>
                   </div>
                   <div class="form-group row" *ngIf="this.type==2;else status">

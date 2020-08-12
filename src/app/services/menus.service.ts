@@ -91,6 +91,7 @@ export class MenusService {
 
  async insert(form :NgForm)
  {
+  form.value["Name"]=form.value["Name"].trim().toLowerCase();
   await this.firebase.database.ref('Menu').orderByChild("Name").equalTo(form.value["Name"]).once("value", (value) => {
     if (value.exists()) {
       this.msg = "Menu Đã Tồn Tại";
@@ -122,6 +123,7 @@ async update(form :NgForm)
 {
   if (form.value["Id"]!=null)
   {
+    form.value["Name"]=form.value["Name"].trim().toLowerCase();
     var date=new Date();
     var y=date.getFullYear();
     var m=date.getMonth()+1;
